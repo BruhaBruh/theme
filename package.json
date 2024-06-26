@@ -1,0 +1,61 @@
+{
+  "name": "@bruhabruh/theme",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "BruhaBruh Theme with CLI",
+  "author": "BruhaBruh",
+  "license": "MIT",
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bruhabruh/theme"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "bin": "./dist/cli.cjs",
+  "scripts": {
+    "build": "tsup",
+    "start": "pnpm run build --silent && node ./dist/cli.cjs",
+    "generate": "pnpm run build --silent && node ./dist/cli.cjs css -o ./dist/theme.css && node ./dist/cli.cjs tailwind -o ./dist/theme.json",
+    "lint": "pnpm run lint:js && pnpm run lint:other",
+    "lint:js": "eslint . --report-unused-disable-directives",
+    "lint:other": "prettier --check '**/*.{md,yaml,yml,json}'",
+    "prettier": "prettier '**/*.{md,yaml,yml,json}'",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@bruhabruh/eslint-config": "^1.0.0",
+    "@bruhabruh/prettier-config": "^1.1.0",
+    "@bruhabruh/tsconfig": "^1.0.0",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@commitlint/types": "^19.0.3",
+    "@types/eslint": "^8.56.10",
+    "@types/node": "^20.14.9",
+    "@types/tinycolor2": "^1.4.6",
+    "@typescript-eslint/parser": "^7.14.1",
+    "eslint": "^8",
+    "husky": "^9.0.11",
+    "nano-staged": "^0.8.0",
+    "prettier": "^3.3.2",
+    "tailwindcss": "^3.4.4",
+    "tsup": "^8.1.0",
+    "typescript": "^5.5.2"
+  },
+  "nano-staged": {
+    "*.{js,ts}": [
+      "eslint --fix --quiet --report-unused-disable-directives"
+    ],
+    "*.{md,yaml,yml,json}": [
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "tinycolor2": "^1.6.0"
+  }
+}
