@@ -9,14 +9,14 @@
       "green": "#2fc654",
       "yellow": "#d8ca2c",
       "red": "#d82c2c"
+    },
+    "options": {
+      "withoutRadius": true,
+      "withoutPalette": true
     }
   },
   "themes": {
     "light": {},
-    "dark": {
-      "palette": {
-        "red": "#2fc654"
-      }
-    }
+    "dark": {}
   }
 }

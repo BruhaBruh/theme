@@ -15,6 +15,11 @@ export const themesFromConfig = <T extends string>(
       const cfg = merge(config.base, themeConfig);
       const theme = generateTheme(cfg);
 
+      if (themeName === config.defaultTheme) {
+        theme.options.withoutRadius = false;
+        theme.options.withoutPalette = false;
+      }
+
       themes[themeName as T] = theme;
     },
   );

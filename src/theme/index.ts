@@ -15,14 +15,20 @@ export const generateTheme = (config: ThemeConfig): Theme => {
   return {
     radius: generateRadiusDesignTokens(config.radius),
     palette: generatePaletteDesignTokens(config.palette),
+    options: {
+      withoutRadius: config.options?.withoutRadius ?? false,
+      withoutPalette: config.options?.withoutPalette ?? false,
+    },
   };
 };
 
 export const generateThemeVariables = (theme: Theme): Variables => {
   const variables: Variables = {};
 
-  Object.assign(variables, generateRadiusVariables(theme.radius));
-  Object.assign(variables, generatePaletteVariables(theme.palette));
+  if (!theme.options.withoutRadius)
+    Object.assign(variables, generateRadiusVariables(theme.radius));
+  if (!theme.options.withoutPalette)
+    Object.assign(variables, generatePaletteVariables(theme.palette));
 
   return variables;
 };
