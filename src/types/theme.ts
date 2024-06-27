@@ -1,8 +1,4 @@
-import { RadiusDesignTokens, RadiusValue } from './radius';
-
-export type ThemeConfig = {
-  radius: RadiusValue;
-};
+import { RadiusDesignTokens } from './radius';
 
 export type Theme = {
   radius: RadiusDesignTokens;

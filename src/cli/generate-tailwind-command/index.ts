@@ -1,4 +1,4 @@
-import { generateThemeTailwindJson as generateThemeTailwindJSON } from '@/theme';
+import { configToTailwind } from '@/config/to-tailwind';
 import { Command, Option } from 'commander';
 import { readConfig } from '../read-config';
 import { writeToFile } from '../write-to-file';
@@ -25,7 +25,7 @@ export const applyGenerateTailwindCommand = (cli: Command) => {
     .action((options: Options) => {
       const config = readConfig(options.config);
 
-      const theme = generateThemeTailwindJSON(config, options.spacing);
+      const theme = configToTailwind(config, options.spacing);
 
       if (options.output) {
         writeToFile(options.output, theme);

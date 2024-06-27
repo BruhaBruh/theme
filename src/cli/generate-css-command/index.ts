@@ -1,4 +1,4 @@
-import { generateThemeVariables } from '@/theme';
+import { configToCSS } from '@/config/to-css';
 import { Command, Option } from 'commander';
 import { readConfig } from '../read-config';
 import { writeToFile } from '../write-to-file';
@@ -25,7 +25,7 @@ export const applyGenerateCSSCommand = (cli: Command) => {
     .action((options: Options) => {
       const config = readConfig(options.config);
 
-      const theme = generateThemeVariables(config, options.spacing);
+      const theme = configToCSS(config, options.spacing);
 
       if (options.output) {
         writeToFile(options.output, theme);

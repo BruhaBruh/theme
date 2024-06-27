@@ -1,3 +1,11 @@
 {
-  "radius": "0.75rem"
+  "defaultTheme": "light",
+  "base": {
+    "radius": "0.75rem"
+  },
+  "themes": {
+    "blue": {},
+    "light": {},
+    "dark": {}
+  }
 }
