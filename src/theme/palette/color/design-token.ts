@@ -2,7 +2,7 @@ import { rgbaToHsl } from '@/lib/rgba-to-hsl';
 import { ColorDesignTokens } from '@/types/color';
 import {
   Hct,
-  argbFromHex,
+  argbFromRgb,
   blueFromArgb,
   greenFromArgb,
   redFromArgb,
@@ -46,8 +46,8 @@ export const generateColorDesignTokens = (
   isBasic = false,
 ): ColorDesignTokens => {
   if (!isBasic) {
-    const hex = ColorTranslator.toHEXA(rawColor);
-    const argb = argbFromHex(hex);
+    const rgba = ColorTranslator.toRGBObject(rawColor);
+    const argb = argbFromRgb(rgba.R, rgba.G, rgba.B);
     const color = Hct.fromInt(argb);
 
     return {
