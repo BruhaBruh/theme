@@ -16,12 +16,12 @@ export default defineConfig([
   {
     entry: ['src/cli.ts'],
     outDir: 'dist',
-    format: ['cjs'],
+    format: ['esm'],
     dts: false,
     splitting: false,
     sourcemap: false,
     clean: true,
     minify: true,
-    outExtension: () => ({ js: '.cjs' }),
+    outExtension: () => ({ js: '.mjs' }),
   },
 ]);

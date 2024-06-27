@@ -1,10 +1,17 @@
 {
   "defaultTheme": "light",
   "base": {
-    "radius": "0.75rem"
+    "radius": "0.75rem",
+    "palette": {
+      "white": "#ffffff",
+      "black": "#101523",
+      "blue": "#2f57c6",
+      "green": "#2fc654",
+      "yellow": "#d8ca2c",
+      "red": "#d82c2c"
+    }
   },
   "themes": {
-    "blue": {},
     "light": {},
     "dark": {}
   }

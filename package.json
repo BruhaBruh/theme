@@ -16,11 +16,11 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "bin": "./dist/cli.cjs",
+  "bin": "./dist/cli.mjs",
   "scripts": {
     "build": "tsup",
-    "start": "pnpm run build --silent && node ./dist/cli.cjs",
-    "generate": "pnpm run build --silent && node ./dist/cli.cjs css -o ./dist/theme.css && node ./dist/cli.cjs tailwind -o ./dist/theme.json",
+    "start": "pnpm run build --silent && node ./dist/cli.mjs",
+    "generate": "pnpm run build --silent && node ./dist/cli.mjs css -o ./dist/theme.css && node ./dist/cli.mjs tailwind -o ./dist/theme.json",
     "lint": "pnpm run lint:js && pnpm run lint:other",
     "lint:js": "eslint . --report-unused-disable-directives",
     "lint:other": "prettier --check '**/*.{md,yaml,yml,json}'",
@@ -36,7 +36,6 @@
     "@commitlint/types": "^19.0.3",
     "@types/eslint": "^8.56.10",
     "@types/node": "^20.14.9",
-    "@types/tinycolor2": "^1.4.6",
     "@typescript-eslint/parser": "^7.14.1",
     "eslint": "^8",
     "husky": "^9.0.11",
@@ -55,7 +54,8 @@
     ]
   },
   "dependencies": {
-    "commander": "^12.1.0",
-    "tinycolor2": "^1.6.0"
+    "@material/material-color-utilities": "^0.3.0",
+    "colortranslator": "^4.1.0",
+    "commander": "^12.1.0"
   }
 }
