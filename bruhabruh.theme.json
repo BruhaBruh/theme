@@ -13,6 +13,10 @@
   },
   "themes": {
     "light": {},
-    "dark": {}
+    "dark": {
+      "palette": {
+        "red": "#2fc654"
+      }
+    }
   }
 }

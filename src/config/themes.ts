@@ -1,3 +1,4 @@
+import { merge } from '@/lib/merge';
 import { generateTheme } from '@/theme';
 import { Config, ThemeConfig } from '@/types/config';
 import { Theme } from '@/types/theme';
@@ -9,12 +10,9 @@ export const themesFromConfig = <T extends string>(
 ): Themes<T> => {
   const themes = {} as Record<T, Theme>;
 
-  Object.entries<ThemeConfig>(config.themes).forEach(
+  Object.entries<Partial<ThemeConfig>>(config.themes).forEach(
     ([themeName, themeConfig]) => {
-      const cfg = {
-        ...config.base,
-        ...themeConfig,
-      } satisfies Required<ThemeConfig>;
+      const cfg = merge(config.base, themeConfig);
       const theme = generateTheme(cfg);
 
       themes[themeName as T] = theme;

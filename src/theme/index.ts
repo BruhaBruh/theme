@@ -11,7 +11,7 @@ import {
   generateRadiusVariables,
 } from './radius';
 
-export const generateTheme = (config: Required<ThemeConfig>): Theme => {
+export const generateTheme = (config: ThemeConfig): Theme => {
   return {
     radius: generateRadiusDesignTokens(config.radius),
     palette: generatePaletteDesignTokens(config.palette),
