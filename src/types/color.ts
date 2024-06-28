@@ -15,3 +15,7 @@ export type ColorVariantToken =
   | 1000;
 
 export type ColorDesignTokens = Record<ColorVariantToken, string>;
+
+export type ColorLinkedDesignTokens = {
+  [key: string]: string | ColorLinkedDesignTokens;
+};

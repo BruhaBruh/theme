@@ -1,6 +1,6 @@
-import { variable } from '@/lib/variable';
 import { ColorDesignTokens } from '@/types/color';
 import { Variables } from '@/types/variables';
+import { colorVariable } from './color-variable';
 
 export const generateColorVariables = (
   colorName: string,
@@ -9,7 +9,7 @@ export const generateColorVariables = (
   const variables: Variables = {};
 
   Object.entries(tokens).forEach(([token, value]) => {
-    const name = variable('color', colorName, token);
+    const name = colorVariable(colorName, token);
     variables[name] = value;
   });
 

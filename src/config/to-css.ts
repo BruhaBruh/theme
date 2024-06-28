@@ -13,7 +13,7 @@ const themeLines = (
 
   lines.push(isDefault ? `:root, .${theme} {` : `.${theme} {`);
   Object.entries<string>(variables).forEach(([variable, value]) => {
-    lines.push(`${space(2)}${variable}: ${value};`);
+    lines.push(`${space(1)}${variable}: ${value};`);
   });
   lines.push('}');
 

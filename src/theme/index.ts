@@ -2,19 +2,26 @@ import { ThemeConfig } from '@/types/config';
 import { Theme } from '@/types/theme';
 import { Variables } from '@/types/variables';
 import { Config } from 'tailwindcss/types/config';
-import { generatePaletteDesignTokens } from './palette/design-token';
-import { generatePaletteTailwindConfig } from './palette/tailwind';
-import { generatePaletteVariables } from './palette/variables';
+import {
+  generatePaletteDesignTokens,
+  generatePaletteTailwindConfig,
+  generatePaletteVariables,
+} from './palette';
 import {
   generateRadiusDesignTokens,
   generateRadiusTailwindConfig,
   generateRadiusVariables,
 } from './radius';
+import {
+  generateSystemTailwindConfig,
+  generateSystemVariables,
+} from './system';
 
 export const generateTheme = (config: ThemeConfig): Theme => {
   return {
     radius: generateRadiusDesignTokens(config.radius),
     palette: generatePaletteDesignTokens(config.palette),
+    system: config.system,
     options: {
       withoutRadius: config.options?.withoutRadius ?? false,
       withoutPalette: config.options?.withoutPalette ?? false,
@@ -30,12 +37,21 @@ export const generateThemeVariables = (theme: Theme): Variables => {
   if (!theme.options.withoutPalette)
     Object.assign(variables, generatePaletteVariables(theme.palette));
 
+  Object.assign(variables, generateSystemVariables(theme.system));
+
   return variables;
 };
 
 export const generateThemeTailwind = (theme: Theme): Config['theme'] => {
-  return {
+  const config = {
     borderRadius: generateRadiusTailwindConfig(theme.radius),
     colors: generatePaletteTailwindConfig(theme.palette),
   } satisfies Config['theme'];
+
+  config.colors = Object.assign(
+    config.colors,
+    generateSystemTailwindConfig(theme.system).colors,
+  );
+
+  return config;
 };

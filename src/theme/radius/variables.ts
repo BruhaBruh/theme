@@ -1,6 +1,6 @@
-import { variable } from '@/lib/variable';
 import { RadiusDesignTokens } from '@/types/radius';
 import { Variables } from '@/types/variables';
+import { radiusVariable } from './radius-variable';
 
 export const generateRadiusVariables = (
   tokens: RadiusDesignTokens,
@@ -8,7 +8,7 @@ export const generateRadiusVariables = (
   const variables: Variables = {};
 
   Object.entries(tokens).forEach(([token, value]) => {
-    const name = variable('radius', token);
+    const name = radiusVariable(token);
     variables[name] = value;
   });
 
