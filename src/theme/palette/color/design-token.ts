@@ -20,22 +20,16 @@ const withAlpha = (rgb: RGBObject, a: number): string => {
 
 const withTone = (hct: Hct, tone: number): string => {
   const clone = Hct.fromInt(hct.toInt());
-  clone.tone = tone;
+  clone.tone = clone.tone + tone;
   const argb = clone.toInt();
-  const red = redFromArgb(argb);
-  const green = greenFromArgb(argb);
-  const blue = blueFromArgb(argb);
-
-  const min = Math.min(red, green, blue);
-  const alpha = (255 - min) / 255;
 
   const result = withAlpha(
     {
-      R: Math.round((red - min) / alpha),
-      G: Math.round((green - min) / alpha),
-      B: Math.round((blue - min) / alpha),
+      R: redFromArgb(argb),
+      G: greenFromArgb(argb),
+      B: blueFromArgb(argb),
     },
-    Math.round(alpha * 10000) / 10000,
+    1,
   );
 
   return result;
@@ -45,27 +39,26 @@ export const generateColorDesignTokens = (
   rawColor: string,
   isBasic = false,
 ): ColorDesignTokens => {
+  const rgbObject = ColorTranslator.toRGBObject(rawColor);
   if (!isBasic) {
-    const rgba = ColorTranslator.toRGBObject(rawColor);
-    const argb = argbFromRgb(rgba.R, rgba.G, rgba.B);
+    const argb = argbFromRgb(rgbObject.R, rgbObject.G, rgbObject.B);
     const color = Hct.fromInt(argb);
 
     return {
-      50: withTone(color, 99),
-      100: withTone(color, 95),
-      200: withTone(color, 90),
-      300: withTone(color, 80),
-      400: withTone(color, 70),
-      500: withTone(color, 60),
-      600: withTone(color, 50),
-      700: withTone(color, 40),
-      800: withTone(color, 30),
-      900: withTone(color, 20),
-      950: withTone(color, 10),
-      1000: withTone(color, 5),
+      50: withAlpha(rgbObject, 0.02),
+      100: withAlpha(rgbObject, 0.05),
+      200: withAlpha(rgbObject, 0.09),
+      300: withAlpha(rgbObject, 0.14),
+      400: withAlpha(rgbObject, 0.4),
+      500: withAlpha(rgbObject, 0.6),
+      600: withAlpha(rgbObject, 0.88),
+      700: withTone(color, 0),
+      800: withTone(color, -10),
+      900: withTone(color, -20),
+      950: withTone(color, -25),
+      1000: withTone(color, -30),
     };
   }
-  const rgbObject = ColorTranslator.toRGBObject(rawColor);
 
   return {
     50: withAlpha(rgbObject, 0.03),

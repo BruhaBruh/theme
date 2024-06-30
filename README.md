@@ -24,10 +24,10 @@ npx @bruhabruh/theme css -o theme.css -s 2
     "palette": {
       "white": "#ffffff",
       "black": "#101523",
-      "blue": "#2f57c6",
-      "green": "#2fc654",
-      "yellow": "#d8ca2c",
-      "red": "#d82c2c"
+      "blue": "#3b82f6",
+      "green": "#22c55e",
+      "yellow": "#eab308",
+      "red": "#ef4444"
     },
     "system": {
       "color": {}
