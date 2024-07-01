@@ -46,12 +46,21 @@ export const generateThemeTailwind = (theme: Theme): Config['theme'] => {
   const config = {
     borderRadius: generateRadiusTailwindConfig(theme.radius),
     colors: generatePaletteTailwindConfig(theme.palette),
+    textColor: {},
+    backgroundColor: {},
+    ringColor: {},
+    outlineColor: {},
+    borderColor: {},
   } satisfies Config['theme'];
 
-  config.colors = Object.assign(
-    config.colors,
-    generateSystemTailwindConfig(theme.system).colors,
-  );
+  const colorsConfig = generateSystemTailwindConfig(theme.system);
+
+  Object.assign(config.colors, colorsConfig.colors);
+  Object.assign(config.textColor, colorsConfig.textColor);
+  Object.assign(config.backgroundColor, colorsConfig.backgroundColor);
+  Object.assign(config.ringColor, colorsConfig.ringColor);
+  Object.assign(config.outlineColor, colorsConfig.outlineColor);
+  Object.assign(config.borderColor, colorsConfig.borderColor);
 
   return config;
 };
