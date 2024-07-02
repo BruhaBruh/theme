@@ -49,7 +49,7 @@ export const applyGenerateCSSCommand = (cli: Command) => {
 
       if (options.type === 'console') {
         process.stdout.write('```css\n');
-        process.stdout.write(`${css}\n`);
+        process.stdout.write(css);
         process.stdout.write('```\n');
       }
       if (options.type === 'css') {

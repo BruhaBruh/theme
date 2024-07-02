@@ -1,27 +1,31 @@
 import { z } from 'zod';
 
-const paletteSchema = z.record(z.string().or(z.record(z.string())));
+const paletteSchema = z.record(z.string().or(z.record(z.string()))).default({});
 
-const radiusSchema = z.record(z.string());
+const radiusSchema = z.record(z.string()).default({});
 
-const refSchema = z.object({
-  radius: radiusSchema,
-});
+const refSchema = z
+  .object({
+    radius: radiusSchema,
+  })
+  .default({ radius: {} });
 
-const sysSchema = z.object({
-  color: z
-    .object({
-      text: z.record(z.string()).default({}),
-      background: z.record(z.string()).default({}),
-      border: z.record(z.string()).default({}),
-      ring: z.record(z.string()).default({}),
-      outline: z.record(z.string()).default({}),
-    })
-    .default({}),
-});
+const sysSchema = z
+  .object({
+    color: z
+      .object({
+        text: z.record(z.string()).default({}),
+        background: z.record(z.string()).default({}),
+        border: z.record(z.string()).default({}),
+        ring: z.record(z.string()).default({}),
+        outline: z.record(z.string()).default({}),
+      })
+      .default({}),
+  })
+  .default({ color: {} });
 
 const themeSchema = z.object({
-  radius: z.string(),
+  radius: z.string().default('0.5rem'),
   palette: paletteSchema,
   ref: refSchema,
   sys: sysSchema,
