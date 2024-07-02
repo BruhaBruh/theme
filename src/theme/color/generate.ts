@@ -12,7 +12,11 @@ import { ThemeConfig } from '@/types/config';
 import { ColorTranslator } from 'colortranslator';
 import { easeInOutSine, easeInSine, easeOutSine } from 'easing-utils';
 
-const generateColor = (name: string, rawColor: string): Color => {
+const generateColor = (
+  name: string,
+  rawColor: string,
+  darkenRatio = 25,
+): Color => {
   const result = {} as Color;
 
   const color = ColorTranslator.toRGBObject(rawColor);
@@ -61,7 +65,7 @@ const generateColor = (name: string, rawColor: string): Color => {
     colorVariantsByDarken.forEach((variant) => {
       result[variant] = withSubtractTone(
         color,
-        25 *
+        darkenRatio *
           easeOutSine(
             normalize(variant, {
               minInput: 650,
@@ -87,6 +91,18 @@ export const generateColorFromConfig = <T extends ThemeConfig>(
       result[name.toLowerCase() as keyof ThemeColor<T>] = generateColor(
         name.toLowerCase(),
         color,
+      );
+    } else if (
+      'darkenRatio' in color &&
+      'source' in color &&
+      Object.keys(color).length === 2
+    ) {
+      result[name.toLowerCase() as keyof ThemeColor<T>] = generateColor(
+        name.toLowerCase(),
+        color.source,
+        typeof color.darkenRatio === 'number'
+          ? color.darkenRatio
+          : Number.parseFloat(color.darkenRatio),
       );
     } else {
       result[name.toLowerCase() as keyof ThemeColor<T>] = color as Color;

@@ -1,6 +1,18 @@
 import { z } from 'zod';
 
-const paletteSchema = z.record(z.string().or(z.record(z.string()))).default({});
+const paletteSchema = z
+  .record(
+    z
+      .string()
+      .or(
+        z.object({
+          darkenRatio: z.number().default(25),
+          source: z.string(),
+        }),
+      )
+      .or(z.record(z.string())),
+  )
+  .default({});
 
 const radiusSchema = z.record(z.string()).default({});
 
@@ -42,6 +54,7 @@ const themesSchema = z
 
       otherThemes.forEach((otherTheme) => {
         Object.keys(palette).forEach((color) => {
+          const paletteColor = palette[color];
           if (!themes[otherTheme].palette[color]) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
@@ -50,15 +63,21 @@ const themesSchema = z
             return;
           }
           if (
-            typeof palette[color] !== typeof themes[otherTheme].palette[color]
+            typeof paletteColor !== typeof themes[otherTheme].palette[color]
           ) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: `theme(${otherTheme}) must be same type(${typeof palette[color]}) of color(${color}) in palette like theme(${name})`,
+              message: `theme(${otherTheme}) must be same type(${typeof paletteColor}) of color(${color}) in palette like theme(${name})`,
             });
             return;
           }
-          if (typeof palette[color] === 'string') return;
+          if (typeof paletteColor === 'string') return;
+          if (
+            'darkenRatio' in paletteColor &&
+            'source' in paletteColor &&
+            Object.keys(paletteColor).length === 2
+          )
+            return;
 
           const otherColor = themes[otherTheme].palette[color] as Record<
             string,

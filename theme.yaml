@@ -9,6 +9,9 @@ themes:
       white: '#ffffff'
       black: '#101523'
       blue: '#3b82f6'
+      yellow:
+        darkenRatio: 50
+        source: '#F0E100'
 
     ref:
       radius:
@@ -37,6 +40,8 @@ themes:
       white: '#ffffff'
       black: '#101523'
       blue: '#3b82f6'
+      yellow:
+        source: '#F0E100'
 
     ref:
       radius:
