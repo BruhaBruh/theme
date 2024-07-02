@@ -9,9 +9,11 @@ export const generateThemeTailwind = <T extends Theme>(
 ): Config['theme'] => {
   const result: Config['theme'] = {};
 
-  result.borderRadius = generateRadiusTailwind(config.prefix, config.radius);
   result.colors = generateColorTailwind(config.prefix, config.color);
-  result.extend = generateSystemTailwind(config.prefix, config.system);
+  result.extend = {
+    ...generateSystemTailwind(config.prefix, config.system),
+    borderRadius: generateRadiusTailwind(config.prefix, config.radius),
+  };
 
   return result;
 };

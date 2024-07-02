@@ -1,6 +1,6 @@
 {
   "name": "@bruhabruh/theme",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "type": "module",
   "description": "BruhaBruh Theme with CLI",
   "author": "BruhaBruh",
@@ -20,9 +20,10 @@
   "scripts": {
     "build": "tsup",
     "start": "pnpm run build --silent && node ./dist/cli.mjs",
-    "generate": "pnpm run build --silent && node ./dist/cli.mjs css -t css && node ./dist/cli.mjs tailwind -t json",
+    "generate": "pnpm run build --silent && node ./dist/cli.mjs css -t css && node ./dist/cli.mjs tailwind -t json && node ./dist/cli.mjs theme -t ts -o ./.generated/theme.light.ts",
     "generate:css": "pnpm run build --silent && node ./dist/cli.mjs css",
     "generate:tailwind": "pnpm run build --silent && node ./dist/cli.mjs tailwind",
+    "generate:theme": "pnpm run build --silent && node ./dist/cli.mjs theme",
     "lint": "pnpm run lint:js && pnpm run lint:other",
     "lint:js": "eslint . --report-unused-disable-directives",
     "lint:other": "prettier --check '**/*.{md,yaml,yml,json}'",
