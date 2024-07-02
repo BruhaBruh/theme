@@ -1,17 +1,6 @@
-export type RadiusToken =
-  | 'none'
-  | 'sm'
-  | 'base'
-  | 'md'
-  | 'lg'
-  | 'xl'
-  | '2xl'
-  | '3xl'
-  | 'full';
+import { ThemeConfig } from './config';
 
-export type RadiusDesignTokens<T extends string = RadiusToken> = Record<
-  RadiusToken | T,
+export type ThemeRadius<T extends ThemeConfig = ThemeConfig> = Record<
+  keyof T['ref']['radius'],
   string
 >;
-
-export type RadiusValue = number | `${number}px` | `${number}rem`;

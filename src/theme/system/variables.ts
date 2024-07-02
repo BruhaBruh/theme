@@ -1,13 +1,20 @@
-import { SystemDesignTokens } from '@/types/system';
+import { variable } from '@/lib/variable';
+import { ThemeSystem } from '@/types/system';
 import { Variables } from '@/types/variables';
-import { generateSystemColorVariables } from './color/variables';
 
-export const generateSystemVariables = (
-  systemTokens: SystemDesignTokens,
+export const generateSystemVariables = <T extends ThemeSystem>(
+  prefix: string | undefined,
+  system: T,
 ): Variables => {
-  const variables: Variables = {};
+  const result: Variables = {};
 
-  Object.assign(variables, generateSystemColorVariables(systemTokens.color));
+  Object.entries(system).forEach(([type, typeVariants]) => {
+    Object.entries(typeVariants).forEach(([typeVariant, variants]) => {
+      Object.entries(variants).forEach(([variant, value]) => {
+        result[variable(prefix, 'sys', type, typeVariant, variant)] = value;
+      });
+    });
+  });
 
-  return variables;
+  return result;
 };

@@ -1,4 +1,1 @@
-type Variable = string;
-type Value = string;
-
-export type Variables = Record<Variable, Value>;
+export type Variables = Record<string, string>;

@@ -1,6 +1,7 @@
-import { configToTailwind } from '@/config/to-tailwind';
+import { readConfig } from '@/config/read';
+import { generateThemesFromConfig } from '@/theme/generate-themes';
+import { generateThemeTailwind } from '@/theme/tailwind';
 import { Command, Option } from 'commander';
-import { readConfig } from '../read-config';
 import { writeToFile } from '../write-to-file';
 
 type Options = {
@@ -16,7 +17,7 @@ export const applyGenerateTailwindCommand = (cli: Command) => {
     .description('generate tailwind')
     .addOption(
       new Option('-c, --config <path>', 'path to config file').default(
-        'bruhabruh.theme.json',
+        'theme.yaml',
       ),
     )
     .addOption(
@@ -33,20 +34,40 @@ export const applyGenerateTailwindCommand = (cli: Command) => {
         .default('json'),
     )
     .action((options: Options) => {
+      // const config = readConfig(options.config);
+      // const theme = configToTailwind(config, options.spacing);
+      // if (options.type === 'console') {
+      //   process.stdout.write('```json\n');
+      //   process.stdout.write(`${theme}\n`);
+      //   process.stdout.write('```\n');
+      // }
+      // if (options.type === 'json') {
+      //   writeToFile(options.output, theme);
+      // }
+      // if (options.type === 'ts' || options.type === 'js') {
+      //   writeToFile(options.output, `export const theme = ${theme};`);
+      // }
       const config = readConfig(options.config);
 
-      const theme = configToTailwind(config, options.spacing);
+      const theme = generateThemesFromConfig(config)[config.default];
+
+      const tailwind = generateThemeTailwind(theme);
+
+      const json = JSON.stringify(tailwind, null, options.spacing);
 
       if (options.type === 'console') {
         process.stdout.write('```json\n');
-        process.stdout.write(`${theme}\n`);
+        process.stdout.write(`${json}\n`);
         process.stdout.write('```\n');
       }
       if (options.type === 'json') {
-        writeToFile(options.output, theme);
+        writeToFile(options.output, json);
       }
-      if (options.type === 'ts' || options.type === 'js') {
-        writeToFile(options.output, `export const theme = ${theme};`);
+      if (options.type === 'js') {
+        writeToFile(options.output, `export const theme = ${json};`);
+      }
+      if (options.type === 'ts') {
+        writeToFile(options.output, `export const theme = ${json} as const;`);
       }
     });
 };

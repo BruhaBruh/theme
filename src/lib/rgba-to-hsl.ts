@@ -1,16 +1,11 @@
-type RGBA = {
-  r: number;
-  g: number;
-  b: number;
-  a: number;
-};
+import { RGBObject } from 'colortranslator';
 
-export const rgbaToHsl = (rgba: RGBA): string => {
-  const { r, g, b, a } = rgba;
+export const rgbaToHsl = (rgba: Required<RGBObject>): string => {
+  const { R, G, B, A } = rgba;
 
-  const rRatio = r / 255;
-  const gRatio = g / 255;
-  const bRatio = b / 255;
+  const rRatio = R / 255;
+  const gRatio = G / 255;
+  const bRatio = B / 255;
 
   const max = Math.max(rRatio, gRatio, bRatio);
   const min = Math.min(rRatio, gRatio, bRatio);
@@ -41,7 +36,7 @@ export const rgbaToHsl = (rgba: RGBA): string => {
     h /= 6;
   }
 
-  const alpha = a.toFixed(2).replace(/\.?0*$/, '');
+  const alpha = A.toFixed(2).replace(/\.?0*$/, '');
 
   return `hsla(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%, ${alpha})`;
 };
