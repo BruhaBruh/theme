@@ -1,3 +1,4 @@
+import { kebabCase } from '@/lib/kebab-case';
 import { variable } from '@/lib/variable';
 import { ThemeRadius } from '@/types/radius';
 import { ThemeConfig as Config } from 'tailwindcss/types/config';
@@ -9,7 +10,12 @@ export const generateRadiusTailwind = <T extends ThemeRadius>(
   const result: Config['borderRadius'] = {};
 
   Object.keys(radius).forEach((variant) => {
-    result[variant] = `var(${variable(prefix, 'ref', 'radius', variant)})`;
+    if (variant === 'DEFAULT') {
+      result[variant] = `var(${variable(prefix, 'ref', 'radius', variant)})`;
+    } else {
+      result[kebabCase(variant)] =
+        `var(${variable(prefix, 'ref', 'radius', variant)})`;
+    }
   });
 
   return result;
