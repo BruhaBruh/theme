@@ -9,7 +9,10 @@ export const generateThemeTailwind = <T extends Theme>(
 ): Config['theme'] => {
   const result: Config['theme'] = {};
 
-  result.colors = generateColorTailwind(config.prefix, config.color);
+  result.colors = {
+    transparent: 'transparent',
+    ...generateColorTailwind(config.prefix, config.color),
+  };
   result.extend = {
     ...generateSystemTailwind(config.prefix, config.system),
     borderRadius: generateRadiusTailwind(config.prefix, config.radius),
