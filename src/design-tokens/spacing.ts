@@ -6,14 +6,11 @@ import { Config, ThemeConfig, ThemeName } from '@/types/config';
 import { TailwindThemeConfig } from '@/types/tailwind';
 import { Variables } from '@/types/variables';
 
-type TailwindBorderRadius = Pick<
-  Required<TailwindThemeConfig>,
-  'borderRadius'
-> & {
-  extend: Pick<Required<TailwindThemeConfig>, 'borderRadius'>;
+type TailwindSpacing = Pick<Required<TailwindThemeConfig>, 'spacing'> & {
+  extend: Pick<Required<TailwindThemeConfig>, 'spacing'>;
 };
 
-export class RadiusDesignTokens<
+export class SpacingDesignTokens<
   C extends Config = Config,
   N extends ThemeName<C> = ThemeName<C>,
   T extends ThemeConfig<C, N> = ThemeConfig<C, N>,
@@ -22,14 +19,14 @@ export class RadiusDesignTokens<
   readonly #themeName: N;
   readonly #themeConfig: T;
   readonly #variables: Variables;
-  readonly #tailwind: TailwindBorderRadius;
+  readonly #tailwind: TailwindSpacing;
 
   constructor(
     config: C,
     themeName: N,
     themeConfig: T,
     variables?: Variables,
-    tailwind?: TailwindBorderRadius,
+    tailwind?: TailwindSpacing,
   ) {
     this.#config = config;
     this.#themeName = themeName;
@@ -54,7 +51,7 @@ export class RadiusDesignTokens<
     return this.#variables;
   }
 
-  get tailwind(): TailwindBorderRadius {
+  get tailwind(): TailwindSpacing {
     return this.#tailwind;
   }
 
@@ -65,15 +62,15 @@ export class RadiusDesignTokens<
   private generateRefVariables(): Variables {
     const variables = {} as Variables;
 
-    const keys = Object.keys(this.themeConfig.ref.radius);
+    const keys = Object.keys(this.themeConfig.ref.spacing);
 
     for (let i = 0; i < keys.length; i++) {
       const variant = keys[i];
       const value = resolveReferences(
-        this.themeConfig.ref.radius[variant as string],
+        this.themeConfig.ref.spacing[variant as string],
         this.themeConfig,
       );
-      const cssVar = variable(this.config.prefix, 'ref', 'radius', variant);
+      const cssVar = variable(this.config.prefix, 'ref', 'spacing', variant);
       variables[cssVar] = value;
     }
 
@@ -83,70 +80,70 @@ export class RadiusDesignTokens<
   private generateSysVariables(): Variables {
     const variables = {} as Variables;
 
-    const keys = Object.keys(this.themeConfig.sys.radius);
+    const keys = Object.keys(this.themeConfig.sys.spacing);
 
     for (let i = 0; i < keys.length; i++) {
       const variant = keys[i];
       const value =
-        this.themeConfig.sys.radius[variant].startsWith('${') &&
-        this.themeConfig.sys.radius[variant].endsWith('}')
+        this.themeConfig.sys.spacing[variant].startsWith('${') &&
+        this.themeConfig.sys.spacing[variant].endsWith('}')
           ? `var(${variable(
               this.config.prefix,
               'ref',
-              'radius',
-              ...this.themeConfig.sys.radius[variant]
-                .substring(2, this.themeConfig.sys.radius[variant].length - 1)
+              'spacing',
+              ...this.themeConfig.sys.spacing[variant]
+                .substring(2, this.themeConfig.sys.spacing[variant].length - 1)
                 .split('.'),
             )})`
-          : this.themeConfig.sys.radius[variant];
-      const cssVar = variable(this.config.prefix, 'sys', 'radius', variant);
+          : this.themeConfig.sys.spacing[variant];
+      const cssVar = variable(this.config.prefix, 'sys', 'spacing', variant);
       variables[cssVar] = value;
     }
 
     return variables;
   }
 
-  private generateTailwind(): TailwindBorderRadius {
+  private generateTailwind(): TailwindSpacing {
     return merge(this.generateRefTailwind(), this.generateSysTailwind());
   }
 
-  private generateRefTailwind(): TailwindBorderRadius {
+  private generateRefTailwind(): TailwindSpacing {
     const tailwind = {
-      borderRadius: {},
+      spacing: {},
       extend: {
-        borderRadius: {},
+        spacing: {},
       },
-    } as TailwindBorderRadius;
+    } as TailwindSpacing;
 
-    const keys = Object.keys(this.themeConfig.ref.radius);
+    const keys = Object.keys(this.themeConfig.ref.spacing);
 
     for (let i = 0; i < keys.length; i++) {
       const variant = keys[i];
-      const cssVar = variable(this.config.prefix, 'ref', 'radius', variant);
+      const cssVar = variable(this.config.prefix, 'ref', 'spacing', variant);
       if (variant === 'DEFAULT') {
-        tailwind.borderRadius[variant] = `var(${cssVar})`;
+        tailwind.spacing[variant] = `var(${cssVar})`;
       } else {
-        tailwind.borderRadius[kebabCase(variant)] = `var(${cssVar})`;
+        tailwind.spacing[kebabCase(variant)] = `var(${cssVar})`;
       }
     }
 
     return tailwind;
   }
 
-  private generateSysTailwind(): TailwindBorderRadius {
+  private generateSysTailwind(): TailwindSpacing {
     const tailwind = {
-      borderRadius: {},
+      spacing: {},
       extend: {
-        borderRadius: {},
+        spacing: {},
       },
-    } as TailwindBorderRadius;
+    } as TailwindSpacing;
 
-    const keys = Object.keys(this.themeConfig.sys.radius);
+    const keys = Object.keys(this.themeConfig.sys.spacing);
 
     for (let i = 0; i < keys.length; i++) {
       const variant = keys[i];
-      const cssVar = variable(this.config.prefix, 'sys', 'radius', variant);
-      tailwind.extend.borderRadius[kebabCase(variant)] = `var(${cssVar})`;
+      const cssVar = variable(this.config.prefix, 'sys', 'spacing', variant);
+      tailwind.extend.spacing[kebabCase(variant)] = `var(${cssVar})`;
     }
 
     return tailwind;

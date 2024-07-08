@@ -5,6 +5,7 @@ import { TailwindThemeConfig } from '@/types/tailwind';
 import { Variables } from '@/types/variables';
 import { ColorDesignTokens } from './color';
 import { RadiusDesignTokens } from './radius';
+import { SpacingDesignTokens } from './spacing';
 
 export class ThemeDesignTokens<
   C extends Config = Config,
@@ -18,6 +19,7 @@ export class ThemeDesignTokens<
   readonly #tailwind: TailwindThemeConfig = {};
   readonly #radius: RadiusDesignTokens<C, N, T>;
   readonly #color: ColorDesignTokens<C, N, T>;
+  readonly #spacing: SpacingDesignTokens<C, N, T>;
 
   constructor(
     config: C,
@@ -35,6 +37,11 @@ export class ThemeDesignTokens<
       this.themeConfig,
     );
     this.#color = new ColorDesignTokens(
+      this.config,
+      this.themeName,
+      this.themeConfig,
+    );
+    this.#spacing = new SpacingDesignTokens(
       this.config,
       this.themeName,
       this.themeConfig,
@@ -88,12 +95,20 @@ export class ThemeDesignTokens<
   }
 
   private generateVariables(): Variables {
-    return merge(this.#radius.variables, this.#color.variables);
+    return merge(
+      this.#radius.variables,
+      this.#color.variables,
+      this.#spacing.variables,
+    );
   }
 
   private generateTailwind(): TailwindThemeConfig {
     return cleanObject(
-      merge<TailwindThemeConfig>(this.#radius.tailwind, this.#color.tailwind),
+      merge<TailwindThemeConfig>(
+        this.#radius.tailwind,
+        this.#color.tailwind,
+        this.#spacing.tailwind,
+      ),
     );
   }
 }

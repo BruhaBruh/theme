@@ -25,6 +25,12 @@ themes:
         3xl: calc(${radius} + 20px)
         full: 9999px
 
+      spacing:
+        none: 0px
+
+      z-index:
+        under: -1
+
     sys:
       color:
         border:
@@ -32,6 +38,15 @@ themes:
           secondary: ${black.200}
           info: ${blue.400}
           disabled: ${black.100}
+
+      spacing:
+        button: ${none}
+
+      radius:
+        button: ${sm}
+
+      z-index:
+        overlay: ${under}
 
   dark:
     radius: 0.75rem
@@ -55,6 +70,12 @@ themes:
         3xl: calc(${radius} + 20px)
         full: 9999px
 
+      spacing:
+        none: 0px
+
+      z-index:
+        under: -1
+
     sys:
       color:
         border:
@@ -62,3 +83,12 @@ themes:
           secondary: ${black.200}
           info: ${blue.400}
           disabled: ${black.100}
+
+      spacing:
+        button: ${none}
+
+      radius:
+        button: ${sm}
+
+      z-index:
+        overlay: ${under}

@@ -16,11 +16,17 @@ const paletteSchema = z
 
 const radiusSchema = z.record(z.string()).default({});
 
+const spacingSchema = z.record(z.string()).default({});
+
+const zIndexSchema = z.record(z.number().or(z.string())).default({});
+
 const refSchema = z
   .object({
     radius: radiusSchema,
+    spacing: spacingSchema,
+    'z-index': zIndexSchema,
   })
-  .default({ radius: {} });
+  .default({ radius: {}, spacing: {} });
 
 const sysSchema = z
   .object({
@@ -33,6 +39,9 @@ const sysSchema = z
         outline: z.record(z.string()).default({}),
       })
       .default({}),
+    radius: radiusSchema,
+    spacing: spacingSchema,
+    'z-index': zIndexSchema,
   })
   .default({ color: {} });
 
@@ -99,6 +108,8 @@ const themesSchema = z
 
     names.forEach((name) => {
       const radius = themes[name].ref.radius;
+      const spacing = themes[name].ref.spacing;
+      const zIndex = themes[name].ref['z-index'];
       const otherThemes = names.filter((t) => t !== name);
 
       otherThemes.forEach((otherTheme) => {
@@ -110,6 +121,24 @@ const themesSchema = z
             message: `theme(${otherTheme}) does not have ref.radius(${variant}) in ref.radius like theme(${name})`,
           });
         });
+
+        Object.keys(spacing).forEach((variant) => {
+          if (themes[otherTheme].ref.spacing[variant]) return;
+
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `theme(${otherTheme}) does not have ref.spacing(${variant}) in ref.spacing like theme(${name})`,
+          });
+        });
+
+        Object.keys(zIndex).forEach((variant) => {
+          if (themes[otherTheme].ref['z-index'][variant]) return;
+
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `theme(${otherTheme}) does not have ref.z-index(${variant}) in ref.z-index like theme(${name})`,
+          });
+        });
       });
     });
   })
@@ -118,6 +147,45 @@ const themesSchema = z
 
     names.forEach((name) => {
       const otherThemes = names.filter((t) => t !== name);
+
+      const radius = themes[name].sys.radius;
+      otherThemes.forEach((otherTheme) => {
+        Object.keys(radius).forEach((variant) => {
+          if (!themes[otherTheme].sys.radius[variant]) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `theme(${otherTheme}) does not have sys.radius(${variant}) in sys.radius like theme(${name})`,
+            });
+            return;
+          }
+        });
+      });
+
+      const spacing = themes[name].sys.spacing;
+      otherThemes.forEach((otherTheme) => {
+        Object.keys(spacing).forEach((variant) => {
+          if (!themes[otherTheme].sys.spacing[variant]) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `theme(${otherTheme}) does not have sys.spacing(${variant}) in sys.spacing like theme(${name})`,
+            });
+            return;
+          }
+        });
+      });
+
+      const zIndex = themes[name].sys['z-index'];
+      otherThemes.forEach((otherTheme) => {
+        Object.keys(zIndex).forEach((variant) => {
+          if (!themes[otherTheme].sys['z-index'][variant]) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `theme(${otherTheme}) does not have sys.z-index(${variant}) in sys.z-index like theme(${name})`,
+            });
+            return;
+          }
+        });
+      });
 
       const textColor = themes[name].sys.color.text;
       otherThemes.forEach((otherTheme) => {

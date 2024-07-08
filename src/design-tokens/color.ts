@@ -127,7 +127,14 @@ export class ColorDesignTokens<
         const variant = colorKeys[j];
         const value =
           colors[variant].startsWith('${') && colors[variant].endsWith('}')
-            ? `var(${variable(this.config.prefix, 'ref', 'color', ...colors[variant].substring(2, colors[variant].length - 1).split('.'))})`
+            ? `var(${variable(
+                this.config.prefix,
+                'ref',
+                'color',
+                ...colors[variant]
+                  .substring(2, colors[variant].length - 1)
+                  .split('.'),
+              )})`
             : colors[variant];
 
         const cssVar = variable(
@@ -145,7 +152,7 @@ export class ColorDesignTokens<
   }
 
   private generateTailwind(): TailwindColor {
-    return merge(this.generateRefTailwind());
+    return merge(this.generateRefTailwind(), this.generateSysTailwind());
   }
 
   private generateRefTailwind(): TailwindColor {
@@ -190,6 +197,52 @@ export class ColorDesignTokens<
             >),
             [kebabCase(variant)]: `var(${cssVar})`,
           };
+        }
+      }
+    }
+
+    return tailwind;
+  }
+
+  private generateSysTailwind(): TailwindColor {
+    const tailwind = {
+      colors: {},
+      extend: {
+        backgroundColor: {},
+        textColor: {},
+        borderColor: {},
+        outlineColor: {},
+        ringColor: {},
+      },
+    } as TailwindColor;
+
+    const keys = Object.keys(this.themeConfig.sys.color);
+
+    for (let i = 0; i < keys.length; i++) {
+      const colorType = keys[i] as keyof ThemeConfig['sys']['color'];
+      const colors = this.themeConfig.sys.color[colorType];
+
+      const colorKeys = Object.keys(colors);
+
+      for (let j = 0; j < colorKeys.length; j++) {
+        const variant = colorKeys[j];
+        const cssVar = variable(
+          this.config.prefix,
+          'sys',
+          'color',
+          colorType,
+          variant,
+        );
+        if (colorType === 'text') {
+          tailwind.extend.textColor[variant] = `var(${cssVar})`;
+        } else if (colorType === 'background') {
+          tailwind.extend.backgroundColor[variant] = `var(${cssVar})`;
+        } else if (colorType === 'ring') {
+          tailwind.extend.ringColor[variant] = `var(${cssVar})`;
+        } else if (colorType === 'border') {
+          tailwind.extend.borderColor[variant] = `var(${cssVar})`;
+        } else if (colorType === 'outline') {
+          tailwind.extend.outlineColor[variant] = `var(${cssVar})`;
         }
       }
     }
