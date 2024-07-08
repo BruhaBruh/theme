@@ -1,5 +1,5 @@
 import { readConfig } from '@/config/read';
-import { generateCSSFromConfig } from '@/theme/generate-css';
+import { DesignTokens } from '@/design-tokens';
 import { Command, Option } from 'commander';
 import { writeToFile } from '../write-to-file';
 
@@ -33,19 +33,11 @@ export const applyGenerateCSSCommand = (cli: Command) => {
         .default('css'),
     )
     .action((options: Options) => {
-      // const config = readConfig(options.config);
-      // const theme = configToCSS(config, options.spacing);
-      // if (options.type === 'console') {
-      //   process.stdout.write('```css\n');
-      //   process.stdout.write(`${theme}\n`);
-      //   process.stdout.write('```\n');
-      // }
-      // if (options.type === 'css') {
-      //   writeToFile(options.output, theme);
-      // }
       const config = readConfig(options.config);
 
-      const css = generateCSSFromConfig(config, options.spacing);
+      const designTokens = new DesignTokens(config);
+
+      const css = designTokens.toCSS(options.spacing);
 
       if (options.type === 'console') {
         process.stdout.write('```css\n');

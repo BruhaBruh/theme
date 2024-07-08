@@ -19,9 +19,9 @@ export default defineConfig([
     format: ['esm'],
     dts: false,
     splitting: false,
-    sourcemap: false,
+    sourcemap: true,
     clean: true,
-    minify: true,
+    minify: false,
     outExtension: () => ({ js: '.mjs' }),
   },
 ]);

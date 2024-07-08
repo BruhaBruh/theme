@@ -1,6 +1,5 @@
 import { readConfig } from '@/config/read';
-import { generateThemesFromConfig } from '@/theme/generate-themes';
-import { generateThemeTailwind } from '@/theme/tailwind';
+import { DesignTokens } from '@/design-tokens';
 import { Command, Option } from 'commander';
 import { writeToFile } from '../write-to-file';
 
@@ -36,9 +35,9 @@ export const applyGenerateTailwindCommand = (cli: Command) => {
     .action((options: Options) => {
       const config = readConfig(options.config);
 
-      const theme = generateThemesFromConfig(config)[config.default];
+      const tokens = new DesignTokens(config);
 
-      const tailwind = generateThemeTailwind(theme);
+      const tailwind = tokens.toTailwind();
 
       const json = JSON.stringify(tailwind, null, options.spacing);
 

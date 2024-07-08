@@ -189,7 +189,7 @@ const themesSchema = z
 export const configSchema = z
   .object({
     default: z.string(),
-    prefix: z.string().optional(),
+    prefix: z.string().default(''),
     themes: themesSchema,
   })
   .superRefine((cfg, ctx) => {

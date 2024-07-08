@@ -1,13 +1,11 @@
-import { ThemeConfig } from '@/types/config';
-
 export const resolveReference = (
   reference: string,
-  config: ThemeConfig,
+  object: Record<string, unknown>,
   defaultValue?: string,
 ): string => {
   const keys = reference.split('.');
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let result: any = config;
+  let result: any = object;
 
   for (const key of keys) {
     result = result[key];
@@ -22,9 +20,9 @@ export const resolveReference = (
 
 export const resolveReferences = (
   value: string,
-  config: ThemeConfig,
+  object: Record<string, unknown>,
 ): string => {
   return value.replace(/\${(.*?)}/g, (match, path) => {
-    return resolveReference(path, config, match);
+    return resolveReference(path, object, match);
   });
 };

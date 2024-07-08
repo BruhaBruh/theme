@@ -1,5 +1,5 @@
 import { readConfig } from '@/config/read';
-import { generateThemesFromConfig } from '@/theme/generate-themes';
+import { DesignTokens } from '@/design-tokens';
 import { Command, Option } from 'commander';
 import { writeToFile } from '../write-to-file';
 
@@ -46,7 +46,9 @@ export const applyGenerateThemeCommand = (cli: Command) => {
         return process.exit(1);
       }
 
-      const theme = generateThemesFromConfig(config)[config.default];
+      const designTokens = new DesignTokens(config);
+
+      const theme = designTokens.themes[options.theme].tailwind;
 
       const json = JSON.stringify(theme, null, 2);
 

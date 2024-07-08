@@ -1,5 +1,3 @@
-import { ThemeConfig } from './config';
-
 export const colorVariantsByAlpha = [
   50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600,
 ] as const;
@@ -20,8 +18,3 @@ export type ColorVariantByDarken = (typeof colorVariantsByDarken)[number];
 export type ColorVariant = ColorVariantByAlpha | ColorVariantByDarken | string;
 
 export type Color = Record<ColorVariant, string>;
-
-export type ThemeColor<T extends ThemeConfig = ThemeConfig> = Record<
-  keyof T['palette'],
-  Color
->;
