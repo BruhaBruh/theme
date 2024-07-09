@@ -1,4 +1,4 @@
-export const resolveReference = (
+const resolveReference = (
   reference: string,
   object: Record<string, unknown>,
   defaultValue?: string,
@@ -18,7 +18,7 @@ export const resolveReference = (
   return result.toString();
 };
 
-export const resolveReferences = (
+export const replaceReferences = (
   value: string,
   object: Record<string, unknown>,
 ): string => {

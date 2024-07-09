@@ -22,11 +22,12 @@ const zIndexSchema = z.record(z.number().or(z.string())).default({});
 
 const refSchema = z
   .object({
+    palette: paletteSchema,
     radius: radiusSchema,
     spacing: spacingSchema,
     'z-index': zIndexSchema,
   })
-  .default({ radius: {}, spacing: {} });
+  .default({ palette: {}, radius: {}, spacing: {} });
 
 const sysSchema = z
   .object({
@@ -47,7 +48,7 @@ const sysSchema = z
 
 const themeSchema = z.object({
   radius: z.string().default('0.5rem'),
-  palette: paletteSchema,
+  spacing: z.string().default('1rem'),
   ref: refSchema,
   sys: sysSchema,
 });
@@ -58,25 +59,25 @@ const themesSchema = z
     const names = Object.keys(themes);
 
     names.forEach((name) => {
-      const palette = themes[name].palette;
+      const palette = themes[name].ref.palette;
       const otherThemes = names.filter((t) => t !== name);
 
       otherThemes.forEach((otherTheme) => {
         Object.keys(palette).forEach((color) => {
           const paletteColor = palette[color];
-          if (!themes[otherTheme].palette[color]) {
+          if (!themes[otherTheme].ref.palette[color]) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: `theme(${otherTheme}) does not have color(${color}) in palette like theme(${name})`,
+              message: `theme(${otherTheme}) does not have color(${color}) in ref.palette like theme(${name})`,
             });
             return;
           }
           if (
-            typeof paletteColor !== typeof themes[otherTheme].palette[color]
+            typeof paletteColor !== typeof themes[otherTheme].ref.palette[color]
           ) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: `theme(${otherTheme}) must be same type(${typeof paletteColor}) of color(${color}) in palette like theme(${name})`,
+              message: `theme(${otherTheme}) must be same type(${typeof paletteColor}) of color(${color}) in ref.palette like theme(${name})`,
             });
             return;
           }
@@ -88,7 +89,7 @@ const themesSchema = z
           )
             return;
 
-          const otherColor = themes[otherTheme].palette[color] as Record<
+          const otherColor = themes[otherTheme].ref.palette[color] as Record<
             string,
             string
           >;
@@ -96,7 +97,7 @@ const themesSchema = z
             if (otherColor[variant]) return;
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: `theme(${otherTheme}) does not have color(${color}.${variant}) in palette like theme(${name})`,
+              message: `theme(${otherTheme}) does not have color(${color}.${variant}) in ref.palette like theme(${name})`,
             });
           });
         });
@@ -107,11 +108,9 @@ const themesSchema = z
     const names = Object.keys(themes);
 
     names.forEach((name) => {
-      const radius = themes[name].ref.radius;
-      const spacing = themes[name].ref.spacing;
-      const zIndex = themes[name].ref['z-index'];
       const otherThemes = names.filter((t) => t !== name);
 
+      const radius = themes[name].ref.radius;
       otherThemes.forEach((otherTheme) => {
         Object.keys(radius).forEach((variant) => {
           if (themes[otherTheme].ref.radius[variant]) return;
@@ -122,6 +121,7 @@ const themesSchema = z
           });
         });
 
+        const spacing = themes[name].ref.spacing;
         Object.keys(spacing).forEach((variant) => {
           if (themes[otherTheme].ref.spacing[variant]) return;
 
@@ -131,6 +131,7 @@ const themesSchema = z
           });
         });
 
+        const zIndex = themes[name].ref['z-index'];
         Object.keys(zIndex).forEach((variant) => {
           if (themes[otherTheme].ref['z-index'][variant]) return;
 

@@ -1,6 +1,6 @@
 import { kebabCase } from '@/lib/kebab-case';
 import { merge } from '@/lib/merge';
-import { resolveReferences } from '@/lib/resolve-reference';
+import { replaceReferences } from '@/lib/replace-references';
 import { variable } from '@/lib/variable';
 import { Config, ThemeConfig, ThemeName } from '@/types/config';
 import { TailwindThemeConfig } from '@/types/tailwind';
@@ -69,12 +69,12 @@ export class RadiusDesignTokens<
 
     for (let i = 0; i < keys.length; i++) {
       const variant = keys[i];
-      const value = resolveReferences(
-        this.themeConfig.ref.radius[variant as string],
+      const key = this.variableKey('ref', variant);
+      const value = replaceReferences(
+        this.themeConfig.ref.radius[variant],
         this.themeConfig,
       );
-      const cssVar = variable(this.config.prefix, 'ref', 'radius', variant);
-      variables[cssVar] = value;
+      variables[key] = value;
     }
 
     return variables;
@@ -87,20 +87,12 @@ export class RadiusDesignTokens<
 
     for (let i = 0; i < keys.length; i++) {
       const variant = keys[i];
-      const value =
-        this.themeConfig.sys.radius[variant].startsWith('${') &&
-        this.themeConfig.sys.radius[variant].endsWith('}')
-          ? `var(${variable(
-              this.config.prefix,
-              'ref',
-              'radius',
-              ...this.themeConfig.sys.radius[variant]
-                .substring(2, this.themeConfig.sys.radius[variant].length - 1)
-                .split('.'),
-            )})`
-          : this.themeConfig.sys.radius[variant];
-      const cssVar = variable(this.config.prefix, 'sys', 'radius', variant);
-      variables[cssVar] = value;
+      const key = this.variableKey('sys', variant);
+      const rawValue = this.themeConfig.sys.radius[variant];
+      const value = this.isReference(rawValue)
+        ? this.variableKey('ref', this.getReference(rawValue), true)
+        : rawValue;
+      variables[key] = value;
     }
 
     return variables;
@@ -122,11 +114,11 @@ export class RadiusDesignTokens<
 
     for (let i = 0; i < keys.length; i++) {
       const variant = keys[i];
-      const cssVar = variable(this.config.prefix, 'ref', 'radius', variant);
+      const value = this.variableKey('ref', variant, true);
       if (variant === 'DEFAULT') {
-        tailwind.borderRadius[variant] = `var(${cssVar})`;
+        tailwind.borderRadius[variant] = value;
       } else {
-        tailwind.borderRadius[kebabCase(variant)] = `var(${cssVar})`;
+        tailwind.borderRadius[kebabCase(variant)] = value;
       }
     }
 
@@ -145,10 +137,29 @@ export class RadiusDesignTokens<
 
     for (let i = 0; i < keys.length; i++) {
       const variant = keys[i];
-      const cssVar = variable(this.config.prefix, 'sys', 'radius', variant);
-      tailwind.extend.borderRadius[kebabCase(variant)] = `var(${cssVar})`;
+      const value = this.variableKey('sys', variant, true);
+      tailwind.extend.borderRadius[kebabCase(variant)] = value;
     }
 
     return tailwind;
+  }
+
+  private variableKey(
+    type: 'ref' | 'sys',
+    variant: string,
+    withVar = false,
+  ): string {
+    return variable({
+      withVar,
+      parts: [this.config.prefix, type, 'radius', variant],
+    });
+  }
+
+  private isReference(value: string): boolean {
+    return /^\$\{.*\}$/.test(value);
+  }
+
+  private getReference(value: string): string {
+    return value.substring(2, value.length - 1);
   }
 }

@@ -1,6 +1,6 @@
 import { kebabCase } from '@/lib/kebab-case';
 import { merge } from '@/lib/merge';
-import { resolveReferences } from '@/lib/resolve-reference';
+import { replaceReferences } from '@/lib/replace-references';
 import { variable } from '@/lib/variable';
 import { Config, ThemeConfig, ThemeName } from '@/types/config';
 import { TailwindThemeConfig } from '@/types/tailwind';
@@ -66,12 +66,12 @@ export class SpacingDesignTokens<
 
     for (let i = 0; i < keys.length; i++) {
       const variant = keys[i];
-      const value = resolveReferences(
-        this.themeConfig.ref.spacing[variant as string],
+      const key = this.variableKey('ref', variant);
+      const value = replaceReferences(
+        this.themeConfig.ref.spacing[variant],
         this.themeConfig,
       );
-      const cssVar = variable(this.config.prefix, 'ref', 'spacing', variant);
-      variables[cssVar] = value;
+      variables[key] = value;
     }
 
     return variables;
@@ -84,20 +84,13 @@ export class SpacingDesignTokens<
 
     for (let i = 0; i < keys.length; i++) {
       const variant = keys[i];
-      const value =
-        this.themeConfig.sys.spacing[variant].startsWith('${') &&
-        this.themeConfig.sys.spacing[variant].endsWith('}')
-          ? `var(${variable(
-              this.config.prefix,
-              'ref',
-              'spacing',
-              ...this.themeConfig.sys.spacing[variant]
-                .substring(2, this.themeConfig.sys.spacing[variant].length - 1)
-                .split('.'),
-            )})`
-          : this.themeConfig.sys.spacing[variant];
-      const cssVar = variable(this.config.prefix, 'sys', 'spacing', variant);
-      variables[cssVar] = value;
+      const key = this.variableKey('sys', variant);
+      const rawValue = this.themeConfig.sys.spacing[variant];
+      const value = this.isReference(rawValue)
+        ? this.variableKey('ref', this.getReference(rawValue), true)
+        : rawValue;
+
+      variables[key] = value;
     }
 
     return variables;
@@ -119,11 +112,11 @@ export class SpacingDesignTokens<
 
     for (let i = 0; i < keys.length; i++) {
       const variant = keys[i];
-      const cssVar = variable(this.config.prefix, 'ref', 'spacing', variant);
+      const value = this.variableKey('ref', variant, true);
       if (variant === 'DEFAULT') {
-        tailwind.spacing[variant] = `var(${cssVar})`;
+        tailwind.spacing[variant] = value;
       } else {
-        tailwind.spacing[kebabCase(variant)] = `var(${cssVar})`;
+        tailwind.spacing[kebabCase(variant)] = value;
       }
     }
 
@@ -142,10 +135,29 @@ export class SpacingDesignTokens<
 
     for (let i = 0; i < keys.length; i++) {
       const variant = keys[i];
-      const cssVar = variable(this.config.prefix, 'sys', 'spacing', variant);
-      tailwind.extend.spacing[kebabCase(variant)] = `var(${cssVar})`;
+      const value = this.variableKey('sys', variant, true);
+      tailwind.extend.spacing[kebabCase(variant)] = value;
     }
 
     return tailwind;
+  }
+
+  private variableKey(
+    type: 'ref' | 'sys',
+    variant: string,
+    withVar = false,
+  ): string {
+    return variable({
+      withVar,
+      parts: [this.config.prefix, type, 'spacing', variant],
+    });
+  }
+
+  private isReference(value: string): boolean {
+    return /^\$\{.*\}$/.test(value);
+  }
+
+  private getReference(value: string): string {
+    return value.substring(2, value.length - 1);
   }
 }

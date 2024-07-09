@@ -1,6 +1,7 @@
 import { kebabCase } from '@/lib/kebab-case';
 import { merge } from '@/lib/merge';
 import { normalize } from '@/lib/normalize';
+import { replaceDots } from '@/lib/replace-dots';
 import { variable } from '@/lib/variable';
 import { withAlpha } from '@/lib/with-alpha';
 import { withSubtractTone } from '@/lib/with-subtract-tone';
@@ -87,7 +88,7 @@ export class ColorDesignTokens<
   private generateRefVariables(): Variables {
     const variables = {} as Variables;
 
-    const keys = Object.keys(this.themeConfig.palette);
+    const keys = Object.keys(this.themeConfig.ref.palette);
 
     for (let i = 0; i < keys.length; i++) {
       const name = keys[i];
@@ -97,15 +98,9 @@ export class ColorDesignTokens<
 
       for (let j = 0; j < colorKeys.length; j++) {
         const variant = colorKeys[j];
+        const key = this.variableKey('ref', name, variant);
         const value = this.#colorPalette[name][variant];
-        const cssVar = variable(
-          this.config.prefix,
-          'ref',
-          'color',
-          name,
-          variant,
-        );
-        variables[cssVar] = value;
+        variables[key] = value;
       }
     }
 
@@ -125,26 +120,13 @@ export class ColorDesignTokens<
 
       for (let j = 0; j < colorKeys.length; j++) {
         const variant = colorKeys[j];
-        const value =
-          colors[variant].startsWith('${') && colors[variant].endsWith('}')
-            ? `var(${variable(
-                this.config.prefix,
-                'ref',
-                'color',
-                ...colors[variant]
-                  .substring(2, colors[variant].length - 1)
-                  .split('.'),
-              )})`
-            : colors[variant];
 
-        const cssVar = variable(
-          this.config.prefix,
-          'sys',
-          'color',
-          colorType,
-          variant,
-        );
-        variables[cssVar] = value;
+        const key = this.variableKey('sys', '', variant);
+        const rawValue = colors[variant];
+        const value = this.isReference(rawValue)
+          ? this.variableKey('sys', '', this.getReference(rawValue), true)
+          : rawValue;
+        variables[key] = value;
       }
     }
 
@@ -167,7 +149,7 @@ export class ColorDesignTokens<
       },
     } as TailwindColor;
 
-    const keys = Object.keys(this.themeConfig.palette);
+    const keys = Object.keys(this.themeConfig.ref.palette);
 
     for (let i = 0; i < keys.length; i++) {
       const name = keys[i];
@@ -177,17 +159,11 @@ export class ColorDesignTokens<
 
       for (let j = 0; j < colorKeys.length; j++) {
         const variant = colorKeys[j];
-        const cssVar = variable(
-          this.config.prefix,
-          'ref',
-          'color',
-          name,
-          variant,
-        );
+        const value = this.variableKey('ref', name, variant, true);
         if (typeof tailwind.colors[kebabCase(name)] === 'string') {
           tailwind.colors[kebabCase(name)] = {
             DEFAULT: tailwind.colors[kebabCase(name)],
-            [kebabCase(variant)]: `var(${cssVar})`,
+            [kebabCase(variant)]: value,
           };
         } else {
           tailwind.colors[kebabCase(name)] = {
@@ -195,7 +171,7 @@ export class ColorDesignTokens<
               string,
               string
             >),
-            [kebabCase(variant)]: `var(${cssVar})`,
+            [kebabCase(variant)]: value,
           };
         }
       }
@@ -226,23 +202,17 @@ export class ColorDesignTokens<
 
       for (let j = 0; j < colorKeys.length; j++) {
         const variant = colorKeys[j];
-        const cssVar = variable(
-          this.config.prefix,
-          'sys',
-          'color',
-          colorType,
-          variant,
-        );
+        const value = this.variableKey('sys', colorType, variant, true);
         if (colorType === 'text') {
-          tailwind.extend.textColor[variant] = `var(${cssVar})`;
+          tailwind.extend.textColor[variant] = value;
         } else if (colorType === 'background') {
-          tailwind.extend.backgroundColor[variant] = `var(${cssVar})`;
+          tailwind.extend.backgroundColor[variant] = value;
         } else if (colorType === 'ring') {
-          tailwind.extend.ringColor[variant] = `var(${cssVar})`;
+          tailwind.extend.ringColor[variant] = value;
         } else if (colorType === 'border') {
-          tailwind.extend.borderColor[variant] = `var(${cssVar})`;
+          tailwind.extend.borderColor[variant] = value;
         } else if (colorType === 'outline') {
-          tailwind.extend.outlineColor[variant] = `var(${cssVar})`;
+          tailwind.extend.outlineColor[variant] = value;
         }
       }
     }
@@ -253,11 +223,11 @@ export class ColorDesignTokens<
   private generateColorPalette(): ThemeColor<T> {
     const result = {} as ThemeColor;
 
-    const keys = Object.keys(this.themeConfig.palette);
+    const keys = Object.keys(this.themeConfig.ref.palette);
 
     for (let i = 0; i < keys.length; i++) {
       const name = keys[i];
-      const rawColor = this.themeConfig.palette[name];
+      const rawColor = this.themeConfig.ref.palette[name];
       let color: Color;
       if (typeof rawColor === 'string') {
         color = this.generateColor(name.toLowerCase(), rawColor);
@@ -349,5 +319,28 @@ export class ColorDesignTokens<
     }
 
     return result;
+  }
+
+  private variableKey(
+    type: 'ref' | 'sys',
+    name: string,
+    variant: string,
+    withVar = false,
+  ): string {
+    return replaceDots(
+      variable({
+        withVar,
+        parts: [this.config.prefix, type, 'color', name, variant],
+      }),
+      true,
+    ).replace('..', '\\.');
+  }
+
+  private isReference(value: string): boolean {
+    return /^\$\{.*\}$/.test(value);
+  }
+
+  private getReference(value: string): string {
+    return value.substring(2, value.length - 1);
   }
 }
