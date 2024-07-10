@@ -201,7 +201,7 @@ export class ColorDesignTokens<
       const colorKeys = Object.keys(colors);
 
       for (let j = 0; j < colorKeys.length; j++) {
-        const variant = colorKeys[j];
+        const variant = kebabCase(colorKeys[j]);
         const value = this.variableKey('sys', colorType, variant, true);
         if (colorType === 'text') {
           tailwind.extend.textColor[variant] = value;
