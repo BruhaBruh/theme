@@ -121,7 +121,7 @@ export class ColorDesignTokens<
       for (let j = 0; j < colorKeys.length; j++) {
         const variant = colorKeys[j];
 
-        const key = this.variableKey('sys', '', variant);
+        const key = this.variableKey('sys', colorType, variant);
         const rawValue = colors[variant];
         const value = this.isReference(rawValue)
           ? this.variableKey('ref', '', this.getReference(rawValue), true)
