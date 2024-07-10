@@ -134,7 +134,26 @@ export class ColorDesignTokens<
   }
 
   private generateTailwind(): TailwindColor {
-    return merge(this.generateRefTailwind(), this.generateSysTailwind());
+    return merge(
+      this.generateDefaultTailwind(),
+      this.generateRefTailwind(),
+      this.generateSysTailwind(),
+    );
+  }
+
+  private generateDefaultTailwind(): TailwindColor {
+    return {
+      colors: {
+        transparent: 'transparent',
+      },
+      extend: {
+        backgroundColor: {},
+        textColor: {},
+        borderColor: {},
+        outlineColor: {},
+        ringColor: {},
+      },
+    };
   }
 
   private generateRefTailwind(): TailwindColor {
