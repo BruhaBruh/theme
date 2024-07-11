@@ -2,6 +2,7 @@ import { kebabCase } from '@/lib/kebab-case';
 import { merge } from '@/lib/merge';
 import { normalize } from '@/lib/normalize';
 import { replaceDots } from '@/lib/replace-dots';
+import { replaceReferences } from '@/lib/replace-references';
 import { variable } from '@/lib/variable';
 import { withAlpha } from '@/lib/with-alpha';
 import { withSubtractTone } from '@/lib/with-subtract-tone';
@@ -123,9 +124,9 @@ export class ColorDesignTokens<
 
         const key = this.variableKey('sys', colorType, variant);
         const rawValue = colors[variant];
-        const value = this.isReference(rawValue)
-          ? this.variableKey('ref', '', this.getReference(rawValue), true)
-          : rawValue;
+        const value = replaceReferences(rawValue, (ref) =>
+          this.variableKey('ref', '', ref, true),
+        );
         variables[key] = value;
       }
     }
@@ -353,13 +354,5 @@ export class ColorDesignTokens<
       }),
       true,
     ).replace('..', '\\.');
-  }
-
-  private isReference(value: string): boolean {
-    return /^\$\{.*\}$/.test(value);
-  }
-
-  private getReference(value: string): string {
-    return value.substring(2, value.length - 1);
   }
 }

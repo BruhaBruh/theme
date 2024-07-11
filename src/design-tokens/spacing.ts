@@ -1,6 +1,7 @@
 import { kebabCase } from '@/lib/kebab-case';
 import { merge } from '@/lib/merge';
 import { replaceReferences } from '@/lib/replace-references';
+import { resolveReference } from '@/lib/resolve-reference';
 import { variable } from '@/lib/variable';
 import { Config, ThemeConfig, ThemeName } from '@/types/config';
 import { TailwindThemeConfig } from '@/types/tailwind';
@@ -69,7 +70,7 @@ export class SpacingDesignTokens<
       const key = this.variableKey('ref', variant);
       const value = replaceReferences(
         this.themeConfig.ref.spacing[variant],
-        this.themeConfig,
+        (ref, match) => resolveReference(ref, this.themeConfig, match),
       );
       variables[key] = value;
     }
@@ -86,10 +87,9 @@ export class SpacingDesignTokens<
       const variant = keys[i];
       const key = this.variableKey('sys', variant);
       const rawValue = this.themeConfig.sys.spacing[variant];
-      const value = this.isReference(rawValue)
-        ? this.variableKey('ref', this.getReference(rawValue), true)
-        : rawValue;
-
+      const value = replaceReferences(rawValue, (ref) =>
+        this.variableKey('ref', ref, true),
+      );
       variables[key] = value;
     }
 
@@ -151,13 +151,5 @@ export class SpacingDesignTokens<
       withVar,
       parts: [this.config.prefix, type, 'spacing', variant],
     });
-  }
-
-  private isReference(value: string): boolean {
-    return /^\$\{.*\}$/.test(value);
-  }
-
-  private getReference(value: string): string {
-    return value.substring(2, value.length - 1);
   }
 }
