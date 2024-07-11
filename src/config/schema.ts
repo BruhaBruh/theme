@@ -255,12 +255,42 @@ const themesSchema = z
     });
   });
 
-export const configSchema = z
-  .object({
-    default: z.string(),
-    prefix: z.string().default(''),
-    themes: themesSchema,
-  })
+export const configSchema = z.object({
+  default: z.string(),
+  prefix: z.string().default(''),
+  content: z.string().default('./themes/*.theme.yaml'),
+  output: z
+    .object({
+      all: z
+        .object({
+          css: z.string().nullish(),
+          json: z.string().nullish(),
+          js: z.string().nullish(),
+          ts: z.string().nullish(),
+        })
+        .default({}),
+      themes: z
+        .record(
+          z
+            .object({
+              css: z.string().nullish(),
+              json: z.string().nullish(),
+              js: z.string().nullish(),
+              ts: z.string().nullish(),
+            })
+            .default({}),
+        )
+        .default({}),
+    })
+    .default({ all: {}, themes: {} }),
+});
+
+export const configWithThemesSchema = configSchema
+  .merge(
+    z.object({
+      themes: themesSchema,
+    }),
+  )
   .superRefine((cfg, ctx) => {
     if (Object.keys(cfg.themes).includes(cfg.default)) return;
     ctx.addIssue({

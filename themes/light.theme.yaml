@@ -1,0 +1,146 @@
+radius: 0.75rem # 12px
+spacing: 0.25rem # 8px
+
+ref:
+  palette:
+    white: '#FFFFFF'
+    black: '#00030e'
+    blue: '#3772FF'
+    green: '#20BF55'
+    yellow:
+      darkenRatio: 38
+      source: '#F0E100'
+    red:
+      source: '#BA1F33'
+
+  radius:
+    none: 0px
+    3xs: calc(${radius} - 12px)
+    2xs: calc(${radius} - 8px)
+    xs: calc(${radius} - 4px)
+    sm: calc(${radius} - 2px)
+    DEFAULT: ${radius}
+    md: calc(${radius} + 2px)
+    lg: calc(${radius} + 4px)
+    xl: calc(${radius} + 8px)
+    2xl: calc(${radius} + 12px)
+    3xl: calc(${radius} + 20px)
+    full: 9999px
+
+  spacing:
+    0: 0px
+    0.25: calc(${spacing} / 4)
+    0.5: calc(${spacing} / 2)
+    1: ${spacing}
+    2: calc(${spacing} * 2)
+    3: calc(${spacing} * 3)
+    4: calc(${spacing} * 4)
+    5: calc(${spacing} * 5)
+    6: calc(${spacing} * 6)
+    7: calc(${spacing} * 7)
+    8: calc(${spacing} * 8)
+    9: calc(${spacing} * 9)
+    10: calc(${spacing} * 10)
+    11: calc(${spacing} * 11)
+    12: calc(${spacing} * 12)
+    14: calc(${spacing} * 13)
+    16: calc(${spacing} * 16)
+    20: calc(${spacing} * 20)
+    24: calc(${spacing} * 24)
+    28: calc(${spacing} * 28)
+    32: calc(${spacing} * 32)
+    36: calc(${spacing} * 36)
+    40: calc(${spacing} * 40)
+    44: calc(${spacing} * 44)
+    48: calc(${spacing} * 48)
+    52: calc(${spacing} * 52)
+    56: calc(${spacing} * 56)
+    60: calc(${spacing} * 60)
+    64: calc(${spacing} * 64)
+    72: calc(${spacing} * 72)
+    80: calc(${spacing} * 80)
+    96: calc(${spacing} * 96)
+
+sys:
+  color:
+    background:
+      background: ${white.1000}
+      primary: ${black.1000}
+      primaryHover: ${black.950}
+      secondary: ${black.200}
+      secondaryHover: ${black.250}
+      info: ${blue.700}
+      infoHover: ${blue.800}
+      infoSubdued: ${blue.300}
+      infoSubduedHover: ${blue.400}
+      success: ${green.600}
+      successHover: ${green.650}
+      successSubdued: ${green.300}
+      successSubduedHover: ${green.400}
+      caution: ${yellow.600}
+      cautionHover: ${yellow.650}
+      cautionSubdued: ${yellow.300}
+      cautionSubduedHover: ${yellow.350}
+      critical: ${red.650}
+      criticalHover: ${red.700}
+      criticalSubdued: ${red.300}
+      criticalSubduedHover: ${red.400}
+      disabled: ${black.200}
+    text:
+      foreground: ${black.1000}
+      secondary: ${black.900}
+      info: ${blue.700}
+      success: ${green.850}
+      caution: ${yellow.1000}
+      critical: ${red.700}
+      disabled: ${black.800}
+      placeholder: ${black.700}
+      onPrimary: ${white.1000}
+      onSecondary: ${black.1000}
+      onInfo: ${white.1000}
+      onInfoSubdued: ${black.1000}
+      onSuccess: ${black.1000}
+      onSuccessSubdued: ${black.1000}
+      onCaution: ${black.1000}
+      onCautionSubdued: ${black.1000}
+      onCritical: ${white.1000}
+      onCriticalSubdued: ${black.1000}
+      onDisabled: ${black.800}
+    border:
+      primary: ${black.400}
+      secondary: ${black.300}
+      info: ${blue.400}
+      success: ${green.400}
+      caution: ${yellow.400}
+      critical: ${red.400}
+      disabled: ${black.200}
+    ring:
+      primary: ${black.400}
+      secondary: ${black.300}
+      info: ${blue.400}
+      success: ${green.400}
+      caution: ${yellow.400}
+      critical: ${red.400}
+      disabled: ${black.200}
+    outline:
+      primary: ${black.400}
+      secondary: ${black.300}
+      info: ${blue.400}
+      success: ${green.400}
+      caution: ${yellow.400}
+      critical: ${red.400}
+      disabled: ${black.200}
+
+  spacing:
+    3xs: ${0.5}
+    2xs: ${1}
+    xs: ${2}
+    sm: ${3}
+    md: ${4}
+    lg: ${6}
+    xl: ${8}
+    2xl: ${10}
+    3xl: ${12}
+    4xl: ${16}
+    5xl: ${20}
+    6xl: ${24}

@@ -1,6 +1,6 @@
 {
   "name": "@bruhabruh/theme",
-  "version": "2.5.4",
+  "version": "2.6.0",
   "type": "module",
   "description": "BruhaBruh Theme with CLI",
   "author": "BruhaBruh",
@@ -19,11 +19,7 @@
   "bin": "./dist/cli.mjs",
   "scripts": {
     "build": "tsup",
-    "start": "pnpm run build --silent && node ./dist/cli.mjs",
-    "generate": "pnpm run build --silent && node ./dist/cli.mjs css -t css && node ./dist/cli.mjs tailwind -t json && node ./dist/cli.mjs theme -t ts -o ./.generated/theme.light.ts",
-    "generate:css": "pnpm run build --silent && node ./dist/cli.mjs css",
-    "generate:tailwind": "pnpm run build --silent && node ./dist/cli.mjs tailwind",
-    "generate:theme": "pnpm run build --silent && node ./dist/cli.mjs theme",
+    "generate": "pnpm run build --silent && node ./dist/cli.mjs generate",
     "lint": "pnpm run lint:js && pnpm run lint:other",
     "lint:js": "eslint . --report-unused-disable-directives",
     "lint:other": "prettier --check '**/*.{md,yaml,yml,json}'",
@@ -61,6 +57,7 @@
     "colortranslator": "^4.1.0",
     "commander": "^12.1.0",
     "easing-utils": "^1.0.0",
+    "glob": "^11.0.0",
     "yaml": "^2.4.5",
     "zod": "^3.23.8"
   }

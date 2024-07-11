@@ -1,7 +1,7 @@
-import { configSchema } from '@/config/schema';
+import { configWithThemesSchema } from '@/config/schema';
 import { z } from 'zod';
 
-export type Config = z.infer<typeof configSchema>;
+export type Config = z.infer<typeof configWithThemesSchema>;
 
 export type ThemeNames<C extends Config = Config> = keyof C['themes'];
 

@@ -19,9 +19,16 @@ npx @bruhabruh/theme css -o theme.css -s 2
 ```yaml
 default: light
 prefix: pw
+content: ./themes/*.theme.yaml
+output:
+  all:
+    css: ./.generated/theme.css
+    json: ./.generated/theme.json
 
-themes:
-  light: {}
+  themes:
+    light:
+      css: ./.generated/theme.light.css
 
-  dark: {}
+    dark:
+      css: ./.generated/theme.dark.css
 ```

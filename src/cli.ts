@@ -1,7 +1,5 @@
 import { Command } from 'commander';
-import { applyGenerateCSSCommand } from './cli/generate-css-command';
-import { applyGenerateTailwindCommand } from './cli/generate-tailwind-command';
-import { applyGenerateThemeCommand } from './cli/generate-theme-command';
+import { applyGenerateCommand } from './cli/generate';
 
 const cli = new Command();
 
@@ -10,8 +8,6 @@ cli
   .version('1.0.0')
   .description('CLI for create Tailwind config and CSS for @bruhabruh/theme');
 
-applyGenerateCSSCommand(cli);
-applyGenerateTailwindCommand(cli);
-applyGenerateThemeCommand(cli);
+applyGenerateCommand(cli);
 
 cli.parse();
