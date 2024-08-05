@@ -1,7 +1,7 @@
 import { RGBObject } from 'colortranslator';
 
 export const rgbaToHsl = (rgba: Required<RGBObject>): string => {
-  const { R, G, B, A } = rgba;
+  const { R, G, B, A = 1 } = rgba;
 
   const rRatio = R / 255;
   const gRatio = G / 255;

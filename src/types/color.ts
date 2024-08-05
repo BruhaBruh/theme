@@ -15,6 +15,13 @@ export type ColorVariantByAlpha = (typeof colorVariantsByAlpha)[number];
 
 export type ColorVariantByDarken = (typeof colorVariantsByDarken)[number];
 
-export type ColorVariant = ColorVariantByAlpha | ColorVariantByDarken | string;
+export type ColorSolidVariant =
+  `${ColorVariantByAlpha | ColorVariantByDarken}s`;
+
+export type ColorVariant =
+  | ColorVariantByAlpha
+  | ColorVariantByDarken
+  | ColorSolidVariant
+  | string;
 
 export type Color = Record<ColorVariant, string>;

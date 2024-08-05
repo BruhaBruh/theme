@@ -3,6 +3,7 @@ import { merge } from '@/lib/merge';
 import { normalize } from '@/lib/normalize';
 import { replaceDots } from '@/lib/replace-dots';
 import { replaceReferences } from '@/lib/replace-references';
+import { rgbaToRgb } from '@/lib/rgba-to-rgb';
 import { variable } from '@/lib/variable';
 import { withAlpha } from '@/lib/with-alpha';
 import { withSubtractTone } from '@/lib/with-subtract-tone';
@@ -310,20 +311,19 @@ export class ColorDesignTokens<
       });
     } else {
       colorVariantsByAlpha.forEach((variant) => {
-        result[variant] = withAlpha(
-          color,
-          easeInOutSine(
-            normalize(variant, {
-              minInput: 50,
-              maxInput: 600,
-              minOutput: 0.08,
-              maxOutput: 0.78,
-            }),
-          ),
+        const alpha = easeInOutSine(
+          normalize(variant, {
+            minInput: 50,
+            maxInput: 600,
+            minOutput: 0.08,
+            maxOutput: 0.78,
+          }),
         );
+        result[variant] = withAlpha(color, alpha);
+        result[variant + 's'] = withAlpha(rgbaToRgb({ ...color, A: alpha }), 1);
       });
       colorVariantsByDarken.forEach((variant) => {
-        result[variant] = withSubtractTone(
+        const colorWithSubtractTone = withSubtractTone(
           color,
           darkenRatio *
             easeOutSine(
@@ -335,6 +335,8 @@ export class ColorDesignTokens<
               }),
             ),
         );
+        result[variant] = colorWithSubtractTone;
+        result[variant + 's'] = colorWithSubtractTone;
       });
     }
 
