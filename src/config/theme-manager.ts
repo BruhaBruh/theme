@@ -75,6 +75,24 @@ export class ThemeManager {
   }
 
   applyTailwind(api: TailwindPluginApi): void {
+    const [inSelector] = this.#tokenManager.css();
+
+    const selectors = Array.from(
+      new Set([`.${this.#name}`, ...this.#config.selectors]),
+    ).sort((a) => (a === ':root' ? -1 : 1));
+
+    const tokens: Record<string, string> = {};
+
+    inSelector.forEach((token) => {
+      const [key, ...value] = token.split(':');
+
+      tokens[key] = value.join(':');
+    });
+
+    api.addBase({
+      [selectors.join(', ')]: tokens,
+    });
+
     this.#tokenManager.applyTailwind(api);
   }
 

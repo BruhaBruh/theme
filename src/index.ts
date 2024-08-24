@@ -1,20 +1,14 @@
 import plugin from 'tailwindcss/plugin';
 import { merge } from 'ts-deepmerge';
 import { loadThemes } from './config/load-themes';
-import { Config } from './config/schema/config';
+import { Config, configSchema } from './config/schema/config';
 import { ThemeManager } from './config/theme-manager';
 import { TailwindConfig } from './types/tailwind';
 
 export const theme = {};
 
-const loadThemeManagers = (config: Omit<Config, 'output'>) => {
-  const themesConfig = loadThemes({
-    ...config,
-    output: {
-      all: {},
-      themes: {},
-    },
-  });
+const loadThemeManagers = (config: Config) => {
+  const themesConfig = loadThemes(config);
 
   const themeManagers: ThemeManager[] = [];
 
@@ -34,8 +28,9 @@ const loadThemeManagers = (config: Omit<Config, 'output'>) => {
   return themeManagers;
 };
 
-export const themePlugin = plugin.withOptions<Omit<Config, 'output'>>(
-  (config) => {
+export const themePlugin = plugin.withOptions<Partial<Config>>(
+  (rawConfig) => {
+    const config = configSchema.parse(rawConfig);
     const themeManagers = loadThemeManagers(config);
 
     return (api) => {
@@ -44,7 +39,8 @@ export const themePlugin = plugin.withOptions<Omit<Config, 'output'>>(
       });
     };
   },
-  (config) => {
+  (rawConfig) => {
+    const config = configSchema.parse(rawConfig);
     const themeManagers = loadThemeManagers(config);
 
     let tailwindConfig: TailwindConfig = {};
