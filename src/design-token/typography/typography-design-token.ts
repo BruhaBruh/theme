@@ -6,14 +6,12 @@ import { FontSizeDesignToken } from './font-size-design-token';
 import { FontWeightDesignToken } from './font-weight-design-token';
 import { LetterSpacingDesignToken } from './letter-spacing-design-token';
 import { LineHeightDesignToken } from './line-height-design-token';
-import { ParagraphSpacingDesignToken } from './paragraph-spacing-design-token';
 
 type Typography = {
   fontFamily?: string;
   fontWeight?: string;
   lineHeight?: string;
   fontSize?: string;
-  paragraphSpacing?: string;
   letterSpacing?: string;
 };
 
@@ -23,7 +21,6 @@ export class TypographyDesignToken extends DesignToken {
   #fontWeightDesignToken: FontWeightDesignToken;
   #lineHeightDesignToken: LineHeightDesignToken;
   #fontSizeDesignToken: FontSizeDesignToken;
-  #paragraphSpacingDesignToken: ParagraphSpacingDesignToken;
   #letterSpacingDesignToken: LetterSpacingDesignToken;
   #typographies: Record<string, Typography> = {};
 
@@ -32,7 +29,6 @@ export class TypographyDesignToken extends DesignToken {
     fontWeightDesignToken: FontWeightDesignToken,
     lineHeightDesignToken: LineHeightDesignToken,
     fontSizeDesignToken: FontSizeDesignToken,
-    paragraphSpacingDesignToken: ParagraphSpacingDesignToken,
     letterSpacing: LetterSpacingDesignToken,
   ) {
     super({ type: TypographyDesignToken.type, prefix: '' });
@@ -40,7 +36,6 @@ export class TypographyDesignToken extends DesignToken {
     this.#fontWeightDesignToken = fontWeightDesignToken;
     this.#lineHeightDesignToken = lineHeightDesignToken;
     this.#fontSizeDesignToken = fontSizeDesignToken;
-    this.#paragraphSpacingDesignToken = paragraphSpacingDesignToken;
     this.#letterSpacingDesignToken = letterSpacing;
   }
 
@@ -67,12 +62,6 @@ export class TypographyDesignToken extends DesignToken {
         typography.fontSize,
       );
     }
-    if (typography.paragraphSpacing) {
-      newTypography.paragraphSpacing =
-        this.#paragraphSpacingDesignToken.resolveReferences(
-          typography.paragraphSpacing,
-        );
-    }
     if (typography.letterSpacing) {
       newTypography.letterSpacing =
         this.#letterSpacingDesignToken.resolveReferences(
@@ -98,10 +87,6 @@ export class TypographyDesignToken extends DesignToken {
       }
       if (typography.fontSize) {
         css['font-size'] = typography.fontSize;
-      }
-      if (typography.paragraphSpacing) {
-        css['margin-top'] = typography.paragraphSpacing;
-        css['margin-bottom'] = typography.paragraphSpacing;
       }
       if (typography.letterSpacing) {
         css['letter-spacing'] = typography.letterSpacing;
@@ -131,10 +116,6 @@ export class TypographyDesignToken extends DesignToken {
         }
         if (typography.fontSize) {
           css.push(`  font-size: ${typography.fontSize};`);
-        }
-        if (typography.paragraphSpacing) {
-          css.push(`  margin-top: ${typography.paragraphSpacing};`);
-          css.push(`  margin-bottom: ${typography.paragraphSpacing};`);
         }
         if (typography.letterSpacing) {
           css.push(`  letter-spacing: ${typography.letterSpacing};`);

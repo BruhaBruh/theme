@@ -10,7 +10,6 @@ import {
   LetterSpacingDesignToken,
   LineHeightDesignToken,
   OutlineDesignToken,
-  ParagraphSpacingDesignToken,
   RingDesignToken,
   SpacingDesignToken,
   StrokeDesignToken,
@@ -37,7 +36,6 @@ export class TokenManager {
   #fontWeightDesignToken: FontWeightDesignToken;
   #lineHeightDesignToken: LineHeightDesignToken;
   #fontSizeDesignToken: FontSizeDesignToken;
-  #paragraphSpacingDesignToken: ParagraphSpacingDesignToken;
   #letterSpacingDesignToken: LetterSpacingDesignToken;
   #typographyDesignToken: TypographyDesignToken;
   #zIndexDesignToken: ZIndexDesignToken;
@@ -72,16 +70,12 @@ export class TokenManager {
     this.#fontWeightDesignToken = new FontWeightDesignToken({ prefix });
     this.#lineHeightDesignToken = new LineHeightDesignToken({ prefix });
     this.#fontSizeDesignToken = new FontSizeDesignToken({ prefix });
-    this.#paragraphSpacingDesignToken = new ParagraphSpacingDesignToken({
-      prefix,
-    });
     this.#letterSpacingDesignToken = new LetterSpacingDesignToken({ prefix });
     this.#typographyDesignToken = new TypographyDesignToken(
       this.#fontFamilyDesignToken,
       this.#fontWeightDesignToken,
       this.#lineHeightDesignToken,
       this.#fontSizeDesignToken,
-      this.#paragraphSpacingDesignToken,
       this.#letterSpacingDesignToken,
     );
     this.#zIndexDesignToken = new ZIndexDesignToken({ prefix });
@@ -104,7 +98,6 @@ export class TokenManager {
         ...this.#fontWeightDesignToken.css(),
         ...this.#lineHeightDesignToken.css(),
         ...this.#fontSizeDesignToken.css(),
-        ...this.#paragraphSpacingDesignToken.css(),
         ...this.#letterSpacingDesignToken.css(),
         ...this.#zIndexDesignToken.css(),
       ],
@@ -127,7 +120,6 @@ export class TokenManager {
     this.#fontWeightDesignToken.applyTailwind(api);
     this.#lineHeightDesignToken.applyTailwind(api);
     this.#fontSizeDesignToken.applyTailwind(api);
-    this.#paragraphSpacingDesignToken.applyTailwind(api);
     this.#letterSpacingDesignToken.applyTailwind(api);
     this.#typographyDesignToken.applyTailwind(api);
     this.#zIndexDesignToken.applyTailwind(api);
@@ -149,7 +141,6 @@ export class TokenManager {
       this.#fontWeightDesignToken.tailwindConfig(),
       this.#lineHeightDesignToken.tailwindConfig(),
       this.#fontSizeDesignToken.tailwindConfig(),
-      this.#paragraphSpacingDesignToken.tailwindConfig(),
       this.#letterSpacingDesignToken.tailwindConfig(),
       this.#typographyDesignToken.tailwindConfig(),
       this.#zIndexDesignToken.tailwindConfig(),
@@ -173,7 +164,6 @@ export class TokenManager {
     this.loadFontWeightTokens(config.fontWeight);
     this.loadLineHeightTokens(config.lineHeight);
     this.loadFontSizeTokens(config.fontSize);
-    this.loadParagraphSpacingTokens(config.paragraphSpacing);
     this.loadLetterSpacingTokens(config.letterSpacing);
     this.loadTypographyTokens(config.typography);
 
@@ -209,8 +199,6 @@ export class TokenManager {
       globalTokenManager.#lineHeightDesignToken;
     this.#fontSizeDesignToken.designTokenReference =
       globalTokenManager.#fontSizeDesignToken;
-    this.#paragraphSpacingDesignToken.designTokenReference =
-      globalTokenManager.#paragraphSpacingDesignToken;
     this.#letterSpacingDesignToken.designTokenReference =
       globalTokenManager.#letterSpacingDesignToken;
     this.#typographyDesignToken.designTokenReference =
@@ -392,25 +380,6 @@ export class TokenManager {
     });
   }
 
-  private loadParagraphSpacingTokens(configs: ThemeConfig['paragraphSpacing']) {
-    configs.forEach((config) => {
-      const generator = config._generator;
-      if (generator) {
-        if (typeof generator === 'string') return;
-        const { start, end, namePattern, valuePattern, step } = generator;
-        for (let i = start; i <= end; i += step) {
-          const name = namePattern.replace(/\{i}/g, i.toString());
-          const value = valuePattern.replace(/\{i}/g, i.toString());
-          this.#paragraphSpacingDesignToken.addParagraphSpacing(name, value);
-        }
-      } else {
-        Object.entries(config).forEach(([name, value]) => {
-          this.#paragraphSpacingDesignToken.addParagraphSpacing(name, value);
-        });
-      }
-    });
-  }
-
   private loadLetterSpacingTokens(configs: ThemeConfig['letterSpacing']) {
     configs.forEach((config) => {
       Object.entries(config).forEach(([name, value]) => {
@@ -424,21 +393,13 @@ export class TokenManager {
       Object.entries(config).forEach(
         ([
           name,
-          {
-            fontFamily,
-            fontWeight,
-            lineHeight,
-            fontSize,
-            paragraphSpacing,
-            letterSpacing,
-          },
+          { fontFamily, fontWeight, lineHeight, fontSize, letterSpacing },
         ]) => {
           this.#typographyDesignToken.addTypography(name, {
             fontFamily: fontFamily || undefined,
             fontWeight: fontWeight || undefined,
             lineHeight: lineHeight || undefined,
             fontSize: fontSize || undefined,
-            paragraphSpacing: paragraphSpacing || undefined,
             letterSpacing: letterSpacing || undefined,
           });
         },

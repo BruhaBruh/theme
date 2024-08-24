@@ -86,56 +86,39 @@ fontSize:
   - 8xl: '{font-size.base} + 80px'
   - 9xl: '{font-size.base} + 112px'
 
-paragraphSpacing:
-  - base: 1rem
-  - xs: '{paragraph-spacing.base} - 4px'
-  - sm: '{paragraph-spacing.base} - 2px'
-  - md: '{paragraph-spacing.base} + 2px'
-  - lg: '{paragraph-spacing.base} + 4px'
-  - xl: '{paragraph-spacing.base} + 8px'
-  - 2xl: '{paragraph-spacing.base} + 12px'
-  - 3xl: '{paragraph-spacing.base} + 20px'
-
 typography:
   - h1:
       fontSize: '{font-size.5xl}'
       fontWeight: '{font-weight.extrabold}'
       lineHeight: '{line-height.normal}'
-      paragraphSpacing: '{paragraph-spacing.md}'
       letterSpacing: '{letter-spacing.tight}'
   - h2:
       fontSize: '{font-size.3xl}'
       fontWeight: '{font-weight.semibold}'
       lineHeight: '{line-height.normal}'
-      paragraphSpacing: '{paragraph-spacing.md}'
       letterSpacing: '{letter-spacing.tight}'
   - h3:
       fontSize: '{font-size.2xl}'
       fontWeight: '{font-weight.semibold}'
       lineHeight: '{line-height.normal}'
-      paragraphSpacing: '{paragraph-spacing.md}'
       letterSpacing: '{letter-spacing.tight}'
   - h4:
       fontSize: '{font-size.xl}'
       fontWeight: '{font-weight.semibold}'
       lineHeight: '{line-height.snug}'
-      paragraphSpacing: '{paragraph-spacing.sm}'
       letterSpacing: '{letter-spacing.tight}'
   - h5:
       fontSize: '{font-size.lg}'
       fontWeight: '{font-weight.medium}'
       lineHeight: '{line-height.snug}'
-      paragraphSpacing: '{paragraph-spacing.sm}'
   - h6:
       fontSize: '{font-size.md}'
       fontWeight: '{font-weight.medium}'
       lineHeight: '{line-height.snug}'
-      paragraphSpacing: '{paragraph-spacing.sm}'
   - p:
       fontSize: '{font-size.md}'
       fontWeight: '{font-weight.normal}'
       lineHeight: '{line-height.normal}'
-      paragraphSpacing: '{paragraph-spacing.sm}'
   - large:
       fontSize: '{font-size.lg}'
       fontWeight: '{font-weight.semibold}'

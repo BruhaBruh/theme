@@ -88,21 +88,6 @@ export const themeConfigSchema = z.object({
       ),
     )
     .default([]),
-  paragraphSpacing: z
-    .array(
-      z.record(z.string()).or(
-        z.object({
-          _generator: z.object({
-            start: z.number(),
-            end: z.number(),
-            namePattern: z.string().default(`{i}`),
-            valuePattern: z.string().default(`{i}px`),
-            step: z.number().default(1),
-          }),
-        }),
-      ),
-    )
-    .default([]),
   letterSpacing: z.array(z.record(z.string())).default([]),
   typography: z
     .array(

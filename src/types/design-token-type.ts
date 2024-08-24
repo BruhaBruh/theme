@@ -17,7 +17,6 @@ type TypographyDesignType =
   | 'font-weight'
   | 'line-height'
   | 'font-size'
-  | 'paragraph-spacing'
   | 'letter-spacing'
   | 'typography';
 

@@ -18,7 +18,6 @@ describe('theme-config schema', () => {
       letterSpacing: [],
       lineHeight: [],
       outline: [],
-      paragraphSpacing: [],
       ring: [],
       spacing: [],
       stroke: [],

@@ -4,7 +4,6 @@ import { FontSizeDesignToken } from './font-size-design-token';
 import { FontWeightDesignToken } from './font-weight-design-token';
 import { LetterSpacingDesignToken } from './letter-spacing-design-token';
 import { LineHeightDesignToken } from './line-height-design-token';
-import { ParagraphSpacingDesignToken } from './paragraph-spacing-design-token';
 import { TypographyDesignToken } from './typography-design-token';
 
 describe('typography-design-token', () => {
@@ -25,15 +24,12 @@ describe('typography-design-token', () => {
     const lineHeightDesignToken = new LineHeightDesignToken();
     const fontSizeDesignToken = new FontSizeDesignToken();
     fontSizeDesignToken.addFontSize('xs', '0.75rem');
-    const paragraphSpacingDesignToken = new ParagraphSpacingDesignToken();
-    paragraphSpacingDesignToken.addParagraphSpacing('xs', '0.75rem');
     const letterSpacingDesignToken = new LetterSpacingDesignToken();
     typographyDesignToken = new TypographyDesignToken(
       fontFamilyDesignToken,
       fontWeightDesignToken,
       lineHeightDesignToken,
       fontSizeDesignToken,
-      paragraphSpacingDesignToken,
       letterSpacingDesignToken,
     );
     utilities = {};
@@ -70,21 +66,16 @@ describe('typography-design-token', () => {
       typographyDesignToken.addTypography('only-font-size', {
         fontSize: '0.75rem',
       });
-      typographyDesignToken.addTypography('only-paragraph-spacing', {
-        paragraphSpacing: '0.5rem',
-      });
       typographyDesignToken.addTypography('only-letter-spacing', {
         letterSpacing: '-0.01em',
       });
       typographyDesignToken.addTypography('h1', {
-        paragraphSpacing: '1.5rem',
         fontSize: '3rem',
         letterSpacing: '0.125em',
         fontFamily: 'sans-serif',
         fontWeight: '700',
       });
       typographyDesignToken.addTypography('p', {
-        paragraphSpacing: '0.5rem',
         fontSize: '1rem',
         fontWeight: '500',
       });
@@ -102,24 +93,16 @@ describe('typography-design-token', () => {
         '.typography-only-font-size': {
           'font-size': '0.75rem',
         },
-        '.typography-only-paragraph-spacing': {
-          'margin-bottom': '0.5rem',
-          'margin-top': '0.5rem',
-        },
         '.typography-only-letter-spacing': {
           'letter-spacing': '-0.01em',
         },
         '.typography-h1': {
-          'margin-bottom': '1.5rem',
-          'margin-top': '1.5rem',
           'font-size': '3rem',
           'letter-spacing': '0.125em',
           'font-family': 'sans-serif',
           'font-weight': '700',
         },
         '.typography-p': {
-          'margin-bottom': '0.5rem',
-          'margin-top': '0.5rem',
           'font-size': '1rem',
           'font-weight': '500',
         },
@@ -139,21 +122,16 @@ describe('typography-design-token', () => {
       typographyDesignToken.addTypography('only-font-size', {
         fontSize: '0.75rem',
       });
-      typographyDesignToken.addTypography('only-paragraph-spacing', {
-        paragraphSpacing: '0.5rem',
-      });
       typographyDesignToken.addTypography('only-letter-spacing', {
         letterSpacing: '-0.01em',
       });
       typographyDesignToken.addTypography('h1', {
-        paragraphSpacing: '1.5rem',
         fontSize: '3rem',
         letterSpacing: '0.125em',
         fontFamily: 'sans-serif',
         fontWeight: '700',
       });
       typographyDesignToken.addTypography('p', {
-        paragraphSpacing: '0.5rem',
         fontSize: '1rem',
         fontWeight: '500',
       });
@@ -174,11 +152,6 @@ describe('typography-design-token', () => {
         '  font-size: 0.75rem;',
         '}',
         '',
-        '.typography-only-paragraph-spacing {',
-        '  margin-top: 0.5rem;',
-        '  margin-bottom: 0.5rem;',
-        '}',
-        '',
         '.typography-only-letter-spacing {',
         '  letter-spacing: -0.01em;',
         '}',
@@ -187,16 +160,12 @@ describe('typography-design-token', () => {
         '  font-family: sans-serif;',
         '  font-weight: 700;',
         '  font-size: 3rem;',
-        '  margin-top: 1.5rem;',
-        '  margin-bottom: 1.5rem;',
         '  letter-spacing: 0.125em;',
         '}',
         '',
         '.typography-p {',
         '  font-weight: 500;',
         '  font-size: 1rem;',
-        '  margin-top: 0.5rem;',
-        '  margin-bottom: 0.5rem;',
         '}',
       ]);
     });
@@ -205,7 +174,6 @@ describe('typography-design-token', () => {
   describe('add paragraph spacing w/ reference', () => {
     test('apply tailwind', () => {
       typographyDesignToken.addTypography('all', {
-        paragraphSpacing: '{paragraph-spacing.xs}',
         fontSize: '{font-size.xs}',
         letterSpacing: '{letter-spacing.normal}',
         fontFamily: '{font-family.serif}',
@@ -220,15 +188,12 @@ describe('typography-design-token', () => {
           'font-weight': '500',
           'letter-spacing': '0em',
           'line-height': '1.5',
-          'margin-bottom': 'var(--paragraph-spacing-xs)',
-          'margin-top': 'var(--paragraph-spacing-xs)',
         },
       });
     });
 
     test('css', () => {
       typographyDesignToken.addTypography('all', {
-        paragraphSpacing: '{paragraph-spacing.xs}',
         fontSize: '{font-size.xs}',
         letterSpacing: '{letter-spacing.normal}',
         fontFamily: '{font-family.serif}',
@@ -241,8 +206,6 @@ describe('typography-design-token', () => {
         '  font-weight: 500;',
         '  line-height: 1.5;',
         '  font-size: var(--font-size-xs);',
-        '  margin-top: var(--paragraph-spacing-xs);',
-        '  margin-bottom: var(--paragraph-spacing-xs);',
         '  letter-spacing: 0em;',
         '}',
       ]);
