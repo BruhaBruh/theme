@@ -1,0 +1,8 @@
+prefix: pw
+content: ./themes/*.theme.yaml
+output:
+  all:
+    css: ./.generated/theme.css
+    json: ./.generated/theme.json
+  light:
+    css: ./.generated/light.theme.css

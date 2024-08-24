@@ -16,7 +16,8 @@ export type ColorVariantByAlpha = (typeof colorVariantsByAlpha)[number];
 export type ColorVariantByDarken = (typeof colorVariantsByDarken)[number];
 
 export type ColorSolidVariant =
-  `${ColorVariantByAlpha | ColorVariantByDarken}s`;
+  | `${ColorVariantByAlpha | ColorVariantByDarken}-sl`
+  | `${ColorVariantByAlpha | ColorVariantByDarken}-sd`;
 
 export type ColorVariant =
   | ColorVariantByAlpha

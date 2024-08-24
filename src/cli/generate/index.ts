@@ -1,54 +1,13 @@
-import { readConfig } from '@/config/read';
-import { DesignTokens } from '@/design-tokens';
-import { ThemeDesignTokens } from '@/design-tokens/theme';
-import { Config } from '@/types/config';
+import { loadThemes } from '@/config/load-themes';
+import { readConfig } from '@/config/read-config';
+import { ThemeManager } from '@/config/theme-manager';
+import { TailwindConfig } from '@/types/tailwind';
 import { Command, Option } from 'commander';
+import { merge } from 'ts-deepmerge';
 import { writeToFile } from '../write-to-file';
 
 type Options = {
   config: string;
-};
-
-const outputAll = (
-  config: Config['output']['all'],
-  designTokens: DesignTokens<Config>,
-) => {
-  if (config.css) {
-    const css = designTokens.toCSS(2);
-    writeToFile(config.css, css);
-  }
-
-  const json = JSON.stringify(designTokens.toTailwind(), null, 2);
-  if (config.json) {
-    writeToFile(config.json, json);
-  }
-  if (config.js) {
-    writeToFile(config.js, `export const theme = ${json};`);
-  }
-  if (config.ts) {
-    writeToFile(config.ts, `export const theme = ${json} as const;`);
-  }
-};
-
-const outputTheme = (
-  config: Config['output']['themes'][string],
-  designTokens: ThemeDesignTokens,
-) => {
-  if (config.css) {
-    const css = designTokens.toCSS(2).join('\n');
-    writeToFile(config.css, css);
-  }
-
-  const json = JSON.stringify(designTokens.tailwind, null, 2);
-  if (config.json) {
-    writeToFile(config.json, json);
-  }
-  if (config.js) {
-    writeToFile(config.js, `export const theme = ${json};`);
-  }
-  if (config.ts) {
-    writeToFile(config.ts, `export const theme = ${json} as const;`);
-  }
 };
 
 export const applyGenerateCommand = (cli: Command) => {
@@ -57,21 +16,82 @@ export const applyGenerateCommand = (cli: Command) => {
     .description('generate')
     .addOption(
       new Option('-c, --config <path>', 'path to config file').default(
-        'theme.yaml',
+        'theme.config.yaml',
       ),
     )
     .action((options: Options) => {
       const config = readConfig(options.config);
 
-      const designTokens = new DesignTokens(config);
+      const themesConfig = loadThemes(config);
 
-      outputAll(config.output.all, designTokens);
+      const themeManagers: ThemeManager[] = [];
 
-      const themes = Object.keys(designTokens.themes);
+      Object.entries(themesConfig.themes)
+        .sort((a, b) => (a[1].dependencies.includes(b[0]) ? 1 : -1))
+        .forEach(([themeName, themeConfig]) => {
+          const themeManager = new ThemeManager(
+            themeName,
+            themesConfig.prefix,
+            themeConfig,
+          );
+          themeManager.load(themesConfig.themes);
 
-      themes.forEach((theme) => {
-        if (!config.output.themes[theme]) return;
-        outputTheme(config.output.themes[theme], designTokens.themes[theme]);
-      });
+          themeManagers.push(themeManager);
+
+          const outputConfig = themeConfig._output;
+          if (outputConfig.css) {
+            writeToFile(outputConfig.css, themeManager.css().join('\r\n'));
+          }
+          let tailwindConfig: TailwindConfig = {};
+          if (outputConfig.js || outputConfig.ts || outputConfig.json) {
+            tailwindConfig = themeManager.tailwindConfig();
+          }
+          if (outputConfig.js) {
+            const file = `export const theme = ${JSON.stringify(tailwindConfig, null, 2)}\r\n`;
+            writeToFile(outputConfig.js, file);
+          }
+          if (outputConfig.ts) {
+            const file = `export const theme = ${JSON.stringify(tailwindConfig, null, 2)} as const\r\n`;
+            writeToFile(outputConfig.ts, file);
+          }
+          if (outputConfig.json) {
+            writeToFile(
+              outputConfig.json,
+              JSON.stringify(tailwindConfig, null, 2),
+            );
+          }
+        });
+
+      const outputConfig = config.output.all;
+      if (outputConfig.css) {
+        writeToFile(
+          outputConfig.css,
+          themeManagers
+            .map((themeManager) => `${themeManager.css().join('\r\n')}\r\n`)
+            .join('\r\n'),
+        );
+      }
+
+      let tailwindConfig: TailwindConfig = {};
+      if (outputConfig.js || outputConfig.ts || outputConfig.json) {
+        tailwindConfig = merge(
+          tailwindConfig,
+          ...themeManagers.map((themeManager) => themeManager.tailwindConfig()),
+        );
+        if (outputConfig.js) {
+          const file = `export const theme = ${JSON.stringify(tailwindConfig, null, 2)}\r\n`;
+          writeToFile(outputConfig.js, file);
+        }
+        if (outputConfig.ts) {
+          const file = `export const theme = ${JSON.stringify(tailwindConfig, null, 2)} as const\r\n`;
+          writeToFile(outputConfig.ts, file);
+        }
+        if (outputConfig.json) {
+          writeToFile(
+            outputConfig.json,
+            JSON.stringify(tailwindConfig, null, 2),
+          );
+        }
+      }
     });
 };

@@ -11,7 +11,8 @@
     ".eslintrc.cjs",
     "commitlint.config.cjs",
     ".prettierrc.cjs",
-    "tsup.config.ts"
+    "tsup.config.ts",
+    "vitest.config.ts"
   ],
   "exclude": ["node_modules", "dist"]
 }
