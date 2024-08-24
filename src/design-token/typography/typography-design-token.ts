@@ -83,7 +83,7 @@ export class TypographyDesignToken extends DesignToken {
     this.#typographies[name] = newTypography;
   }
 
-  override applyTailwind({ addComponents, e }: TailwindPluginApi): void {
+  override applyTailwind({ addUtilities }: TailwindPluginApi): void {
     Object.entries(this.#typographies).forEach(([name, typography]) => {
       const css: Record<string, string> = {};
 
@@ -107,8 +107,8 @@ export class TypographyDesignToken extends DesignToken {
         css['letter-spacing'] = typography.letterSpacing;
       }
 
-      addComponents({
-        [e(`.typography-${name}`)]: css,
+      addUtilities({
+        [`.typography-${name}`]: css,
       });
     });
   }

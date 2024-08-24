@@ -28,7 +28,7 @@ const loadThemeManagers = (config: Config) => {
   return themeManagers;
 };
 
-export const themePlugin = plugin.withOptions<Partial<Config>>(
+export const themePlugin = plugin.withOptions<Omit<Partial<Config>, 'output'>>(
   (rawConfig) => {
     const config = configSchema.parse(rawConfig);
     const themeManagers = loadThemeManagers(config);

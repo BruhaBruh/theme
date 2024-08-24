@@ -10,7 +10,7 @@ import { TypographyDesignToken } from './typography-design-token';
 describe('typography-design-token', () => {
   let typographyDesignToken: TypographyDesignToken;
   let pluginApi: TailwindPluginApi;
-  let components: Record<string, Record<string, string>> = {};
+  let utilities: Record<string, Record<string, string>> = {};
 
   beforeEach(() => {
     const fontFamilyDesignToken = new FontFamilyDesignToken();
@@ -36,13 +36,13 @@ describe('typography-design-token', () => {
       paragraphSpacingDesignToken,
       letterSpacingDesignToken,
     );
-    components = {};
+    utilities = {};
     pluginApi = {
-      addUtilities() {},
-      matchUtilities: () => {},
-      addComponents: (c) => {
-        Object.assign(components, c);
+      addUtilities: (c) => {
+        Object.assign(utilities, c);
       },
+      matchUtilities: () => {},
+      addComponents: () => {},
       matchComponents: () => {},
       addBase: () => {},
       addVariant: () => {},
@@ -89,7 +89,7 @@ describe('typography-design-token', () => {
         fontWeight: '500',
       });
       typographyDesignToken.applyTailwind(pluginApi);
-      expect(components).toStrictEqual({
+      expect(utilities).toStrictEqual({
         '.typography-only-font-family': {
           'font-family': 'serif',
         },
@@ -213,7 +213,7 @@ describe('typography-design-token', () => {
         lineHeight: '{line-height.normal}',
       });
       typographyDesignToken.applyTailwind(pluginApi);
-      expect(components).toStrictEqual({
+      expect(utilities).toStrictEqual({
         '.typography-all': {
           'font-family': 'var(--font-family-serif)',
           'font-size': 'var(--font-size-xs)',
