@@ -4,11 +4,19 @@ selectors:
 
 color:
   - white:
+      base: '#ffffff'
+  - black:
+      base: '#00030e'
+  - white:
       _generator:
         source: '#ffffff'
+        baseDarkColor: '{color.black.base}'
+        baseLightColor: '{color.white.base}'
   - black:
       _generator:
         source: '#00030e'
+        baseDarkColor: '{color.black.base}'
+        baseLightColor: '{color.white.base}'
   - purple:
       _generator:
         source: '#BF36AA'

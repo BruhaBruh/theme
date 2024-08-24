@@ -50,6 +50,15 @@ export class ColorDesignToken extends DesignToken {
       darkenRatio: number;
     }> = {},
   ) {
+    let sourceColorRGBObject: RGBObject;
+    const sourceColorReference = this.resolveReferences(sourceColor);
+    try {
+      const sourceAbsoluteValue =
+        this.resolveAbsoluteValue(sourceColorReference);
+      sourceColorRGBObject = ColorTranslator.toRGBObject(sourceAbsoluteValue);
+    } catch (ignore) {
+      throw new Error(`source color of "${baseLightColor}" is invalid`);
+    }
     let baseLightColorRGBObject: RGBObject;
     const baseLightColorReference = this.resolveReferences(baseLightColor);
     try {
@@ -76,7 +85,7 @@ export class ColorDesignToken extends DesignToken {
     }
     const color = this.color(
       name,
-      sourceColor,
+      sourceColorRGBObject,
       baseLightColorRGBObject,
       baseDarkColorRGBObject,
       darkenRatio,
@@ -123,7 +132,7 @@ export class ColorDesignToken extends DesignToken {
 
   private color(
     name: string,
-    sourceColor: string,
+    sourceColor: RGBObject,
     lightBaseColor: RGBObject,
     darkBaseColor: RGBObject,
     darkenRatio: number,
@@ -149,6 +158,9 @@ export class ColorDesignToken extends DesignToken {
         result[variant + '-sd'] = this.toHSL(
           this.toRGB(withAlpha, darkBaseColor),
         );
+        result[variant + '-sl'] = this.toHSL(
+          this.toRGB(withAlpha, lightBaseColor),
+        );
       });
     } else if (name === 'black') {
       colorVariants.forEach((variant) => {
@@ -165,6 +177,9 @@ export class ColorDesignToken extends DesignToken {
         );
 
         result[variant] = this.toHSL(withAlpha);
+        result[variant + '-sd'] = this.toHSL(
+          this.toRGB(withAlpha, darkBaseColor),
+        );
         result[variant + '-sl'] = this.toHSL(
           this.toRGB(withAlpha, lightBaseColor),
         );
