@@ -43,11 +43,15 @@ export class ColorDesignToken extends DesignToken {
     {
       baseLightColor = '#ffffff',
       baseDarkColor = '#000000',
+      solidLight = true,
+      solidDark = true,
       darkenRatio = 25,
     }: Partial<{
       baseLightColor: string;
       baseDarkColor: string;
       darkenRatio: number;
+      solidDark: boolean;
+      solidLight: boolean;
     }> = {},
   ) {
     let sourceColorRGBObject: RGBObject;
@@ -89,6 +93,8 @@ export class ColorDesignToken extends DesignToken {
       baseLightColorRGBObject,
       baseDarkColorRGBObject,
       darkenRatio,
+      solidLight,
+      solidDark,
     );
 
     Object.entries(color).forEach(([key, value]) => {
@@ -136,6 +142,8 @@ export class ColorDesignToken extends DesignToken {
     lightBaseColor: RGBObject,
     darkBaseColor: RGBObject,
     darkenRatio: number,
+    solidLight: boolean,
+    solidDark: boolean,
   ): Color {
     const result = {} as Color;
 
@@ -155,12 +163,14 @@ export class ColorDesignToken extends DesignToken {
         );
 
         result[variant] = this.toHSL(withAlpha);
-        result[variant + '-sd'] = this.toHSL(
-          this.toRGB(withAlpha, darkBaseColor),
-        );
-        result[variant + '-sl'] = this.toHSL(
-          this.toRGB(withAlpha, lightBaseColor),
-        );
+        if (solidDark)
+          result[variant + '-sd'] = this.toHSL(
+            this.toRGB(withAlpha, darkBaseColor),
+          );
+        if (solidLight)
+          result[variant + '-sl'] = this.toHSL(
+            this.toRGB(withAlpha, lightBaseColor),
+          );
       });
     } else if (name === 'black') {
       colorVariants.forEach((variant) => {
@@ -177,12 +187,14 @@ export class ColorDesignToken extends DesignToken {
         );
 
         result[variant] = this.toHSL(withAlpha);
-        result[variant + '-sd'] = this.toHSL(
-          this.toRGB(withAlpha, darkBaseColor),
-        );
-        result[variant + '-sl'] = this.toHSL(
-          this.toRGB(withAlpha, lightBaseColor),
-        );
+        if (solidDark)
+          result[variant + '-sd'] = this.toHSL(
+            this.toRGB(withAlpha, darkBaseColor),
+          );
+        if (solidLight)
+          result[variant + '-sl'] = this.toHSL(
+            this.toRGB(withAlpha, lightBaseColor),
+          );
       });
     } else {
       colorVariantsByAlpha.forEach((variant) => {
@@ -198,12 +210,14 @@ export class ColorDesignToken extends DesignToken {
           ),
         );
         result[variant] = this.toHSL(withAlpha);
-        result[variant + '-sd'] = this.toHSL(
-          this.toRGB(withAlpha, darkBaseColor),
-        );
-        result[variant + '-sl'] = this.toHSL(
-          this.toRGB(withAlpha, lightBaseColor),
-        );
+        if (solidDark)
+          result[variant + '-sd'] = this.toHSL(
+            this.toRGB(withAlpha, darkBaseColor),
+          );
+        if (solidLight)
+          result[variant + '-sl'] = this.toHSL(
+            this.toRGB(withAlpha, lightBaseColor),
+          );
       });
       colorVariantsByDarken.forEach((variant) => {
         const colorWithSubtractTone = this.toHSL(
@@ -221,8 +235,8 @@ export class ColorDesignToken extends DesignToken {
           ),
         );
         result[variant] = colorWithSubtractTone;
-        result[variant + '-sd'] = colorWithSubtractTone;
-        result[variant + '-sl'] = colorWithSubtractTone;
+        if (solidDark) result[variant + '-sd'] = colorWithSubtractTone;
+        if (solidLight) result[variant + '-sl'] = colorWithSubtractTone;
       });
     }
 

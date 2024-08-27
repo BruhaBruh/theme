@@ -13,6 +13,15 @@ export const themeConfigSchema = z.object({
               baseLightColor: z.string().nullish(),
               baseDarkColor: z.string().nullish(),
               darkenRatio: z.coerce.number().nullish(),
+              solid: z
+                .boolean()
+                .or(
+                  z.object({
+                    light: z.boolean().default(false),
+                    dark: z.boolean().default(false),
+                  }),
+                )
+                .default(false),
             }),
           }),
         ),
