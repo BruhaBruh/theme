@@ -6,7 +6,7 @@ describe('ring-design-token', () => {
 
   beforeEach(() => {
     const colorDesignToken = new ColorDesignToken();
-    colorDesignToken.generateColor('white', '#ffffff');
+    colorDesignToken.generateColor('white', '#ffffff', { type: 'alpha' });
     ringDesignToken = new RingDesignToken(colorDesignToken);
   });
 
@@ -41,7 +41,7 @@ describe('ring-design-token', () => {
     describe('with prefix', () => {
       beforeEach(() => {
         const colorDesignToken = new ColorDesignToken({ prefix: 'pw' });
-        colorDesignToken.generateColor('white', '#ffffff');
+        colorDesignToken.generateColor('white', '#ffffff', { type: 'alpha' });
         ringDesignToken = new RingDesignToken(colorDesignToken, {
           prefix: 'pw',
         });
@@ -102,8 +102,8 @@ describe('ring-design-token', () => {
         theme: {
           extend: {
             ringColor: {
-              ring: 'var(--ring-ring) /* hsl(0 0% 100% / 1) */',
               button: 'var(--ring-button) /* hsl(0 0% 100% / 1) */',
+              ring: 'var(--ring-ring) /* hsl(0 0% 100% / 1) */',
             },
           },
         },
@@ -113,7 +113,7 @@ describe('ring-design-token', () => {
     describe('with prefix', () => {
       beforeEach(() => {
         const colorDesignToken = new ColorDesignToken({ prefix: 'pw' });
-        colorDesignToken.generateColor('white', '#ffffff');
+        colorDesignToken.generateColor('white', '#ffffff', { type: 'alpha' });
         ringDesignToken = new RingDesignToken(colorDesignToken, {
           prefix: 'pw',
         });
@@ -144,8 +144,8 @@ describe('ring-design-token', () => {
           theme: {
             extend: {
               ringColor: {
-                primary: 'var(--pw-ring-primary) /* hsl(0 0% 100% / 1) */',
                 button: 'var(--pw-ring-button) /* hsl(0 0% 100% / 1) */',
+                primary: 'var(--pw-ring-primary) /* hsl(0 0% 100% / 1) */',
               },
             },
           },

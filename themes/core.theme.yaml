@@ -4,44 +4,51 @@ selectors:
 
 color:
   - white:
-      base: '#ffffff'
+      DEFAULT: '#ffffff'
   - black:
-      base: '#00030e'
+      DEFAULT: '#00030e'
   - white:
       _generator:
-        source: '#ffffff'
-        baseDarkColor: '{color.black.base}'
-        baseLightColor: '{color.white.base}'
+        base: '{color.white.DEFAULT}'
+        type: alpha
+        solid:
+          dark: '{color.black.DEFAULT}'
   - black:
       _generator:
-        source: '#00030e'
-        baseDarkColor: '{color.black.base}'
-        baseLightColor: '{color.white.base}'
+        base: '{color.black.DEFAULT}'
+        type: alpha
+        solid:
+          light: '{color.white.DEFAULT}'
   - purple:
       _generator:
-        source: '#BF36AA'
-        baseDarkColor: '{color.black.1000}'
-        baseLightColor: '{color.white.1000}'
+        base: '#BF36AA'
+        solid:
+          light: '{color.white.DEFAULT}'
+          dark: '{color.black.DEFAULT}'
   - blue:
       _generator:
-        source: '#3772FF'
-        baseDarkColor: '{color.black.1000}'
-        baseLightColor: '{color.white.1000}'
+        base: '#3772FF'
+        solid:
+          light: '{color.white.DEFAULT}'
+          dark: '{color.black.DEFAULT}'
   - green:
       _generator:
-        source: '#34ff63'
-        baseDarkColor: '{color.black.1000}'
-        baseLightColor: '{color.white.1000}'
+        base: '#34ff63'
+        solid:
+          light: '{color.white.DEFAULT}'
+          dark: '{color.black.DEFAULT}'
   - yellow:
       _generator:
-        source: '#F0E100'
-        baseDarkColor: '{color.black.1000}'
-        baseLightColor: '{color.white.1000}'
+        base: '#FFDE4D'
+        solid:
+          light: '{color.white.DEFAULT}'
+          dark: '{color.black.DEFAULT}'
   - red:
       _generator:
-        source: '#BA1F33'
-        baseDarkColor: '{color.black.1000}'
-        baseLightColor: '{color.white.1000}'
+        base: '#BA1F33'
+        solid:
+          light: '{color.white.DEFAULT}'
+          dark: '{color.black.DEFAULT}'
 
 borderRadius:
   - base: 0.75rem + 0.125rem

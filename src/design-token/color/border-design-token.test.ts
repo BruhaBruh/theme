@@ -6,7 +6,7 @@ describe('border-design-token', () => {
 
   beforeEach(() => {
     const colorDesignToken = new ColorDesignToken();
-    colorDesignToken.generateColor('white', '#ffffff');
+    colorDesignToken.generateColor('white', '#ffffff', { type: 'alpha' });
     borderDesignToken = new BorderDesignToken(colorDesignToken);
   });
 
@@ -41,7 +41,7 @@ describe('border-design-token', () => {
     describe('with prefix', () => {
       beforeEach(() => {
         const colorDesignToken = new ColorDesignToken({ prefix: 'pw' });
-        colorDesignToken.generateColor('white', '#ffffff');
+        colorDesignToken.generateColor('white', '#ffffff', { type: 'alpha' });
         borderDesignToken = new BorderDesignToken(colorDesignToken, {
           prefix: 'pw',
         });
@@ -113,7 +113,7 @@ describe('border-design-token', () => {
     describe('with prefix', () => {
       beforeEach(() => {
         const colorDesignToken = new ColorDesignToken({ prefix: 'pw' });
-        colorDesignToken.generateColor('white', '#ffffff');
+        colorDesignToken.generateColor('white', '#ffffff', { type: 'alpha' });
         borderDesignToken = new BorderDesignToken(colorDesignToken, {
           prefix: 'pw',
         });

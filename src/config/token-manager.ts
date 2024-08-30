@@ -212,14 +212,15 @@ export class TokenManager {
       Object.entries(config).forEach(([colorName, values]) => {
         const generator = values._generator;
         if (generator && typeof generator !== 'string') {
-          const { source, baseLightColor, baseDarkColor, darkenRatio, solid } =
-            generator;
-          this.#colorDesignToken.generateColor(colorName, source, {
-            baseLightColor: baseLightColor || undefined,
-            baseDarkColor: baseDarkColor || undefined,
-            darkenRatio: darkenRatio || undefined,
-            solidLight: typeof solid === 'boolean' ? solid : solid.light,
-            solidDark: typeof solid === 'boolean' ? solid : solid.dark,
+          const { base, solid, modifier, type } = generator;
+
+          this.#colorDesignToken.generateColor(colorName, base, {
+            type,
+            solid: {
+              light: solid?.light || undefined,
+              dark: solid?.dark || undefined,
+            },
+            modifierGenerator: modifier || undefined,
           });
         }
 

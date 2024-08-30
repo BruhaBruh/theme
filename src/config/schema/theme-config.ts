@@ -9,19 +9,23 @@ export const themeConfigSchema = z.object({
         z.record(z.string()).or(
           z.object({
             _generator: z.object({
-              source: z.string(),
-              baseLightColor: z.string().nullish(),
-              baseDarkColor: z.string().nullish(),
-              darkenRatio: z.coerce.number().nullish(),
+              base: z.string(),
+              type: z
+                .union([z.literal('hsb'), z.literal('alpha')])
+                .default('hsb'),
               solid: z
-                .boolean()
-                .or(
-                  z.object({
-                    light: z.boolean().default(false),
-                    dark: z.boolean().default(false),
-                  }),
-                )
-                .default(false),
+                .object({
+                  light: z.string().nullish(),
+                  dark: z.string().nullish(),
+                })
+                .nullish(),
+              modifier: z
+                .object({
+                  min: z.number().default(50),
+                  max: z.number().default(1000),
+                  step: z.number().default(50),
+                })
+                .nullish(),
             }),
           }),
         ),

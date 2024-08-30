@@ -1,6 +1,6 @@
 {
   "name": "@bruhabruh/theme",
-  "version": "3.0.6",
+  "version": "3.0.7",
   "type": "module",
   "description": "BruhaBruh Theme with CLI",
   "author": "BruhaBruh",
@@ -58,7 +58,6 @@
     ]
   },
   "dependencies": {
-    "@material/material-color-utilities": "^0.3.0",
     "colortranslator": "^4.1.0",
     "commander": "^12.1.0",
     "easing-utils": "^1.0.0",

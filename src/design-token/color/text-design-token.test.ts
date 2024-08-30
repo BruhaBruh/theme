@@ -6,7 +6,7 @@ describe('text-design-token', () => {
 
   beforeEach(() => {
     const colorDesignToken = new ColorDesignToken();
-    colorDesignToken.generateColor('white', '#ffffff');
+    colorDesignToken.generateColor('white', '#ffffff', { type: 'alpha' });
     textDesignToken = new TextDesignToken(colorDesignToken);
   });
 
@@ -41,7 +41,7 @@ describe('text-design-token', () => {
     describe('with prefix', () => {
       beforeEach(() => {
         const colorDesignToken = new ColorDesignToken({ prefix: 'pw' });
-        colorDesignToken.generateColor('white', '#ffffff');
+        colorDesignToken.generateColor('white', '#ffffff', { type: 'alpha' });
         textDesignToken = new TextDesignToken(colorDesignToken, {
           prefix: 'pw',
         });
@@ -114,7 +114,7 @@ describe('text-design-token', () => {
     describe('with prefix', () => {
       beforeEach(() => {
         const colorDesignToken = new ColorDesignToken({ prefix: 'pw' });
-        colorDesignToken.generateColor('white', '#ffffff');
+        colorDesignToken.generateColor('white', '#ffffff', { type: 'alpha' });
         textDesignToken = new TextDesignToken(colorDesignToken, {
           prefix: 'pw',
         });
