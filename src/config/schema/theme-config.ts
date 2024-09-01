@@ -11,19 +11,20 @@ export const themeConfigSchema = z.object({
             _generator: z.object({
               base: z.string(),
               type: z
-                .union([z.literal('hsb'), z.literal('alpha')])
-                .default('hsb'),
-              solid: z
-                .object({
-                  light: z.string().nullish(),
-                  dark: z.string().nullish(),
-                })
-                .nullish(),
+                .union([z.literal('color'), z.literal('neutral')])
+                .default('color'),
               modifier: z
                 .object({
                   min: z.number().default(50),
                   max: z.number().default(1000),
                   step: z.number().default(50),
+                })
+                .nullish(),
+              hsb: z
+                .object({
+                  min: z.number().nullish(),
+                  middle: z.number().nullish(),
+                  max: z.number().nullish(),
                 })
                 .nullish(),
             }),

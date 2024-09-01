@@ -1,20 +1,20 @@
-import { Easing, EasingFn, easing } from '@/lib/easings';
 import { DesignTokenType } from '@/types/design-token-type';
 import { TailwindConfig } from '@/types/tailwind';
 import { ColorTranslator, RGBObject } from 'colortranslator';
 import { DesignToken } from '../design-token';
 
 type ColorGenerateOptions = {
-  solid?: Partial<{
-    light: RGBObject;
-    dark: RGBObject;
-  }>;
   modifierGenerator?: {
     min: number;
     max: number;
     step: number;
   };
-  type?: 'hsb' | 'alpha';
+  hsbGenerator?: {
+    min?: number;
+    max?: number;
+    middle?: number;
+  };
+  type?: 'color' | 'neutral';
 };
 
 export class ColorDesignToken extends DesignToken {
@@ -40,28 +40,14 @@ export class ColorDesignToken extends DesignToken {
   generateColor(
     name: string,
     baseColor: string,
-    options: Omit<ColorGenerateOptions, 'solid'> & {
-      solid?: Partial<{
-        light: string;
-        dark: string;
-      }>;
-    } = {},
+    options: ColorGenerateOptions = {},
   ) {
     const baseColorRgb = this.rgbFromStringWithReferences(baseColor);
     const color = this.color(baseColorRgb, {
-      type: 'hsb',
+      type: 'color',
       ...options,
-      solid: {
-        light: options.solid?.light
-          ? this.rgbFromStringWithReferences(options.solid.light)
-          : undefined,
-        dark: options.solid?.dark
-          ? this.rgbFromStringWithReferences(options.solid.dark)
-          : undefined,
-      },
     });
 
-    this.addColor(`${name}-DEFAULT`, this.hslStringFromRgb(baseColorRgb));
     Object.entries(color).forEach(([key, value]) => {
       this.addColor(`${name}-${key}`, value);
     });
@@ -126,12 +112,12 @@ export class ColorDesignToken extends DesignToken {
     base: RGBObject,
     {
       type,
-      solid,
       modifierGenerator = {
-        min: 50,
+        min: 100,
         max: 1000,
         step: 50,
       },
+      hsbGenerator = {},
     }: ColorGenerateOptions,
   ): Record<string, string> {
     const result: Record<string, string> = {};
@@ -141,75 +127,56 @@ export class ColorDesignToken extends DesignToken {
       modifier <= modifierGenerator.max;
       modifier += modifierGenerator.step
     ) {
-      if (type === 'hsb') {
-        const baseHSB = this.hsbFromRgb(base);
+      const baseHSB = this.hsbFromRgb(base);
 
-        const normalizedSaturation = this.normalize(modifier, {
-          minInput: modifierGenerator.min,
-          maxInput: modifierGenerator.max,
-          minOutput: 0.05,
-        });
-        const saturationWithBezier = Math.max(
-          0,
-          Math.min(this.bezier(normalizedSaturation), 1),
-        );
-        const saturation = saturationWithBezier * 100;
-        const normalizedBrightness = this.normalize(modifier, {
-          minInput: modifierGenerator.min,
-          maxInput: modifierGenerator.max,
-          minOutput: 0.05,
-          maxOutput: 0.98,
-        });
-        const brightnessWithBezier = Math.max(
-          0,
-          Math.min(this.easingByName('easeInQuint')(normalizedBrightness)),
-        );
-        const brightness = (1 - brightnessWithBezier) * 100;
+      const t = this.normalize(modifier, {
+        minInput: modifierGenerator.min,
+        maxInput: modifierGenerator.max,
+        minOutput: -1,
+      });
 
-        const rgb = this.rgbFromHsb({
+      let rgb: RGBObject = { R: 0, G: 0, B: 0 };
+      if (type === 'color') {
+        const { min = 10, middle = 80, max = 100 } = hsbGenerator;
+
+        let saturation = middle;
+        let brightness = middle;
+        if (t <= 0) {
+          const t0 = 1 + t;
+          saturation = t0 * (middle - min) + min;
+          brightness = max - t0 * min * 2;
+        } else if (t > 0) {
+          saturation = middle + t * min * 2;
+          brightness = middle - t * min * 7;
+        }
+
+        rgb = this.rgbFromHsb({
           H: baseHSB.H,
           S: saturation,
           B: brightness,
         });
+      } else if (type === 'neutral') {
+        const { min = 2, middle = 20, max = 98 } = hsbGenerator;
 
-        const transparent = this.solidToTransparent(rgb);
+        let saturation = middle;
+        let brightness = middle;
+        if (t <= 0) {
+          const t0 = 1 + t;
+          saturation = t0 * (middle - min) + min;
+          brightness = max - t0 * (max - middle);
+        } else if (t > 0) {
+          saturation = middle + t * (max - middle);
+          brightness = middle - t * (middle - min);
+        }
 
-        result[modifier] = this.hslStringFromRgb(transparent);
-        if (solid?.dark) {
-          result[`${modifier}-sd`] = this.hslStringFromRgb(
-            this.transparentOnBackground(transparent, solid.dark),
-          );
-        }
-        if (solid?.light) {
-          result[`${modifier}-sl`] = this.hslStringFromRgb(
-            this.transparentOnBackground(transparent, solid.light),
-          );
-        }
-      } else if (type === 'alpha') {
-        const normalizedAlpha = this.normalize(modifier, {
-          minInput: modifierGenerator.min,
-          maxInput: modifierGenerator.max,
-          minOutput: 0.15,
-          maxOutput: 1,
+        rgb = this.rgbFromHsb({
+          H: baseHSB.H,
+          S: saturation,
+          B: brightness,
         });
-
-        const transparent = this.withAlpha(
-          base,
-          this.easingByName('easeInSine')(normalizedAlpha),
-        );
-
-        result[modifier] = this.hslStringFromRgb(transparent);
-        if (solid?.dark) {
-          result[`${modifier}-sd`] = this.hslStringFromRgb(
-            this.transparentOnBackground(transparent, solid.dark),
-          );
-        }
-        if (solid?.light) {
-          result[`${modifier}-sl`] = this.hslStringFromRgb(
-            this.transparentOnBackground(transparent, solid.light),
-          );
-        }
       }
+
+      result[modifier] = this.stringFromRgb(rgb);
     }
 
     return result;
@@ -249,164 +216,91 @@ export class ColorDesignToken extends DesignToken {
     return Math.max(Math.min(normalized, maxOutput), minOutput);
   }
 
-  private bezier(n: number): number {
-    const p0 = 0;
-    const p1 = 0.8;
-    const p2 = 0.2;
-    const p3 = 1;
-
-    const result =
-      Math.pow(1 - n, 3) * p0 +
-      3 * Math.pow(1 - n, 2) * n * p1 +
-      3 * (1 - n) * Math.pow(n, 2) * p2 +
-      Math.pow(n, 3) * p3;
-
-    return result;
-  }
-
-  private easingByName(name: Easing): EasingFn {
-    return easing(name);
-  }
-
-  private withAlpha(rgb: RGBObject, alpha: number): RGBObject {
-    if (alpha < 0 || alpha > 1) {
-      throw new Error('alpha should be between 0 and 1');
-    }
-
-    return {
-      ...rgb,
-      A: alpha,
-    };
-  }
-
-  private transparentOnBackground(
-    rgb: RGBObject,
-    background: RGBObject,
-  ): RGBObject {
-    const { R, G, B, A = 1 } = rgb;
-    const { R: BR, G: BG, B: BB } = background;
-
-    return {
-      R: Math.floor((1 - A) * BR + A * R + 0.5),
-      G: Math.floor((1 - A) * BG + A * G + 0.5),
-      B: Math.floor((1 - A) * BB + A * B + 0.5),
-      A: 1,
-    };
-  }
-
-  private solidToTransparent({ R, G, B }: RGBObject): RGBObject {
-    const A = 1 - Math.min(R, G, B) / 255;
-
-    if (A === 0) {
-      return {
-        R: 0,
-        G: 0,
-        B: 0,
-        A: 0,
-      };
-    }
-    const newR = Math.round((1 - (1 - R / 255) / A) * 255);
-    const newG = Math.round((1 - (1 - G / 255) / A) * 255);
-    const newB = Math.round((1 - (1 - B / 255) / A) * 255);
-
-    return {
-      R: Math.max(0, Math.min(255, newR)),
-      G: Math.max(0, Math.min(255, newG)),
-      B: Math.max(0, Math.min(255, newB)),
-      A,
-    };
-  }
-
-  private hsbFromRgb({ R, G, B }: RGBObject): {
+  private hsbFromRgb({ R: red, G: green, B: blue }: RGBObject): {
     H: number;
     S: number;
     B: number;
   } {
+    const R = Math.max(0, Math.min(red / 255, 1));
+    const G = Math.max(0, Math.min(green / 255, 1));
+    const B = Math.max(0, Math.min(blue / 255, 1));
     const max = Math.max(R, G, B);
     const min = Math.min(R, G, B);
-    const delta = max - min;
+    let H = 0;
+    let S = 0;
+    const V = max;
+    if (max === min) return { H, S: S * 100, B: V * 100 };
 
-    let h = 0;
-    if (delta !== 0) {
-      if (max === R) {
-        h = ((G - B) / delta) % 6;
-      } else if (max === G) {
-        h = (B - R) / delta + 2;
-      } else {
-        h = (R - G) / delta + 4;
-      }
-      h *= 60;
-      if (h < 0) h += 360;
+    if (max === R && G >= B) {
+      H = 60 * ((G - B) / (max - min));
+    } else if (max === R && G < B) {
+      H = 60 * ((G - B) / (max - min)) + 360;
+    } else if (max === G) {
+      H = 60 * ((B - R) / (max - min)) + 120;
+    } else if (max === B) {
+      H = 60 * ((R - G) / (max - min)) + 240;
     }
 
-    const s = max === 0 ? 0 : delta / max;
-    const brightness = max / 255;
+    if (max !== 0) {
+      S = 1 - min / max;
+    }
 
-    return {
-      H: Math.round(h),
-      S: Number((s * 100).toFixed(2)),
-      B: Number((brightness * 100).toFixed(2)),
-    };
+    return { H, S: S * 100, B: V * 100 };
   }
 
   private rgbFromHsb({
     H,
     S,
-    B,
+    B: V,
   }: {
     H: number;
     S: number;
     B: number;
   }): RGBObject {
-    const saturation = S / 100;
-    const brightness = B / 100;
-    const c = brightness * saturation;
-    const x = c * (1 - Math.abs(((H / 60) % 2) - 1));
-    const m = brightness - c;
+    const h = Math.floor((H / 60) % 6);
+    const min = ((100 - S) * V) / 100;
+    const delta = (V - min) * ((H % 60) / 60);
+    const inc = min + delta;
+    const dec = V - delta;
 
-    let r = 0;
-    let g = 0;
-    let b = 0;
-
-    if (H >= 0 && H < 60) {
-      r = c;
-      g = x;
-      b = 0;
-    } else if (H >= 60 && H < 120) {
-      r = x;
-      g = c;
-      b = 0;
-    } else if (H >= 120 && H < 180) {
-      r = 0;
-      g = c;
-      b = x;
-    } else if (H >= 180 && H < 240) {
-      r = 0;
-      g = x;
-      b = c;
-    } else if (H >= 240 && H < 300) {
-      r = x;
-      g = 0;
-      b = c;
-    } else if (H >= 300 && H < 360) {
-      r = c;
-      g = 0;
-      b = x;
+    let R = 0;
+    let G = 0;
+    let B = 0;
+    if (h === 0) {
+      R = V;
+      G = inc;
+      B = min;
+    } else if (h === 1) {
+      R = dec;
+      G = V;
+      B = min;
+    } else if (h === 2) {
+      R = min;
+      G = V;
+      B = inc;
+    } else if (h === 3) {
+      R = min;
+      G = dec;
+      B = V;
+    } else if (h === 4) {
+      R = inc;
+      G = min;
+      B = V;
+    } else if (h === 5) {
+      R = V;
+      G = min;
+      B = dec;
     }
 
-    r = Math.round((r + m) * 255);
-    g = Math.round((g + m) * 255);
-    b = Math.round((b + m) * 255);
-
-    return { R: r, G: g, B: b, A: 1 };
+    return {
+      R: Math.min(255, (R / 100) * 255),
+      G: Math.min(255, (G / 100) * 255),
+      B: Math.min(255, (B / 100) * 255),
+      A: 1,
+    };
   }
 
-  private hslStringFromRgb(rgb: RGBObject): string {
-    const { H, S, L, A } = ColorTranslator.toHSLAObject(rgb);
-    const hue = parseFloat(H.toFixed(2));
-    const saturation = parseFloat(S.toFixed(2));
-    const lightness = parseFloat(L.toFixed(2));
-    const alpha = A ? parseFloat(A.toFixed(2)) : 1;
-    return `hsl(${hue} ${saturation}% ${lightness}% / ${alpha})`;
+  private stringFromRgb(rgb: RGBObject): string {
+    return ColorTranslator.toHEX(rgb);
   }
 }

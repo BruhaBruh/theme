@@ -3,52 +3,25 @@ selectors:
   - :root
 
 color:
-  - white:
-      DEFAULT: '#ffffff'
-  - black:
-      DEFAULT: '#00030e'
-  - white:
+  - neutral:
       _generator:
-        base: '{color.white.DEFAULT}'
-        type: alpha
-        solid:
-          dark: '{color.black.DEFAULT}'
-  - black:
-      _generator:
-        base: '{color.black.DEFAULT}'
-        type: alpha
-        solid:
-          light: '{color.white.DEFAULT}'
+        type: neutral
+        base: '#292B33'
   - purple:
       _generator:
-        base: '#BF36AA'
-        solid:
-          light: '{color.white.DEFAULT}'
-          dark: '{color.black.DEFAULT}'
+        base: '#9029CC'
   - blue:
       _generator:
-        base: '#3772FF'
-        solid:
-          light: '{color.white.DEFAULT}'
-          dark: '{color.black.DEFAULT}'
+        base: '#295CCC'
   - green:
       _generator:
-        base: '#34ff63'
-        solid:
-          light: '{color.white.DEFAULT}'
-          dark: '{color.black.DEFAULT}'
+        base: '#29CC29'
   - yellow:
       _generator:
-        base: '#FFDE4D'
-        solid:
-          light: '{color.white.DEFAULT}'
-          dark: '{color.black.DEFAULT}'
+        base: '#CCCC29'
   - red:
       _generator:
-        base: '#BA1F33'
-        solid:
-          light: '{color.white.DEFAULT}'
-          dark: '{color.black.DEFAULT}'
+        base: '#CC2929'
 
 borderRadius:
   - base: 0.75rem + 0.125rem
