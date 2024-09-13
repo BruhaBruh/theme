@@ -37,7 +37,7 @@ export class BackgroundDesignToken extends DesignToken {
 
     this.tokens.forEach((token) => {
       backgroundColor[token.name] = token.css
-        ? `rgb(${token.css.keyVariable}, <alpha-value>) /* ${token.value} */`
+        ? `rgb(from ${token.css.keyVariable} r g b / <alpha-value>) /* ${token.value} */`
         : `${token.value}`;
       colors[`${token.name}-${this.type}`] = backgroundColor[token.name];
     });

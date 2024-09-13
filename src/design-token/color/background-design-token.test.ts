@@ -41,11 +41,11 @@ describe('background-design-token', () => {
           extend: {
             colors: {
               'background-bg':
-                'rgb(var(--bg-background), <alpha-value>) /* #000105 */',
+                'rgb(from var(--bg-background) r g b / <alpha-value>) /* #000105 */',
             },
             backgroundColor: {
               background:
-                'rgb(var(--bg-background), <alpha-value>) /* #000105 */',
+                'rgb(from var(--bg-background) r g b / <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -93,11 +93,11 @@ describe('background-design-token', () => {
             extend: {
               colors: {
                 'background-bg':
-                  'rgb(var(--pw-bg-background), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-bg-background) r g b / <alpha-value>) /* #000105 */',
               },
               backgroundColor: {
                 background:
-                  'rgb(var(--pw-bg-background), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-bg-background) r g b / <alpha-value>) /* #000105 */',
               },
             },
           },
@@ -142,13 +142,15 @@ describe('background-design-token', () => {
           extend: {
             colors: {
               'background-bg':
-                'rgb(var(--bg-background), <alpha-value>) /* #000105 */',
-              'button-bg': 'rgb(var(--bg-button), <alpha-value>) /* #000105 */',
+                'rgb(from var(--bg-background) r g b / <alpha-value>) /* #000105 */',
+              'button-bg':
+                'rgb(from var(--bg-button) r g b / <alpha-value>) /* #000105 */',
             },
             backgroundColor: {
               background:
-                'rgb(var(--bg-background), <alpha-value>) /* #000105 */',
-              button: 'rgb(var(--bg-button), <alpha-value>) /* #000105 */',
+                'rgb(from var(--bg-background) r g b / <alpha-value>) /* #000105 */',
+              button:
+                'rgb(from var(--bg-button) r g b / <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -201,14 +203,15 @@ describe('background-design-token', () => {
             extend: {
               colors: {
                 'background-bg':
-                  'rgb(var(--pw-bg-background), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-bg-background) r g b / <alpha-value>) /* #000105 */',
                 'button-bg':
-                  'rgb(var(--pw-bg-button), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-bg-button) r g b / <alpha-value>) /* #000105 */',
               },
               backgroundColor: {
                 background:
-                  'rgb(var(--pw-bg-background), <alpha-value>) /* #000105 */',
-                button: 'rgb(var(--pw-bg-button), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-bg-background) r g b / <alpha-value>) /* #000105 */',
+                button:
+                  'rgb(from var(--pw-bg-button) r g b / <alpha-value>) /* #000105 */',
               },
             },
           },

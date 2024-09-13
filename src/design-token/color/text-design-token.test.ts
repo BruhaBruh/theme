@@ -34,10 +34,11 @@ describe('text-design-token', () => {
           extend: {
             colors: {
               'primary-text':
-                'rgb(var(--text-primary), <alpha-value>) /* #000105 */',
+                'rgb(from var(--text-primary) r g b / <alpha-value>) /* #000105 */',
             },
             textColor: {
-              primary: 'rgb(var(--text-primary), <alpha-value>) /* #000105 */',
+              primary:
+                'rgb(from var(--text-primary) r g b / <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -76,11 +77,11 @@ describe('text-design-token', () => {
             extend: {
               colors: {
                 'primary-text':
-                  'rgb(var(--pw-text-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-text-primary) r g b / <alpha-value>) /* #000105 */',
               },
               textColor: {
                 primary:
-                  'rgb(var(--pw-text-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-text-primary) r g b / <alpha-value>) /* #000105 */',
               },
             },
           },
@@ -115,13 +116,15 @@ describe('text-design-token', () => {
         theme: {
           extend: {
             colors: {
-              'text-text': 'rgb(var(--text-text), <alpha-value>) /* #000105 */',
+              'text-text':
+                'rgb(from var(--text-text) r g b / <alpha-value>) /* #000105 */',
               'button-text':
-                'rgb(var(--text-button), <alpha-value>) /* #000105 */',
+                'rgb(from var(--text-button) r g b / <alpha-value>) /* #000105 */',
             },
             textColor: {
-              text: 'rgb(var(--text-text), <alpha-value>) /* #000105 */',
-              button: 'rgb(var(--text-button), <alpha-value>) /* #000105 */',
+              text: 'rgb(from var(--text-text) r g b / <alpha-value>) /* #000105 */',
+              button:
+                'rgb(from var(--text-button) r g b / <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -165,15 +168,15 @@ describe('text-design-token', () => {
             extend: {
               colors: {
                 'primary-text':
-                  'rgb(var(--pw-text-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-text-primary) r g b / <alpha-value>) /* #000105 */',
                 'button-text':
-                  'rgb(var(--pw-text-button), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-text-button) r g b / <alpha-value>) /* #000105 */',
               },
               textColor: {
                 primary:
-                  'rgb(var(--pw-text-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-text-primary) r g b / <alpha-value>) /* #000105 */',
                 button:
-                  'rgb(var(--pw-text-button), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-text-button) r g b / <alpha-value>) /* #000105 */',
               },
             },
           },

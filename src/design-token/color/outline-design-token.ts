@@ -33,7 +33,7 @@ export class OutlineDesignToken extends DesignToken {
 
     this.tokens.forEach((token) => {
       outlineColor[token.name] = token.css
-        ? `rgb(${token.css.keyVariable}, <alpha-value>) /* ${token.value} */`
+        ? `rgb(from ${token.css.keyVariable} r g b / <alpha-value>) /* ${token.value} */`
         : `${token.value}`;
       colors[`${token.name}-${this.type}`] = outlineColor[token.name];
     });

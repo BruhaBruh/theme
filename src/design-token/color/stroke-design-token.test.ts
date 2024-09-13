@@ -34,11 +34,11 @@ describe('stroke-design-token', () => {
           extend: {
             colors: {
               'primary-stroke':
-                'rgb(var(--stroke-primary), <alpha-value>) /* #000105 */',
+                'rgb(from var(--stroke-primary) r g b / <alpha-value>) /* #000105 */',
             },
             strokeColor: {
               primary:
-                'rgb(var(--stroke-primary), <alpha-value>) /* #000105 */',
+                'rgb(from var(--stroke-primary) r g b / <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -77,11 +77,11 @@ describe('stroke-design-token', () => {
             extend: {
               colors: {
                 'primary-stroke':
-                  'rgb(var(--pw-stroke-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-stroke-primary) r g b / <alpha-value>) /* #000105 */',
               },
               strokeColor: {
                 primary:
-                  'rgb(var(--pw-stroke-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-stroke-primary) r g b / <alpha-value>) /* #000105 */',
               },
             },
           },
@@ -117,13 +117,15 @@ describe('stroke-design-token', () => {
           extend: {
             colors: {
               'stroke-stroke':
-                'rgb(var(--stroke-stroke), <alpha-value>) /* #000105 */',
+                'rgb(from var(--stroke-stroke) r g b / <alpha-value>) /* #000105 */',
               'button-stroke':
-                'rgb(var(--stroke-button), <alpha-value>) /* #000105 */',
+                'rgb(from var(--stroke-button) r g b / <alpha-value>) /* #000105 */',
             },
             strokeColor: {
-              stroke: 'rgb(var(--stroke-stroke), <alpha-value>) /* #000105 */',
-              button: 'rgb(var(--stroke-button), <alpha-value>) /* #000105 */',
+              stroke:
+                'rgb(from var(--stroke-stroke) r g b / <alpha-value>) /* #000105 */',
+              button:
+                'rgb(from var(--stroke-button) r g b / <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -167,15 +169,15 @@ describe('stroke-design-token', () => {
             extend: {
               colors: {
                 'primary-stroke':
-                  'rgb(var(--pw-stroke-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-stroke-primary) r g b / <alpha-value>) /* #000105 */',
                 'button-stroke':
-                  'rgb(var(--pw-stroke-button), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-stroke-button) r g b / <alpha-value>) /* #000105 */',
               },
               strokeColor: {
                 primary:
-                  'rgb(var(--pw-stroke-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-stroke-primary) r g b / <alpha-value>) /* #000105 */',
                 button:
-                  'rgb(var(--pw-stroke-button), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-stroke-button) r g b / <alpha-value>) /* #000105 */',
               },
             },
           },

@@ -34,10 +34,11 @@ describe('fill-design-token', () => {
           extend: {
             colors: {
               'primary-fill':
-                'rgb(var(--fill-primary), <alpha-value>) /* #000105 */',
+                'rgb(from var(--fill-primary) r g b / <alpha-value>) /* #000105 */',
             },
             fillColor: {
-              primary: 'rgb(var(--fill-primary), <alpha-value>) /* #000105 */',
+              primary:
+                'rgb(from var(--fill-primary) r g b / <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -76,11 +77,11 @@ describe('fill-design-token', () => {
             extend: {
               colors: {
                 'primary-fill':
-                  'rgb(var(--pw-fill-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-fill-primary) r g b / <alpha-value>) /* #000105 */',
               },
               fillColor: {
                 primary:
-                  'rgb(var(--pw-fill-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-fill-primary) r g b / <alpha-value>) /* #000105 */',
               },
             },
           },
@@ -115,13 +116,15 @@ describe('fill-design-token', () => {
         theme: {
           extend: {
             colors: {
-              'fill-fill': 'rgb(var(--fill-fill), <alpha-value>) /* #000105 */',
+              'fill-fill':
+                'rgb(from var(--fill-fill) r g b / <alpha-value>) /* #000105 */',
               'button-fill':
-                'rgb(var(--fill-button), <alpha-value>) /* #000105 */',
+                'rgb(from var(--fill-button) r g b / <alpha-value>) /* #000105 */',
             },
             fillColor: {
-              fill: 'rgb(var(--fill-fill), <alpha-value>) /* #000105 */',
-              button: 'rgb(var(--fill-button), <alpha-value>) /* #000105 */',
+              fill: 'rgb(from var(--fill-fill) r g b / <alpha-value>) /* #000105 */',
+              button:
+                'rgb(from var(--fill-button) r g b / <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -165,15 +168,15 @@ describe('fill-design-token', () => {
             extend: {
               colors: {
                 'primary-fill':
-                  'rgb(var(--pw-fill-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-fill-primary) r g b / <alpha-value>) /* #000105 */',
                 'button-fill':
-                  'rgb(var(--pw-fill-button), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-fill-button) r g b / <alpha-value>) /* #000105 */',
               },
               fillColor: {
                 primary:
-                  'rgb(var(--pw-fill-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-fill-primary) r g b / <alpha-value>) /* #000105 */',
                 button:
-                  'rgb(var(--pw-fill-button), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-fill-button) r g b / <alpha-value>) /* #000105 */',
               },
             },
           },

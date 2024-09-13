@@ -30,7 +30,8 @@ describe('color-design-token', () => {
             initial: 'initial',
             transparent: 'transparent',
             unset: 'unset',
-            white: 'rgb(var(--color-white), <alpha-value>) /* #ffffff */',
+            white:
+              'rgb(from var(--color-white) r g b / <alpha-value>) /* #ffffff */',
           },
         },
       });
@@ -67,7 +68,8 @@ describe('color-design-token', () => {
               initial: 'initial',
               transparent: 'transparent',
               unset: 'unset',
-              white: 'rgb(var(--pw-color-white), <alpha-value>) /* #ffffff */',
+              white:
+                'rgb(from var(--pw-color-white) r g b / <alpha-value>) /* #ffffff */',
             },
           },
         });
@@ -106,10 +108,12 @@ describe('color-design-token', () => {
             initial: 'initial',
             transparent: 'transparent',
             unset: 'unset',
-            white: 'rgb(var(--color-white), <alpha-value>) /* #ffffff */',
+            white:
+              'rgb(from var(--color-white) r g b / <alpha-value>) /* #ffffff */',
             background:
-              'rgb(var(--color-background), <alpha-value>) /* #ffffff */',
-            button: 'rgb(var(--color-button), <alpha-value>) /* #ffffff */',
+              'rgb(from var(--color-background) r g b / <alpha-value>) /* #ffffff */',
+            button:
+              'rgb(from var(--color-button) r g b / <alpha-value>) /* #ffffff */',
           },
         },
       });
@@ -150,11 +154,12 @@ describe('color-design-token', () => {
               initial: 'initial',
               transparent: 'transparent',
               unset: 'unset',
-              white: 'rgb(var(--pw-color-white), <alpha-value>) /* #ffffff */',
+              white:
+                'rgb(from var(--pw-color-white) r g b / <alpha-value>) /* #ffffff */',
               background:
-                'rgb(var(--pw-color-background), <alpha-value>) /* #ffffff */',
+                'rgb(from var(--pw-color-background) r g b / <alpha-value>) /* #ffffff */',
               button:
-                'rgb(var(--pw-color-button), <alpha-value>) /* #ffffff */',
+                'rgb(from var(--pw-color-button) r g b / <alpha-value>) /* #ffffff */',
             },
           },
         });
@@ -261,68 +266,86 @@ describe('color-design-token', () => {
           colors: {
             current: 'currentColor',
             green: {
-              '100': 'rgb(var(--color-green-100), <alpha-value>) /* #E6FFE6 */',
+              '100':
+                'rgb(from var(--color-green-100) r g b / <alpha-value>) /* #E6FFE6 */',
               '1000':
-                'rgb(var(--color-green-1000), <alpha-value>) /* #001A00 */',
-              '150': 'rgb(var(--color-green-150), <alpha-value>) /* #CDF9CD */',
-              '200': 'rgb(var(--color-green-200), <alpha-value>) /* #B5F4B5 */',
-              '250': 'rgb(var(--color-green-250), <alpha-value>) /* #9FEE9F */',
-              '300': 'rgb(var(--color-green-300), <alpha-value>) /* #89E889 */',
-              '350': 'rgb(var(--color-green-350), <alpha-value>) /* #74E374 */',
-              '400': 'rgb(var(--color-green-400), <alpha-value>) /* #60DD60 */',
-              '450': 'rgb(var(--color-green-450), <alpha-value>) /* #4DD74D */',
-              '500': 'rgb(var(--color-green-500), <alpha-value>) /* #3AD23A */',
-              '550': 'rgb(var(--color-green-550), <alpha-value>) /* #29CC29 */',
-              '600': 'rgb(var(--color-green-600), <alpha-value>) /* #21B821 */',
-              '650': 'rgb(var(--color-green-650), <alpha-value>) /* #1AA41A */',
-              '700': 'rgb(var(--color-green-700), <alpha-value>) /* #139113 */',
-              '750': 'rgb(var(--color-green-750), <alpha-value>) /* #0E7D0E */',
-              '800': 'rgb(var(--color-green-800), <alpha-value>) /* #096909 */',
-              '850': 'rgb(var(--color-green-850), <alpha-value>) /* #065506 */',
-              '900': 'rgb(var(--color-green-900), <alpha-value>) /* #034103 */',
-              '950': 'rgb(var(--color-green-950), <alpha-value>) /* #012D01 */',
+                'rgb(from var(--color-green-1000) r g b / <alpha-value>) /* #001A00 */',
+              '150':
+                'rgb(from var(--color-green-150) r g b / <alpha-value>) /* #CDF9CD */',
+              '200':
+                'rgb(from var(--color-green-200) r g b / <alpha-value>) /* #B5F4B5 */',
+              '250':
+                'rgb(from var(--color-green-250) r g b / <alpha-value>) /* #9FEE9F */',
+              '300':
+                'rgb(from var(--color-green-300) r g b / <alpha-value>) /* #89E889 */',
+              '350':
+                'rgb(from var(--color-green-350) r g b / <alpha-value>) /* #74E374 */',
+              '400':
+                'rgb(from var(--color-green-400) r g b / <alpha-value>) /* #60DD60 */',
+              '450':
+                'rgb(from var(--color-green-450) r g b / <alpha-value>) /* #4DD74D */',
+              '500':
+                'rgb(from var(--color-green-500) r g b / <alpha-value>) /* #3AD23A */',
+              '550':
+                'rgb(from var(--color-green-550) r g b / <alpha-value>) /* #29CC29 */',
+              '600':
+                'rgb(from var(--color-green-600) r g b / <alpha-value>) /* #21B821 */',
+              '650':
+                'rgb(from var(--color-green-650) r g b / <alpha-value>) /* #1AA41A */',
+              '700':
+                'rgb(from var(--color-green-700) r g b / <alpha-value>) /* #139113 */',
+              '750':
+                'rgb(from var(--color-green-750) r g b / <alpha-value>) /* #0E7D0E */',
+              '800':
+                'rgb(from var(--color-green-800) r g b / <alpha-value>) /* #096909 */',
+              '850':
+                'rgb(from var(--color-green-850) r g b / <alpha-value>) /* #065506 */',
+              '900':
+                'rgb(from var(--color-green-900) r g b / <alpha-value>) /* #034103 */',
+              '950':
+                'rgb(from var(--color-green-950) r g b / <alpha-value>) /* #012D01 */',
             },
             inherit: 'inherit',
             initial: 'initial',
             neutral: {
               '100':
-                'rgb(var(--color-neutral-100), <alpha-value>) /* #F5F6FA */',
+                'rgb(from var(--color-neutral-100) r g b / <alpha-value>) /* #F5F6FA */',
               '1000':
-                'rgb(var(--color-neutral-1000), <alpha-value>) /* #000105 */',
+                'rgb(from var(--color-neutral-1000) r g b / <alpha-value>) /* #000105 */',
               '150':
-                'rgb(var(--color-neutral-150), <alpha-value>) /* #DBDDE4 */',
+                'rgb(from var(--color-neutral-150) r g b / <alpha-value>) /* #DBDDE4 */',
               '200':
-                'rgb(var(--color-neutral-200), <alpha-value>) /* #C1C4CE */',
+                'rgb(from var(--color-neutral-200) r g b / <alpha-value>) /* #C1C4CE */',
               '250':
-                'rgb(var(--color-neutral-250), <alpha-value>) /* #A9ACB8 */',
+                'rgb(from var(--color-neutral-250) r g b / <alpha-value>) /* #A9ACB8 */',
               '300':
-                'rgb(var(--color-neutral-300), <alpha-value>) /* #9195A2 */',
+                'rgb(from var(--color-neutral-300) r g b / <alpha-value>) /* #9195A2 */',
               '350':
-                'rgb(var(--color-neutral-350), <alpha-value>) /* #7B7E8B */',
+                'rgb(from var(--color-neutral-350) r g b / <alpha-value>) /* #7B7E8B */',
               '400':
-                'rgb(var(--color-neutral-400), <alpha-value>) /* #656875 */',
+                'rgb(from var(--color-neutral-400) r g b / <alpha-value>) /* #656875 */',
               '450':
-                'rgb(var(--color-neutral-450), <alpha-value>) /* #50535F */',
+                'rgb(from var(--color-neutral-450) r g b / <alpha-value>) /* #50535F */',
               '500':
-                'rgb(var(--color-neutral-500), <alpha-value>) /* #3C3F49 */',
+                'rgb(from var(--color-neutral-500) r g b / <alpha-value>) /* #3C3F49 */',
               '550':
-                'rgb(var(--color-neutral-550), <alpha-value>) /* #292B33 */',
+                'rgb(from var(--color-neutral-550) r g b / <alpha-value>) /* #292B33 */',
               '600':
-                'rgb(var(--color-neutral-600), <alpha-value>) /* #21232E */',
+                'rgb(from var(--color-neutral-600) r g b / <alpha-value>) /* #21232E */',
               '650':
-                'rgb(var(--color-neutral-650), <alpha-value>) /* #1A1D29 */',
+                'rgb(from var(--color-neutral-650) r g b / <alpha-value>) /* #1A1D29 */',
               '700':
-                'rgb(var(--color-neutral-700), <alpha-value>) /* #131724 */',
+                'rgb(from var(--color-neutral-700) r g b / <alpha-value>) /* #131724 */',
               '750':
-                'rgb(var(--color-neutral-750), <alpha-value>) /* #0E111F */',
+                'rgb(from var(--color-neutral-750) r g b / <alpha-value>) /* #0E111F */',
               '800':
-                'rgb(var(--color-neutral-800), <alpha-value>) /* #090D1A */',
+                'rgb(from var(--color-neutral-800) r g b / <alpha-value>) /* #090D1A */',
               '850':
-                'rgb(var(--color-neutral-850), <alpha-value>) /* #060914 */',
+                'rgb(from var(--color-neutral-850) r g b / <alpha-value>) /* #060914 */',
               '900':
-                'rgb(var(--color-neutral-900), <alpha-value>) /* #03050F */',
+                'rgb(from var(--color-neutral-900) r g b / <alpha-value>) /* #03050F */',
               '950':
-                'rgb(var(--color-neutral-950), <alpha-value>) /* #01030A */',
+                'rgb(from var(--color-neutral-950) r g b / <alpha-value>) /* #01030A */',
             },
             transparent: 'transparent',
             unset: 'unset',

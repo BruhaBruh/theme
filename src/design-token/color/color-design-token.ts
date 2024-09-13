@@ -58,7 +58,7 @@ export class ColorDesignToken extends DesignToken {
 
     this.tokens.forEach((token) => {
       const value = token.css
-        ? `rgb(${token.css.keyVariable}, <alpha-value>) /* ${token.value} */`
+        ? `rgb(from ${token.css.keyVariable} r g b / <alpha-value>) /* ${token.value} */`
         : `${token.value}`;
 
       if (!token.name.includes('-')) {

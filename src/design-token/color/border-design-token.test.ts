@@ -34,11 +34,11 @@ describe('border-design-token', () => {
           extend: {
             colors: {
               'primary-border':
-                'rgb(var(--border-primary), <alpha-value>) /* #000105 */',
+                'rgb(from var(--border-primary) r g b / <alpha-value>) /* #000105 */',
             },
             borderColor: {
               primary:
-                'rgb(var(--border-primary), <alpha-value>) /* #000105 */',
+                'rgb(from var(--border-primary) r g b / <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -77,11 +77,11 @@ describe('border-design-token', () => {
             extend: {
               colors: {
                 'primary-border':
-                  'rgb(var(--pw-border-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-border-primary) r g b / <alpha-value>) /* #000105 */',
               },
               borderColor: {
                 primary:
-                  'rgb(var(--pw-border-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-border-primary) r g b / <alpha-value>) /* #000105 */',
               },
             },
           },
@@ -117,13 +117,15 @@ describe('border-design-token', () => {
           extend: {
             colors: {
               'border-border':
-                'rgb(var(--border-border), <alpha-value>) /* #000105 */',
+                'rgb(from var(--border-border) r g b / <alpha-value>) /* #000105 */',
               'button-border':
-                'rgb(var(--border-button), <alpha-value>) /* #000105 */',
+                'rgb(from var(--border-button) r g b / <alpha-value>) /* #000105 */',
             },
             borderColor: {
-              border: 'rgb(var(--border-border), <alpha-value>) /* #000105 */',
-              button: 'rgb(var(--border-button), <alpha-value>) /* #000105 */',
+              border:
+                'rgb(from var(--border-border) r g b / <alpha-value>) /* #000105 */',
+              button:
+                'rgb(from var(--border-button) r g b / <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -167,15 +169,15 @@ describe('border-design-token', () => {
             extend: {
               colors: {
                 'primary-border':
-                  'rgb(var(--pw-border-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-border-primary) r g b / <alpha-value>) /* #000105 */',
                 'button-border':
-                  'rgb(var(--pw-border-button), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-border-button) r g b / <alpha-value>) /* #000105 */',
               },
               borderColor: {
                 primary:
-                  'rgb(var(--pw-border-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-border-primary) r g b / <alpha-value>) /* #000105 */',
                 button:
-                  'rgb(var(--pw-border-button), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-border-button) r g b / <alpha-value>) /* #000105 */',
               },
             },
           },

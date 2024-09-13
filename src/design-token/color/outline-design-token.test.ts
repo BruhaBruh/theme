@@ -34,11 +34,11 @@ describe('outline-design-token', () => {
           extend: {
             colors: {
               'primary-outline':
-                'rgb(var(--outline-primary), <alpha-value>) /* #000105 */',
+                'rgb(from var(--outline-primary) r g b / <alpha-value>) /* #000105 */',
             },
             outlineColor: {
               primary:
-                'rgb(var(--outline-primary), <alpha-value>) /* #000105 */',
+                'rgb(from var(--outline-primary) r g b / <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -77,11 +77,11 @@ describe('outline-design-token', () => {
             extend: {
               colors: {
                 'primary-outline':
-                  'rgb(var(--pw-outline-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-outline-primary) r g b / <alpha-value>) /* #000105 */',
               },
               outlineColor: {
                 primary:
-                  'rgb(var(--pw-outline-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-outline-primary) r g b / <alpha-value>) /* #000105 */',
               },
             },
           },
@@ -117,14 +117,15 @@ describe('outline-design-token', () => {
           extend: {
             colors: {
               'outline-outline':
-                'rgb(var(--outline-outline), <alpha-value>) /* #000105 */',
+                'rgb(from var(--outline-outline) r g b / <alpha-value>) /* #000105 */',
               'button-outline':
-                'rgb(var(--outline-button), <alpha-value>) /* #000105 */',
+                'rgb(from var(--outline-button) r g b / <alpha-value>) /* #000105 */',
             },
             outlineColor: {
               outline:
-                'rgb(var(--outline-outline), <alpha-value>) /* #000105 */',
-              button: 'rgb(var(--outline-button), <alpha-value>) /* #000105 */',
+                'rgb(from var(--outline-outline) r g b / <alpha-value>) /* #000105 */',
+              button:
+                'rgb(from var(--outline-button) r g b / <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -168,15 +169,15 @@ describe('outline-design-token', () => {
             extend: {
               colors: {
                 'primary-outline':
-                  'rgb(var(--pw-outline-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-outline-primary) r g b / <alpha-value>) /* #000105 */',
                 'button-outline':
-                  'rgb(var(--pw-outline-button), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-outline-button) r g b / <alpha-value>) /* #000105 */',
               },
               outlineColor: {
                 primary:
-                  'rgb(var(--pw-outline-primary), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-outline-primary) r g b / <alpha-value>) /* #000105 */',
                 button:
-                  'rgb(var(--pw-outline-button), <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-outline-button) r g b / <alpha-value>) /* #000105 */',
               },
             },
           },
