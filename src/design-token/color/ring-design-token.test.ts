@@ -32,8 +32,12 @@ describe('ring-design-token', () => {
       expect(ringDesignToken.tailwindConfig()).toStrictEqual({
         theme: {
           extend: {
+            colors: {
+              'primary-ring':
+                'rgb(var(--ring-primary), <alpha-value>) /* #000105 */',
+            },
             ringColor: {
-              primary: 'var(--ring-primary) /* #000105 */',
+              primary: 'rgb(var(--ring-primary), <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -70,8 +74,13 @@ describe('ring-design-token', () => {
         expect(ringDesignToken.tailwindConfig()).toStrictEqual({
           theme: {
             extend: {
+              colors: {
+                'primary-ring':
+                  'rgb(var(--pw-ring-primary), <alpha-value>) /* #000105 */',
+              },
               ringColor: {
-                primary: 'var(--pw-ring-primary) /* #000105 */',
+                primary:
+                  'rgb(var(--pw-ring-primary), <alpha-value>) /* #000105 */',
               },
             },
           },
@@ -105,9 +114,14 @@ describe('ring-design-token', () => {
       expect(ringDesignToken.tailwindConfig()).toStrictEqual({
         theme: {
           extend: {
+            colors: {
+              'ring-ring': 'rgb(var(--ring-ring), <alpha-value>) /* #000105 */',
+              'button-ring':
+                'rgb(var(--ring-button), <alpha-value>) /* #000105 */',
+            },
             ringColor: {
-              button: 'var(--ring-button) /* #000105 */',
-              ring: 'var(--ring-ring) /* #000105 */',
+              ring: 'rgb(var(--ring-ring), <alpha-value>) /* #000105 */',
+              button: 'rgb(var(--ring-button), <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -149,9 +163,17 @@ describe('ring-design-token', () => {
         expect(ringDesignToken.tailwindConfig()).toStrictEqual({
           theme: {
             extend: {
+              colors: {
+                'primary-ring':
+                  'rgb(var(--pw-ring-primary), <alpha-value>) /* #000105 */',
+                'button-ring':
+                  'rgb(var(--pw-ring-button), <alpha-value>) /* #000105 */',
+              },
               ringColor: {
-                button: 'var(--pw-ring-button) /* #000105 */',
-                primary: 'var(--pw-ring-primary) /* #000105 */',
+                primary:
+                  'rgb(var(--pw-ring-primary), <alpha-value>) /* #000105 */',
+                button:
+                  'rgb(var(--pw-ring-button), <alpha-value>) /* #000105 */',
               },
             },
           },

@@ -6,7 +6,6 @@ import { ThemesConfig } from './schema/themes-config';
 export const loadThemes = (config: Config): ThemesConfig => {
   const files = globSync(config.content);
   const themesConfig: ThemesConfig = {
-    default: config.default,
     prefix: config.prefix,
     themes: {},
   };
@@ -22,9 +21,6 @@ export const loadThemes = (config: Config): ThemesConfig => {
       ...themeConfig,
     };
   });
-
-  if (themesConfig.default && !themesConfig.themes[themesConfig.default])
-    throw new Error('default theme is not found');
 
   return themesConfig;
 };

@@ -14,26 +14,30 @@ describe('text-design-token', () => {
 
   describe('add text color', () => {
     test('css variables', () => {
-      textDesignToken.addTextColor('foreground', '{color.neutral.1000}');
+      textDesignToken.addTextColor('primary', '{color.neutral.1000}');
       expect(textDesignToken.cssVariables).toStrictEqual({
-        '--text-foreground': 'var(--color-neutral-1000)',
+        '--text-primary': 'var(--color-neutral-1000)',
       });
     });
 
     test('css', () => {
-      textDesignToken.addTextColor('foreground', '{color.neutral.1000}');
+      textDesignToken.addTextColor('primary', '{color.neutral.1000}');
       expect(textDesignToken.css()).toStrictEqual([
-        '--text-foreground: var(--color-neutral-1000);',
+        '--text-primary: var(--color-neutral-1000);',
       ]);
     });
 
     test('tailwind config', () => {
-      textDesignToken.addTextColor('foreground', '{color.neutral.1000}');
+      textDesignToken.addTextColor('primary', '{color.neutral.1000}');
       expect(textDesignToken.tailwindConfig()).toStrictEqual({
         theme: {
           extend: {
+            colors: {
+              'primary-text':
+                'rgb(var(--text-primary), <alpha-value>) /* #000105 */',
+            },
             textColor: {
-              foreground: 'var(--text-foreground) /* #000105 */',
+              primary: 'rgb(var(--text-primary), <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -52,26 +56,31 @@ describe('text-design-token', () => {
       });
 
       test('css variables', () => {
-        textDesignToken.addTextColor('foreground', '{color.neutral.1000}');
+        textDesignToken.addTextColor('primary', '{color.neutral.1000}');
         expect(textDesignToken.cssVariables).toStrictEqual({
-          '--pw-text-foreground': 'var(--pw-color-neutral-1000)',
+          '--pw-text-primary': 'var(--pw-color-neutral-1000)',
         });
       });
 
       test('css', () => {
-        textDesignToken.addTextColor('foreground', '{color.neutral.1000}');
+        textDesignToken.addTextColor('primary', '{color.neutral.1000}');
         expect(textDesignToken.css()).toStrictEqual([
-          '--pw-text-foreground: var(--pw-color-neutral-1000);',
+          '--pw-text-primary: var(--pw-color-neutral-1000);',
         ]);
       });
 
       test('tailwind config', () => {
-        textDesignToken.addTextColor('foreground', '{color.neutral.1000}');
+        textDesignToken.addTextColor('primary', '{color.neutral.1000}');
         expect(textDesignToken.tailwindConfig()).toStrictEqual({
           theme: {
             extend: {
+              colors: {
+                'primary-text':
+                  'rgb(var(--pw-text-primary), <alpha-value>) /* #000105 */',
+              },
               textColor: {
-                foreground: 'var(--pw-text-foreground) /* #000105 */',
+                primary:
+                  'rgb(var(--pw-text-primary), <alpha-value>) /* #000105 */',
               },
             },
           },
@@ -105,9 +114,14 @@ describe('text-design-token', () => {
       expect(textDesignToken.tailwindConfig()).toStrictEqual({
         theme: {
           extend: {
+            colors: {
+              'text-text': 'rgb(var(--text-text), <alpha-value>) /* #000105 */',
+              'button-text':
+                'rgb(var(--text-button), <alpha-value>) /* #000105 */',
+            },
             textColor: {
-              text: 'var(--text-text) /* #000105 */',
-              button: 'var(--text-button) /* #000105 */',
+              text: 'rgb(var(--text-text), <alpha-value>) /* #000105 */',
+              button: 'rgb(var(--text-button), <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -126,32 +140,40 @@ describe('text-design-token', () => {
       });
 
       test('css variables', () => {
-        textDesignToken.addTextColor('foreground', '{color.neutral.1000}');
-        textDesignToken.addTextColor('button', '{text.foreground}');
+        textDesignToken.addTextColor('primary', '{color.neutral.1000}');
+        textDesignToken.addTextColor('button', '{text.primary}');
         expect(textDesignToken.cssVariables).toStrictEqual({
-          '--pw-text-foreground': 'var(--pw-color-neutral-1000)',
-          '--pw-text-button': 'var(--pw-text-foreground)',
+          '--pw-text-primary': 'var(--pw-color-neutral-1000)',
+          '--pw-text-button': 'var(--pw-text-primary)',
         });
       });
 
       test('css', () => {
-        textDesignToken.addTextColor('foreground', '{color.neutral.1000}');
-        textDesignToken.addTextColor('button', '{text.foreground}');
+        textDesignToken.addTextColor('primary', '{color.neutral.1000}');
+        textDesignToken.addTextColor('button', '{text.primary}');
         expect(textDesignToken.css()).toStrictEqual([
-          '--pw-text-foreground: var(--pw-color-neutral-1000);',
-          '--pw-text-button: var(--pw-text-foreground);',
+          '--pw-text-primary: var(--pw-color-neutral-1000);',
+          '--pw-text-button: var(--pw-text-primary);',
         ]);
       });
 
       test('tailwind config', () => {
-        textDesignToken.addTextColor('foreground', '{color.neutral.1000}');
-        textDesignToken.addTextColor('button', '{text.foreground}');
+        textDesignToken.addTextColor('primary', '{color.neutral.1000}');
+        textDesignToken.addTextColor('button', '{text.primary}');
         expect(textDesignToken.tailwindConfig()).toStrictEqual({
           theme: {
             extend: {
+              colors: {
+                'primary-text':
+                  'rgb(var(--pw-text-primary), <alpha-value>) /* #000105 */',
+                'button-text':
+                  'rgb(var(--pw-text-button), <alpha-value>) /* #000105 */',
+              },
               textColor: {
-                foreground: 'var(--pw-text-foreground) /* #000105 */',
-                button: 'var(--pw-text-button) /* #000105 */',
+                primary:
+                  'rgb(var(--pw-text-primary), <alpha-value>) /* #000105 */',
+                button:
+                  'rgb(var(--pw-text-button), <alpha-value>) /* #000105 */',
               },
             },
           },

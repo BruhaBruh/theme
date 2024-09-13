@@ -34,6 +34,8 @@ export const themePlugin = plugin.withOptions<Omit<Partial<Config>, 'output'>>(
     const themeManagers = loadThemeManagers(config);
 
     return (api) => {
+      api.addVariant('starting', '@starting-style');
+
       themeManagers.forEach((themeManager) => {
         themeManager.applyTailwind(api);
       });

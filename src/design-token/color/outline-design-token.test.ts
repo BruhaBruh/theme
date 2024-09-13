@@ -32,8 +32,13 @@ describe('outline-design-token', () => {
       expect(outlineDesignToken.tailwindConfig()).toStrictEqual({
         theme: {
           extend: {
+            colors: {
+              'primary-outline':
+                'rgb(var(--outline-primary), <alpha-value>) /* #000105 */',
+            },
             outlineColor: {
-              primary: 'var(--outline-primary) /* #000105 */',
+              primary:
+                'rgb(var(--outline-primary), <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -70,8 +75,13 @@ describe('outline-design-token', () => {
         expect(outlineDesignToken.tailwindConfig()).toStrictEqual({
           theme: {
             extend: {
+              colors: {
+                'primary-outline':
+                  'rgb(var(--pw-outline-primary), <alpha-value>) /* #000105 */',
+              },
               outlineColor: {
-                primary: 'var(--pw-outline-primary) /* #000105 */',
+                primary:
+                  'rgb(var(--pw-outline-primary), <alpha-value>) /* #000105 */',
               },
             },
           },
@@ -105,9 +115,16 @@ describe('outline-design-token', () => {
       expect(outlineDesignToken.tailwindConfig()).toStrictEqual({
         theme: {
           extend: {
+            colors: {
+              'outline-outline':
+                'rgb(var(--outline-outline), <alpha-value>) /* #000105 */',
+              'button-outline':
+                'rgb(var(--outline-button), <alpha-value>) /* #000105 */',
+            },
             outlineColor: {
-              outline: 'var(--outline-outline) /* #000105 */',
-              button: 'var(--outline-button) /* #000105 */',
+              outline:
+                'rgb(var(--outline-outline), <alpha-value>) /* #000105 */',
+              button: 'rgb(var(--outline-button), <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -149,9 +166,17 @@ describe('outline-design-token', () => {
         expect(outlineDesignToken.tailwindConfig()).toStrictEqual({
           theme: {
             extend: {
+              colors: {
+                'primary-outline':
+                  'rgb(var(--pw-outline-primary), <alpha-value>) /* #000105 */',
+                'button-outline':
+                  'rgb(var(--pw-outline-button), <alpha-value>) /* #000105 */',
+              },
               outlineColor: {
-                primary: 'var(--pw-outline-primary) /* #000105 */',
-                button: 'var(--pw-outline-button) /* #000105 */',
+                primary:
+                  'rgb(var(--pw-outline-primary), <alpha-value>) /* #000105 */',
+                button:
+                  'rgb(var(--pw-outline-button), <alpha-value>) /* #000105 */',
               },
             },
           },

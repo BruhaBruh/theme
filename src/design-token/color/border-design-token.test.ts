@@ -32,8 +32,13 @@ describe('border-design-token', () => {
       expect(borderDesignToken.tailwindConfig()).toStrictEqual({
         theme: {
           extend: {
+            colors: {
+              'primary-border':
+                'rgb(var(--border-primary), <alpha-value>) /* #000105 */',
+            },
             borderColor: {
-              primary: 'var(--border-primary) /* #000105 */',
+              primary:
+                'rgb(var(--border-primary), <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -70,8 +75,13 @@ describe('border-design-token', () => {
         expect(borderDesignToken.tailwindConfig()).toStrictEqual({
           theme: {
             extend: {
+              colors: {
+                'primary-border':
+                  'rgb(var(--pw-border-primary), <alpha-value>) /* #000105 */',
+              },
               borderColor: {
-                primary: 'var(--pw-border-primary) /* #000105 */',
+                primary:
+                  'rgb(var(--pw-border-primary), <alpha-value>) /* #000105 */',
               },
             },
           },
@@ -105,9 +115,15 @@ describe('border-design-token', () => {
       expect(borderDesignToken.tailwindConfig()).toStrictEqual({
         theme: {
           extend: {
+            colors: {
+              'border-border':
+                'rgb(var(--border-border), <alpha-value>) /* #000105 */',
+              'button-border':
+                'rgb(var(--border-button), <alpha-value>) /* #000105 */',
+            },
             borderColor: {
-              border: 'var(--border-border) /* #000105 */',
-              button: 'var(--border-button) /* #000105 */',
+              border: 'rgb(var(--border-border), <alpha-value>) /* #000105 */',
+              button: 'rgb(var(--border-button), <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -149,9 +165,17 @@ describe('border-design-token', () => {
         expect(borderDesignToken.tailwindConfig()).toStrictEqual({
           theme: {
             extend: {
+              colors: {
+                'primary-border':
+                  'rgb(var(--pw-border-primary), <alpha-value>) /* #000105 */',
+                'button-border':
+                  'rgb(var(--pw-border-button), <alpha-value>) /* #000105 */',
+              },
               borderColor: {
-                primary: 'var(--pw-border-primary) /* #000105 */',
-                button: 'var(--pw-border-button) /* #000105 */',
+                primary:
+                  'rgb(var(--pw-border-primary), <alpha-value>) /* #000105 */',
+                button:
+                  'rgb(var(--pw-border-button), <alpha-value>) /* #000105 */',
               },
             },
           },

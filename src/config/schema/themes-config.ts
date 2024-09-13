@@ -2,7 +2,6 @@ import { z } from 'zod';
 import { themeConfigSchema } from './theme-config';
 
 export const themesConfigSchema = z.object({
-  default: z.string().nullish(),
   prefix: z.string().default(''),
   themes: z
     .object({})

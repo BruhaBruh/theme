@@ -32,8 +32,13 @@ describe('stroke-design-token', () => {
       expect(strokeDesignToken.tailwindConfig()).toStrictEqual({
         theme: {
           extend: {
+            colors: {
+              'primary-stroke':
+                'rgb(var(--stroke-primary), <alpha-value>) /* #000105 */',
+            },
             strokeColor: {
-              primary: 'var(--stroke-primary) /* #000105 */',
+              primary:
+                'rgb(var(--stroke-primary), <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -70,8 +75,13 @@ describe('stroke-design-token', () => {
         expect(strokeDesignToken.tailwindConfig()).toStrictEqual({
           theme: {
             extend: {
+              colors: {
+                'primary-stroke':
+                  'rgb(var(--pw-stroke-primary), <alpha-value>) /* #000105 */',
+              },
               strokeColor: {
-                primary: 'var(--pw-stroke-primary) /* #000105 */',
+                primary:
+                  'rgb(var(--pw-stroke-primary), <alpha-value>) /* #000105 */',
               },
             },
           },
@@ -105,9 +115,15 @@ describe('stroke-design-token', () => {
       expect(strokeDesignToken.tailwindConfig()).toStrictEqual({
         theme: {
           extend: {
+            colors: {
+              'stroke-stroke':
+                'rgb(var(--stroke-stroke), <alpha-value>) /* #000105 */',
+              'button-stroke':
+                'rgb(var(--stroke-button), <alpha-value>) /* #000105 */',
+            },
             strokeColor: {
-              stroke: 'var(--stroke-stroke) /* #000105 */',
-              button: 'var(--stroke-button) /* #000105 */',
+              stroke: 'rgb(var(--stroke-stroke), <alpha-value>) /* #000105 */',
+              button: 'rgb(var(--stroke-button), <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -149,9 +165,17 @@ describe('stroke-design-token', () => {
         expect(strokeDesignToken.tailwindConfig()).toStrictEqual({
           theme: {
             extend: {
+              colors: {
+                'primary-stroke':
+                  'rgb(var(--pw-stroke-primary), <alpha-value>) /* #000105 */',
+                'button-stroke':
+                  'rgb(var(--pw-stroke-button), <alpha-value>) /* #000105 */',
+              },
               strokeColor: {
-                primary: 'var(--pw-stroke-primary) /* #000105 */',
-                button: 'var(--pw-stroke-button) /* #000105 */',
+                primary:
+                  'rgb(var(--pw-stroke-primary), <alpha-value>) /* #000105 */',
+                button:
+                  'rgb(var(--pw-stroke-button), <alpha-value>) /* #000105 */',
               },
             },
           },

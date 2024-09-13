@@ -28,17 +28,20 @@ export class StrokeDesignToken extends DesignToken {
   }
 
   override tailwindConfig(): TailwindConfig {
+    const colors: Record<string, string> = {};
     const strokeColor: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
       strokeColor[token.name] = token.css
-        ? `${token.css.keyVariable} /* ${token.value} */`
-        : token.value;
+        ? `rgb(${token.css.keyVariable}, <alpha-value>) /* ${token.value} */`
+        : `${token.value}`;
+      colors[`${token.name}-${this.type}`] = strokeColor[token.name];
     });
 
     return {
       theme: {
         extend: {
+          colors,
           strokeColor,
         },
       },

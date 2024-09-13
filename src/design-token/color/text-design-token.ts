@@ -28,17 +28,20 @@ export class TextDesignToken extends DesignToken {
   }
 
   override tailwindConfig(): TailwindConfig {
+    const colors: Record<string, string> = {};
     const textColor: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
       textColor[token.name] = token.css
-        ? `${token.css.keyVariable} /* ${token.value} */`
-        : token.value;
+        ? `rgb(${token.css.keyVariable}, <alpha-value>) /* ${token.value} */`
+        : `${token.value}`;
+      colors[`${token.name}-${this.type}`] = textColor[token.name];
     });
 
     return {
       theme: {
         extend: {
+          colors,
           textColor,
         },
       },

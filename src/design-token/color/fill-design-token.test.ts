@@ -32,8 +32,12 @@ describe('fill-design-token', () => {
       expect(fillDesignToken.tailwindConfig()).toStrictEqual({
         theme: {
           extend: {
+            colors: {
+              'primary-fill':
+                'rgb(var(--fill-primary), <alpha-value>) /* #000105 */',
+            },
             fillColor: {
-              primary: 'var(--fill-primary) /* #000105 */',
+              primary: 'rgb(var(--fill-primary), <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -70,8 +74,13 @@ describe('fill-design-token', () => {
         expect(fillDesignToken.tailwindConfig()).toStrictEqual({
           theme: {
             extend: {
+              colors: {
+                'primary-fill':
+                  'rgb(var(--pw-fill-primary), <alpha-value>) /* #000105 */',
+              },
               fillColor: {
-                primary: 'var(--pw-fill-primary) /* #000105 */',
+                primary:
+                  'rgb(var(--pw-fill-primary), <alpha-value>) /* #000105 */',
               },
             },
           },
@@ -105,9 +114,14 @@ describe('fill-design-token', () => {
       expect(fillDesignToken.tailwindConfig()).toStrictEqual({
         theme: {
           extend: {
+            colors: {
+              'fill-fill': 'rgb(var(--fill-fill), <alpha-value>) /* #000105 */',
+              'button-fill':
+                'rgb(var(--fill-button), <alpha-value>) /* #000105 */',
+            },
             fillColor: {
-              fill: 'var(--fill-fill) /* #000105 */',
-              button: 'var(--fill-button) /* #000105 */',
+              fill: 'rgb(var(--fill-fill), <alpha-value>) /* #000105 */',
+              button: 'rgb(var(--fill-button), <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -149,9 +163,17 @@ describe('fill-design-token', () => {
         expect(fillDesignToken.tailwindConfig()).toStrictEqual({
           theme: {
             extend: {
+              colors: {
+                'primary-fill':
+                  'rgb(var(--pw-fill-primary), <alpha-value>) /* #000105 */',
+                'button-fill':
+                  'rgb(var(--pw-fill-button), <alpha-value>) /* #000105 */',
+              },
               fillColor: {
-                primary: 'var(--pw-fill-primary) /* #000105 */',
-                button: 'var(--pw-fill-button) /* #000105 */',
+                primary:
+                  'rgb(var(--pw-fill-primary), <alpha-value>) /* #000105 */',
+                button:
+                  'rgb(var(--pw-fill-button), <alpha-value>) /* #000105 */',
               },
             },
           },

@@ -39,8 +39,13 @@ describe('background-design-token', () => {
       expect(backgroundDesignToken.tailwindConfig()).toStrictEqual({
         theme: {
           extend: {
+            colors: {
+              'background-bg':
+                'rgb(var(--bg-background), <alpha-value>) /* #000105 */',
+            },
             backgroundColor: {
-              background: 'var(--bg-background) /* #000105 */',
+              background:
+                'rgb(var(--bg-background), <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -86,8 +91,13 @@ describe('background-design-token', () => {
         expect(backgroundDesignToken.tailwindConfig()).toStrictEqual({
           theme: {
             extend: {
+              colors: {
+                'background-bg':
+                  'rgb(var(--pw-bg-background), <alpha-value>) /* #000105 */',
+              },
               backgroundColor: {
-                background: 'var(--pw-bg-background) /* #000105 */',
+                background:
+                  'rgb(var(--pw-bg-background), <alpha-value>) /* #000105 */',
               },
             },
           },
@@ -130,9 +140,15 @@ describe('background-design-token', () => {
       expect(backgroundDesignToken.tailwindConfig()).toStrictEqual({
         theme: {
           extend: {
+            colors: {
+              'background-bg':
+                'rgb(var(--bg-background), <alpha-value>) /* #000105 */',
+              'button-bg': 'rgb(var(--bg-button), <alpha-value>) /* #000105 */',
+            },
             backgroundColor: {
-              background: 'var(--bg-background) /* #000105 */',
-              button: 'var(--bg-button) /* #000105 */',
+              background:
+                'rgb(var(--bg-background), <alpha-value>) /* #000105 */',
+              button: 'rgb(var(--bg-button), <alpha-value>) /* #000105 */',
             },
           },
         },
@@ -183,9 +199,16 @@ describe('background-design-token', () => {
         expect(backgroundDesignToken.tailwindConfig()).toStrictEqual({
           theme: {
             extend: {
+              colors: {
+                'background-bg':
+                  'rgb(var(--pw-bg-background), <alpha-value>) /* #000105 */',
+                'button-bg':
+                  'rgb(var(--pw-bg-button), <alpha-value>) /* #000105 */',
+              },
               backgroundColor: {
-                background: 'var(--pw-bg-background) /* #000105 */',
-                button: 'var(--pw-bg-button) /* #000105 */',
+                background:
+                  'rgb(var(--pw-bg-background), <alpha-value>) /* #000105 */',
+                button: 'rgb(var(--pw-bg-button), <alpha-value>) /* #000105 */',
               },
             },
           },

@@ -28,17 +28,20 @@ export class OutlineDesignToken extends DesignToken {
   }
 
   override tailwindConfig(): TailwindConfig {
+    const colors: Record<string, string> = {};
     const outlineColor: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
       outlineColor[token.name] = token.css
-        ? `${token.css.keyVariable} /* ${token.value} */`
-        : token.value;
+        ? `rgb(${token.css.keyVariable}, <alpha-value>) /* ${token.value} */`
+        : `${token.value}`;
+      colors[`${token.name}-${this.type}`] = outlineColor[token.name];
     });
 
     return {
       theme: {
         extend: {
+          colors,
           outlineColor,
         },
       },

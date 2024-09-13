@@ -32,17 +32,20 @@ export class BackgroundDesignToken extends DesignToken {
   }
 
   override tailwindConfig(): TailwindConfig {
+    const colors: Record<string, string> = {};
     const backgroundColor: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
       backgroundColor[token.name] = token.css
-        ? `${token.css.keyVariable} /* ${token.value} */`
-        : token.value;
+        ? `rgb(${token.css.keyVariable}, <alpha-value>) /* ${token.value} */`
+        : `${token.value}`;
+      colors[`${token.name}-${this.type}`] = backgroundColor[token.name];
     });
 
     return {
       theme: {
         extend: {
+          colors,
           backgroundColor,
         },
       },

@@ -28,17 +28,20 @@ export class RingDesignToken extends DesignToken {
   }
 
   override tailwindConfig(): TailwindConfig {
+    const colors: Record<string, string> = {};
     const ringColor: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
       ringColor[token.name] = token.css
-        ? `${token.css.keyVariable} /* ${token.value} */`
-        : token.value;
+        ? `rgb(${token.css.keyVariable}, <alpha-value>) /* ${token.value} */`
+        : `${token.value}`;
+      colors[`${token.name}-${this.type}`] = ringColor[token.name];
     });
 
     return {
       theme: {
         extend: {
+          colors,
           ringColor,
         },
       },

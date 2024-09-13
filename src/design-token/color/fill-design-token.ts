@@ -28,17 +28,20 @@ export class FillDesignToken extends DesignToken {
   }
 
   override tailwindConfig(): TailwindConfig {
+    const colors: Record<string, string> = {};
     const fillColor: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
       fillColor[token.name] = token.css
-        ? `${token.css.keyVariable} /* ${token.value} */`
-        : token.value;
+        ? `rgb(${token.css.keyVariable}, <alpha-value>) /* ${token.value} */`
+        : `${token.value}`;
+      colors[`${token.name}-${this.type}`] = fillColor[token.name];
     });
 
     return {
       theme: {
         extend: {
+          colors,
           fillColor,
         },
       },

@@ -28,17 +28,20 @@ export class BorderDesignToken extends DesignToken {
   }
 
   override tailwindConfig(): TailwindConfig {
+    const colors: Record<string, string> = {};
     const borderColor: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
       borderColor[token.name] = token.css
-        ? `${token.css.keyVariable} /* ${token.value} */`
-        : token.value;
+        ? `rgb(${token.css.keyVariable}, <alpha-value>) /* ${token.value} */`
+        : `${token.value}`;
+      colors[`${token.name}-${this.type}`] = borderColor[token.name];
     });
 
     return {
       theme: {
         extend: {
+          colors,
           borderColor,
         },
       },
