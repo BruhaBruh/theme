@@ -212,17 +212,12 @@ export class TokenManager {
       Object.entries(config).forEach(([colorName, values]) => {
         const generator = values._generator;
         if (generator && typeof generator !== 'string') {
-          const {
-            base,
-            modifier,
-            tintChromaMultiplier,
-            shadeChromaMultiplier,
-          } = generator;
+          const { base, modifier, tintTarget, shadeTarget } = generator;
 
           this.#colorDesignToken.generateColor(colorName, base, {
             modifierGenerator: modifier || undefined,
-            tintChromaMultiplier,
-            shadeChromaMultiplier,
+            tintTarget,
+            shadeTarget,
           });
         }
 

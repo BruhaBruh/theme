@@ -20,8 +20,6 @@ export const themeConfigSchema = z.object({
                   step: z.number().default(50),
                 })
                 .nullish(),
-              tintChromaMultiplier: z.number().default(1),
-              shadeChromaMultiplier: z.number().default(0.8),
             }),
           }),
         ),

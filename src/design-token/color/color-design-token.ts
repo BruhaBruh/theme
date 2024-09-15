@@ -1,6 +1,6 @@
 import { DesignTokenType } from '@/types/design-token-type';
 import { TailwindConfig } from '@/types/tailwind';
-import { Hsv, formatHex, hsv, oklch } from 'culori';
+import { Oklch, formatHex, interpolate, oklch } from 'culori';
 import { DesignToken } from '../design-token';
 
 type ColorGenerateOptions = {
@@ -9,8 +9,6 @@ type ColorGenerateOptions = {
     max?: number;
     step?: number;
   };
-  tintChromaMultiplier?: number;
-  shadeChromaMultiplier?: number;
 };
 
 export class ColorDesignToken extends DesignToken {
@@ -38,8 +36,8 @@ export class ColorDesignToken extends DesignToken {
     baseColor: string,
     options: ColorGenerateOptions = {},
   ) {
-    const baseColorHsv = this.hsvFromStringWithReferences(baseColor);
-    const color = this.color(baseColorHsv, options);
+    const baseColorOklch = this.oklchFromStringWithReferences(baseColor);
+    const color = this.color(baseColorOklch, options);
 
     Object.entries(color).forEach(([key, value]) => {
       this.addColor(`${name}-${key}`, value);
@@ -93,11 +91,11 @@ export class ColorDesignToken extends DesignToken {
     return super.variable({ type, parts: [this.type, ...parts] });
   }
 
-  private hsvFromStringWithReferences(ref: string): Hsv {
+  private oklchFromStringWithReferences(ref: string): Oklch {
     const reference = this.resolveReferences(ref);
     const value = this.resolveAbsoluteValue(reference);
     try {
-      const color = hsv(value);
+      const color = oklch(value);
       if (!color) throw new Error();
       return color;
     } catch (ignore) {
@@ -106,49 +104,23 @@ export class ColorDesignToken extends DesignToken {
   }
 
   private color(
-    base: Hsv,
-    {
-      modifierGenerator = {},
-      tintChromaMultiplier = 1,
-      shadeChromaMultiplier = 0.8,
-    }: ColorGenerateOptions,
+    base: Oklch,
+    { modifierGenerator = {} }: ColorGenerateOptions,
   ): Record<string, string> {
     const result: Record<string, string> = {};
 
     const { min = 50, max = 950, step = 50 } = modifierGenerator;
-    const middle = max / 2;
 
-    for (let modifier = min; modifier <= middle; modifier += step) {
-      const color = oklch(base);
-      const factor =
-        1 -
+    const interpolator = interpolate(['#ffffff', base, '#000000'], 'cubehelix');
+
+    for (let modifier = min; modifier <= max; modifier += step) {
+      const color = interpolator(
         this.normalize(modifier, {
           minInput: min,
-          maxInput: middle,
-        });
-      color.l = color.l + (1 - color.l) * factor;
-      color.c = color.c * (1 - tintChromaMultiplier * factor);
-      result[modifier] = formatHex(color);
-    }
-
-    let nearest = max;
-    let nearestDelta = Math.abs(nearest - middle);
-    for (let modifier = min; modifier <= max; modifier += step) {
-      const delta = Math.abs(modifier - middle);
-      if (delta < nearestDelta && modifier > middle) {
-        nearest = modifier;
-        nearestDelta = delta;
-      }
-    }
-
-    for (let modifier = nearest; modifier <= max; modifier += step) {
-      const color = oklch(base);
-      const factor = this.normalize(modifier, {
-        minInput: nearest,
-        maxInput: max,
-      });
-      color.l = color.l * (1 - factor);
-      color.c = color.c * (1 - shadeChromaMultiplier * factor);
+          maxInput: max,
+        }),
+      );
+      if (!color) throw new Error(`invalid color: ${color}`);
       result[modifier] = formatHex(color);
     }
 
@@ -187,5 +159,13 @@ export class ColorDesignToken extends DesignToken {
       minOutput;
 
     return Math.max(Math.min(normalized, maxOutput), minOutput);
+  }
+
+  private easeOutSine(t: number): number {
+    return Math.sin((t * Math.PI) / 2);
+  }
+
+  private easeInOutSine(t: number): number {
+    return -(Math.cos(Math.PI * t) - 1) / 2;
   }
 }

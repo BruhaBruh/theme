@@ -5,25 +5,39 @@ selectors:
 color:
   - neutral:
       _generator:
-        base: '#64748b'
-        shadeChromaMultiplier: 0.7
-  - purple:
-      _generator:
-        base: '#a855f7'
-        shadeChromaMultiplier: 0.85
+        base: '#3A4454'
+        modifier:
+          min: 0
+          max: 100
+          step: 1
   - blue:
       _generator:
-        base: '#3b82f6'
-        shadeChromaMultiplier: 0.85
+        base: '#00ABE7'
+        modifier:
+          min: 0
+          max: 100
+          step: 1
   - green:
       _generator:
-        base: '#22c55e'
+        base: '#30E015'
+        modifier:
+          min: 0
+          max: 100
+          step: 1
   - yellow:
       _generator:
-        base: '#eab308'
+        base: '#FED766'
+        modifier:
+          min: 0
+          max: 100
+          step: 1
   - red:
       _generator:
-        base: '#ef4444'
+        base: '#f43f5e'
+        modifier:
+          min: 0
+          max: 100
+          step: 1
 
 borderRadius:
   - base: 0.75rem + 0.125rem
