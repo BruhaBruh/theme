@@ -7,12 +7,12 @@ settings:
 importers:
   .:
     dependencies:
-      colortranslator:
-        specifier: ^4.1.0
-        version: 4.1.0
       commander:
         specifier: ^12.1.0
         version: 12.1.0
+      culori:
+        specifier: ^4.0.1
+        version: 4.0.1
       glob:
         specifier: ^11.0.0
         version: 11.0.0
@@ -47,6 +47,9 @@ importers:
       '@commitlint/types':
         specifier: ^19.0.3
         version: 19.0.3
+      '@types/culori':
+        specifier: ^2.1.1
+        version: 2.1.1
       '@types/eslint':
         specifier: ^8.56.10
         version: 8.56.10
@@ -903,6 +906,12 @@ packages:
         integrity: sha512-loB369iXNmAZglwWATL+WRe+CRMmmBPtpolYzIebFaX4YA3x+BEfLqhUAV9WanycKI3TG1IMr5bMJDajDKLlUQ==,
       }
 
+  '@types/culori@2.1.1':
+    resolution:
+      {
+        integrity: sha512-NzLYD0vNHLxTdPp8+RlvGbR2NfOZkwxcYGFwxNtm+WH2NuUNV8785zv1h0sulFQ5aFQ9n/jNDUuJeo3Bh7+oFA==,
+      }
+
   '@types/eslint@8.56.10':
     resolution:
       {
@@ -1469,12 +1478,6 @@ packages:
         integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==,
       }
 
-  colortranslator@4.1.0:
-    resolution:
-      {
-        integrity: sha512-bwa5awaMnQ6dpm9D3nbsFwUr6x6FrTKmxPdolNtSYfxCNR7ZM93GG1OF5Y3Sy1LvYdalb3riKC9uTn0X5NB36g==,
-      }
-
   commander@12.1.0:
     resolution:
       {
@@ -1560,6 +1563,13 @@ packages:
       }
     engines: { node: '>=4' }
     hasBin: true
+
+  culori@4.0.1:
+    resolution:
+      {
+        integrity: sha512-LSnjA6HuIUOlkfKVbzi2OlToZE8OjFi667JWN9qNymXVXzGDmvuP60SSgC+e92sd7B7158f7Fy3Mb6rXS5EDPw==,
+      }
+    engines: { node: ^12.20.0 || ^14.13.1 || >=16.0.0 }
 
   damerau-levenshtein@1.0.8:
     resolution:
@@ -4729,6 +4739,8 @@ snapshots:
     dependencies:
       '@types/node': 20.14.9
 
+  '@types/culori@2.1.1': {}
+
   '@types/eslint@8.56.10':
     dependencies:
       '@types/estree': 1.0.5
@@ -5158,8 +5170,6 @@ snapshots:
 
   color-name@1.1.4: {}
 
-  colortranslator@4.1.0: {}
-
   commander@12.1.0: {}
 
   commander@4.1.1: {}
@@ -5209,6 +5219,8 @@ snapshots:
       which: 2.0.2
 
   cssesc@3.0.0: {}
+
+  culori@4.0.1: {}
 
   damerau-levenshtein@1.0.8: {}
 

@@ -14,31 +14,31 @@ describe('stroke-design-token', () => {
 
   describe('add stroke color', () => {
     test('css variables', () => {
-      strokeDesignToken.addStrokeColor('primary', '{color.neutral.1000}');
+      strokeDesignToken.addStrokeColor('primary', '{color.neutral.950}');
       expect(strokeDesignToken.cssVariables).toStrictEqual({
-        '--stroke-primary': 'var(--color-neutral-1000)',
+        '--stroke-primary': 'var(--color-neutral-950)',
       });
     });
 
     test('css', () => {
-      strokeDesignToken.addStrokeColor('primary', '{color.neutral.1000}');
+      strokeDesignToken.addStrokeColor('primary', '{color.neutral.950}');
       expect(strokeDesignToken.css()).toStrictEqual([
-        '--stroke-primary: var(--color-neutral-1000);',
+        '--stroke-primary: var(--color-neutral-950);',
       ]);
     });
 
     test('tailwind config', () => {
-      strokeDesignToken.addStrokeColor('primary', '{color.neutral.1000}');
+      strokeDesignToken.addStrokeColor('primary', '{color.neutral.950}');
       expect(strokeDesignToken.tailwindConfig()).toStrictEqual({
         theme: {
           extend: {
             colors: {
               'primary-stroke':
-                'rgb(from var(--stroke-primary) r g b / <alpha-value>) /* #000105 */',
+                'rgb(from var(--stroke-primary) r g b / <alpha-value>) /* #000000 */',
             },
             strokeColor: {
               primary:
-                'rgb(from var(--stroke-primary) r g b / <alpha-value>) /* #000105 */',
+                'rgb(from var(--stroke-primary) r g b / <alpha-value>) /* #000000 */',
             },
           },
         },
@@ -57,31 +57,31 @@ describe('stroke-design-token', () => {
       });
 
       test('css variables', () => {
-        strokeDesignToken.addStrokeColor('primary', '{color.neutral.1000}');
+        strokeDesignToken.addStrokeColor('primary', '{color.neutral.950}');
         expect(strokeDesignToken.cssVariables).toStrictEqual({
-          '--pw-stroke-primary': 'var(--pw-color-neutral-1000)',
+          '--pw-stroke-primary': 'var(--pw-color-neutral-950)',
         });
       });
 
       test('css', () => {
-        strokeDesignToken.addStrokeColor('primary', '{color.neutral.1000}');
+        strokeDesignToken.addStrokeColor('primary', '{color.neutral.950}');
         expect(strokeDesignToken.css()).toStrictEqual([
-          '--pw-stroke-primary: var(--pw-color-neutral-1000);',
+          '--pw-stroke-primary: var(--pw-color-neutral-950);',
         ]);
       });
 
       test('tailwind config', () => {
-        strokeDesignToken.addStrokeColor('primary', '{color.neutral.1000}');
+        strokeDesignToken.addStrokeColor('primary', '{color.neutral.950}');
         expect(strokeDesignToken.tailwindConfig()).toStrictEqual({
           theme: {
             extend: {
               colors: {
                 'primary-stroke':
-                  'rgb(from var(--pw-stroke-primary) r g b / <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-stroke-primary) r g b / <alpha-value>) /* #000000 */',
               },
               strokeColor: {
                 primary:
-                  'rgb(from var(--pw-stroke-primary) r g b / <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-stroke-primary) r g b / <alpha-value>) /* #000000 */',
               },
             },
           },
@@ -92,40 +92,40 @@ describe('stroke-design-token', () => {
 
   describe('add stroke color w/ reference', () => {
     test('css variables', () => {
-      strokeDesignToken.addStrokeColor('stroke', '{color.neutral.1000}');
+      strokeDesignToken.addStrokeColor('stroke', '{color.neutral.950}');
       strokeDesignToken.addStrokeColor('button', '{stroke.stroke}');
       expect(strokeDesignToken.cssVariables).toStrictEqual({
-        '--stroke-stroke': 'var(--color-neutral-1000)',
+        '--stroke-stroke': 'var(--color-neutral-950)',
         '--stroke-button': 'var(--stroke-stroke)',
       });
     });
 
     test('css', () => {
-      strokeDesignToken.addStrokeColor('stroke', '{color.neutral.1000}');
+      strokeDesignToken.addStrokeColor('stroke', '{color.neutral.950}');
       strokeDesignToken.addStrokeColor('button', '{stroke.stroke}');
       expect(strokeDesignToken.css()).toStrictEqual([
-        '--stroke-stroke: var(--color-neutral-1000);',
+        '--stroke-stroke: var(--color-neutral-950);',
         '--stroke-button: var(--stroke-stroke);',
       ]);
     });
 
     test('tailwind config', () => {
-      strokeDesignToken.addStrokeColor('stroke', '{color.neutral.1000}');
+      strokeDesignToken.addStrokeColor('stroke', '{color.neutral.950}');
       strokeDesignToken.addStrokeColor('button', '{stroke.stroke}');
       expect(strokeDesignToken.tailwindConfig()).toStrictEqual({
         theme: {
           extend: {
             colors: {
               'stroke-stroke':
-                'rgb(from var(--stroke-stroke) r g b / <alpha-value>) /* #000105 */',
+                'rgb(from var(--stroke-stroke) r g b / <alpha-value>) /* #000000 */',
               'button-stroke':
-                'rgb(from var(--stroke-button) r g b / <alpha-value>) /* #000105 */',
+                'rgb(from var(--stroke-button) r g b / <alpha-value>) /* #000000 */',
             },
             strokeColor: {
               stroke:
-                'rgb(from var(--stroke-stroke) r g b / <alpha-value>) /* #000105 */',
+                'rgb(from var(--stroke-stroke) r g b / <alpha-value>) /* #000000 */',
               button:
-                'rgb(from var(--stroke-button) r g b / <alpha-value>) /* #000105 */',
+                'rgb(from var(--stroke-button) r g b / <alpha-value>) /* #000000 */',
             },
           },
         },
@@ -144,40 +144,40 @@ describe('stroke-design-token', () => {
       });
 
       test('css variables', () => {
-        strokeDesignToken.addStrokeColor('primary', '{color.neutral.1000}');
+        strokeDesignToken.addStrokeColor('primary', '{color.neutral.950}');
         strokeDesignToken.addStrokeColor('button', '{stroke.primary}');
         expect(strokeDesignToken.cssVariables).toStrictEqual({
-          '--pw-stroke-primary': 'var(--pw-color-neutral-1000)',
+          '--pw-stroke-primary': 'var(--pw-color-neutral-950)',
           '--pw-stroke-button': 'var(--pw-stroke-primary)',
         });
       });
 
       test('css', () => {
-        strokeDesignToken.addStrokeColor('primary', '{color.neutral.1000}');
+        strokeDesignToken.addStrokeColor('primary', '{color.neutral.950}');
         strokeDesignToken.addStrokeColor('button', '{stroke.primary}');
         expect(strokeDesignToken.css()).toStrictEqual([
-          '--pw-stroke-primary: var(--pw-color-neutral-1000);',
+          '--pw-stroke-primary: var(--pw-color-neutral-950);',
           '--pw-stroke-button: var(--pw-stroke-primary);',
         ]);
       });
 
       test('tailwind config', () => {
-        strokeDesignToken.addStrokeColor('primary', '{color.neutral.1000}');
+        strokeDesignToken.addStrokeColor('primary', '{color.neutral.950}');
         strokeDesignToken.addStrokeColor('button', '{stroke.primary}');
         expect(strokeDesignToken.tailwindConfig()).toStrictEqual({
           theme: {
             extend: {
               colors: {
                 'primary-stroke':
-                  'rgb(from var(--pw-stroke-primary) r g b / <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-stroke-primary) r g b / <alpha-value>) /* #000000 */',
                 'button-stroke':
-                  'rgb(from var(--pw-stroke-button) r g b / <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-stroke-button) r g b / <alpha-value>) /* #000000 */',
               },
               strokeColor: {
                 primary:
-                  'rgb(from var(--pw-stroke-primary) r g b / <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-stroke-primary) r g b / <alpha-value>) /* #000000 */',
                 button:
-                  'rgb(from var(--pw-stroke-button) r g b / <alpha-value>) /* #000105 */',
+                  'rgb(from var(--pw-stroke-button) r g b / <alpha-value>) /* #000000 */',
               },
             },
           },

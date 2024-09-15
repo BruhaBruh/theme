@@ -1,6 +1,6 @@
 {
   "name": "@bruhabruh/theme",
-  "version": "3.1.2",
+  "version": "3.2.0",
   "type": "module",
   "description": "BruhaBruh Theme with CLI",
   "author": "BruhaBruh",
@@ -36,6 +36,7 @@
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@commitlint/types": "^19.0.3",
+    "@types/culori": "^2.1.1",
     "@types/eslint": "^8.56.10",
     "@types/node": "^20.14.9",
     "@typescript-eslint/parser": "^7.14.1",
@@ -58,8 +59,8 @@
     ]
   },
   "dependencies": {
-    "colortranslator": "^4.1.0",
     "commander": "^12.1.0",
+    "culori": "^4.0.1",
     "glob": "^11.0.0",
     "math-expression-evaluator": "^2.0.5",
     "ts-deepmerge": "^7.0.1",

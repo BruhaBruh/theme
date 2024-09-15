@@ -1,20 +1,16 @@
 import { DesignTokenType } from '@/types/design-token-type';
 import { TailwindConfig } from '@/types/tailwind';
-import { ColorTranslator, RGBObject } from 'colortranslator';
+import { Hsv, formatHex, hsv, oklch } from 'culori';
 import { DesignToken } from '../design-token';
 
 type ColorGenerateOptions = {
   modifierGenerator?: {
-    min: number;
-    max: number;
-    step: number;
-  };
-  hsbGenerator?: {
     min?: number;
     max?: number;
-    middle?: number;
+    step?: number;
   };
-  type?: 'color' | 'neutral';
+  tintChromaMultiplier?: number;
+  shadeChromaMultiplier?: number;
 };
 
 export class ColorDesignToken extends DesignToken {
@@ -42,11 +38,8 @@ export class ColorDesignToken extends DesignToken {
     baseColor: string,
     options: ColorGenerateOptions = {},
   ) {
-    const baseColorRgb = this.rgbFromStringWithReferences(baseColor);
-    const color = this.color(baseColorRgb, {
-      type: 'color',
-      ...options,
-    });
+    const baseColorHsv = this.hsvFromStringWithReferences(baseColor);
+    const color = this.color(baseColorHsv, options);
 
     Object.entries(color).forEach(([key, value]) => {
       this.addColor(`${name}-${key}`, value);
@@ -66,11 +59,13 @@ export class ColorDesignToken extends DesignToken {
         return;
       }
 
-      const [name, ...modifier] = token.name.split('-');
+      const split = token.name.split('-');
+      const name = split.slice(0, -1).join('-');
+      const modifier = split.slice(-1).join('-');
       if (typeof colors[name] === 'string')
         colors[name] = { DEFAULT: colors[name] };
       if (!colors[name]) colors[name] = {};
-      colors[name][modifier.join('-')] = value;
+      colors[name][modifier] = value;
     });
 
     return {
@@ -98,85 +93,63 @@ export class ColorDesignToken extends DesignToken {
     return super.variable({ type, parts: [this.type, ...parts] });
   }
 
-  private rgbFromStringWithReferences(ref: string): RGBObject {
+  private hsvFromStringWithReferences(ref: string): Hsv {
     const reference = this.resolveReferences(ref);
     const value = this.resolveAbsoluteValue(reference);
     try {
-      return ColorTranslator.toRGBObject(value);
+      const color = hsv(value);
+      if (!color) throw new Error();
+      return color;
     } catch (ignore) {
       throw new Error(`fail convert ${reference} with ${value} to rgb object`);
     }
   }
 
   private color(
-    base: RGBObject,
+    base: Hsv,
     {
-      type,
-      modifierGenerator = {
-        min: 100,
-        max: 1000,
-        step: 50,
-      },
-      hsbGenerator = {},
+      modifierGenerator = {},
+      tintChromaMultiplier = 1,
+      shadeChromaMultiplier = 0.8,
     }: ColorGenerateOptions,
   ): Record<string, string> {
     const result: Record<string, string> = {};
 
-    for (
-      let modifier = modifierGenerator.min;
-      modifier <= modifierGenerator.max;
-      modifier += modifierGenerator.step
-    ) {
-      const baseHSB = this.hsbFromRgb(base);
+    const { min = 50, max = 950, step = 50 } = modifierGenerator;
+    const middle = max / 2;
 
-      const t = this.normalize(modifier, {
-        minInput: modifierGenerator.min,
-        maxInput: modifierGenerator.max,
-        minOutput: -1,
-      });
-
-      let rgb: RGBObject = { R: 0, G: 0, B: 0 };
-      if (type === 'color') {
-        const { min = 10, middle = 80, max = 100 } = hsbGenerator;
-
-        let saturation = middle;
-        let brightness = middle;
-        if (t <= 0) {
-          const t0 = 1 + t;
-          saturation = t0 * (middle - min) + min;
-          brightness = max - t0 * min * 2;
-        } else if (t > 0) {
-          saturation = middle + t * min * 2;
-          brightness = middle - t * min * 7;
-        }
-
-        rgb = this.rgbFromHsb({
-          H: baseHSB.H,
-          S: saturation,
-          B: brightness,
+    for (let modifier = min; modifier <= middle; modifier += step) {
+      const color = oklch(base);
+      const factor =
+        1 -
+        this.normalize(modifier, {
+          minInput: min,
+          maxInput: middle,
         });
-      } else if (type === 'neutral') {
-        const { min = 2, middle = 20, max = 98 } = hsbGenerator;
+      color.l = color.l + (1 - color.l) * factor;
+      color.c = color.c * (1 - tintChromaMultiplier * factor);
+      result[modifier] = formatHex(color);
+    }
 
-        let saturation = middle;
-        let brightness = middle;
-        if (t <= 0) {
-          const t0 = 1 + t;
-          saturation = t0 * (middle - min) + min;
-          brightness = max - t0 * (max - middle);
-        } else if (t > 0) {
-          saturation = middle + t * (max - middle);
-          brightness = middle - t * (middle - min);
-        }
-
-        rgb = this.rgbFromHsb({
-          H: baseHSB.H,
-          S: saturation,
-          B: brightness,
-        });
+    let nearest = max;
+    let nearestDelta = Math.abs(nearest - middle);
+    for (let modifier = min; modifier <= max; modifier += step) {
+      const delta = Math.abs(modifier - middle);
+      if (delta < nearestDelta && modifier > middle) {
+        nearest = modifier;
+        nearestDelta = delta;
       }
+    }
 
-      result[modifier] = this.stringFromRgb(rgb);
+    for (let modifier = nearest; modifier <= max; modifier += step) {
+      const color = oklch(base);
+      const factor = this.normalize(modifier, {
+        minInput: nearest,
+        maxInput: max,
+      });
+      color.l = color.l * (1 - factor);
+      color.c = color.c * (1 - shadeChromaMultiplier * factor);
+      result[modifier] = formatHex(color);
     }
 
     return result;
@@ -214,93 +187,5 @@ export class ColorDesignToken extends DesignToken {
       minOutput;
 
     return Math.max(Math.min(normalized, maxOutput), minOutput);
-  }
-
-  private hsbFromRgb({ R: red, G: green, B: blue }: RGBObject): {
-    H: number;
-    S: number;
-    B: number;
-  } {
-    const R = Math.max(0, Math.min(red / 255, 1));
-    const G = Math.max(0, Math.min(green / 255, 1));
-    const B = Math.max(0, Math.min(blue / 255, 1));
-    const max = Math.max(R, G, B);
-    const min = Math.min(R, G, B);
-    let H = 0;
-    let S = 0;
-    const V = max;
-    if (max === min) return { H, S: S * 100, B: V * 100 };
-
-    if (max === R && G >= B) {
-      H = 60 * ((G - B) / (max - min));
-    } else if (max === R && G < B) {
-      H = 60 * ((G - B) / (max - min)) + 360;
-    } else if (max === G) {
-      H = 60 * ((B - R) / (max - min)) + 120;
-    } else if (max === B) {
-      H = 60 * ((R - G) / (max - min)) + 240;
-    }
-
-    if (max !== 0) {
-      S = 1 - min / max;
-    }
-
-    return { H, S: S * 100, B: V * 100 };
-  }
-
-  private rgbFromHsb({
-    H,
-    S,
-    B: V,
-  }: {
-    H: number;
-    S: number;
-    B: number;
-  }): RGBObject {
-    const h = Math.floor((H / 60) % 6);
-    const min = ((100 - S) * V) / 100;
-    const delta = (V - min) * ((H % 60) / 60);
-    const inc = min + delta;
-    const dec = V - delta;
-
-    let R = 0;
-    let G = 0;
-    let B = 0;
-    if (h === 0) {
-      R = V;
-      G = inc;
-      B = min;
-    } else if (h === 1) {
-      R = dec;
-      G = V;
-      B = min;
-    } else if (h === 2) {
-      R = min;
-      G = V;
-      B = inc;
-    } else if (h === 3) {
-      R = min;
-      G = dec;
-      B = V;
-    } else if (h === 4) {
-      R = inc;
-      G = min;
-      B = V;
-    } else if (h === 5) {
-      R = V;
-      G = min;
-      B = dec;
-    }
-
-    return {
-      R: Math.min(255, (R / 100) * 255),
-      G: Math.min(255, (G / 100) * 255),
-      B: Math.min(255, (B / 100) * 255),
-      A: 1,
-    };
-  }
-
-  private stringFromRgb(rgb: RGBObject): string {
-    return ColorTranslator.toHEX(rgb);
   }
 }
