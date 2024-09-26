@@ -18,6 +18,7 @@ import {
   ZIndexDesignToken,
 } from '@/design-token';
 import { TailwindConfig, TailwindPluginApi } from '@/types/tailwind';
+import { Ok, Result } from '@bruhabruh/type-safe';
 import { merge } from 'ts-deepmerge';
 import { ThemeConfig } from './schema/theme-config';
 
@@ -147,8 +148,11 @@ export class TokenManager {
     );
   }
 
-  load(config: ThemeConfig) {
-    this.loadColorTokens(config.color);
+  load(config: ThemeConfig): Result<true, string> {
+    const colorResult = this.loadColorTokens(config.color);
+    if (colorResult.isErr()) {
+      return colorResult.mapErr((err) => `Fail load color tokens: ${err}`);
+    }
     this.loadBackgroundTokens(config.background);
     this.loadTextTokens(config.text);
     this.loadBorderTokens(config.border);
@@ -157,17 +161,52 @@ export class TokenManager {
     this.loadOutlineTokens(config.outline);
     this.loadStrokeTokens(config.stroke);
 
-    this.loadBorderRadiusTokens(config.borderRadius);
-    this.loadSpacingTokens(config.spacing);
+    const borderRadiusResult = this.loadBorderRadiusTokens(config.borderRadius);
+    if (borderRadiusResult.isErr()) {
+      return borderRadiusResult.mapErr(
+        (err) => `Fail load border radius tokens: ${err}`,
+      );
+    }
+    const spacingResult = this.loadSpacingTokens(config.spacing);
+    if (spacingResult.isErr()) {
+      return spacingResult.mapErr((err) => `Fail load spacing tokens: ${err}`);
+    }
 
-    this.loadFontFamilyTokens(config.fontFamily);
+    const fontFamilyResult = this.loadFontFamilyTokens(config.fontFamily);
+    if (fontFamilyResult.isErr()) {
+      return fontFamilyResult.mapErr(
+        (err) => `Fail load font family tokens: ${err}`,
+      );
+    }
     this.loadFontWeightTokens(config.fontWeight);
-    this.loadLineHeightTokens(config.lineHeight);
-    this.loadFontSizeTokens(config.fontSize);
-    this.loadLetterSpacingTokens(config.letterSpacing);
+    const lineHeightResult = this.loadLineHeightTokens(config.lineHeight);
+    if (lineHeightResult.isErr()) {
+      return lineHeightResult.mapErr(
+        (err) => `Fail load line height tokens: ${err}`,
+      );
+    }
+    const fontSizeResult = this.loadFontSizeTokens(config.fontSize);
+    if (fontSizeResult.isErr()) {
+      return fontSizeResult.mapErr(
+        (err) => `Fail load font size tokens: ${err}`,
+      );
+    }
+    const letterSpacingResult = this.loadLetterSpacingTokens(
+      config.letterSpacing,
+    );
+    if (letterSpacingResult.isErr()) {
+      return letterSpacingResult.mapErr(
+        (err) => `Fail load letter spacing tokens: ${err}`,
+      );
+    }
     this.loadTypographyTokens(config.typography);
 
-    this.loadZIndexTokens(config.zIndex);
+    const zIndexResult = this.loadZIndexTokens(config.zIndex);
+    if (zIndexResult.isErr()) {
+      return zIndexResult.mapErr((err) => `Fail load z-index tokens: ${err}`);
+    }
+
+    return Ok(true);
   }
 
   applyGlobalTokenManager(globalTokenManager: TokenManager) {
@@ -207,29 +246,38 @@ export class TokenManager {
       globalTokenManager.#zIndexDesignToken;
   }
 
-  private loadColorTokens(configs: ThemeConfig['color']) {
-    configs.forEach((config) => {
-      Object.entries(config).forEach(([colorName, values]) => {
+  private loadColorTokens(configs: ThemeConfig['color']): Result<true, string> {
+    for (let i = 0; i < configs.length; i++) {
+      const config = configs[i];
+      const colorNames = Object.keys(config);
+      for (let j = 0; j < colorNames.length; j++) {
+        const colorName = colorNames[j];
+        const values = config[colorName];
+
         const generator = values._generator;
         if (generator && typeof generator !== 'string') {
-          const { base, modifier, tintTarget, shadeTarget } = generator;
+          const { base, modifier } = generator;
 
-          this.#colorDesignToken.generateColor(colorName, base, {
+          const result = this.#colorDesignToken.generateColor(colorName, base, {
             modifierGenerator: modifier || undefined,
-            tintTarget,
-            shadeTarget,
           });
+          if (result.isErr()) {
+            return result.mapErr(
+              (err) => `Fail generate color ${colorName}: ${err}`,
+            );
+          }
         }
 
         const withoutGenerator: Record<string, string> = Object.fromEntries(
           Object.entries(values).filter(([key]) => key !== '_generator'),
         );
-
         Object.entries(withoutGenerator).forEach(([modifier, value]) => {
           this.#colorDesignToken.addColor(`${colorName}-${modifier}`, value);
         });
-      });
-    });
+      }
+    }
+
+    return Ok(true);
   }
 
   private loadBackgroundTokens(configs: ThemeConfig['background']) {
@@ -288,50 +336,101 @@ export class TokenManager {
     });
   }
 
-  private loadBorderRadiusTokens(configs: ThemeConfig['borderRadius']) {
-    configs.forEach((config) => {
+  private loadBorderRadiusTokens(
+    configs: ThemeConfig['borderRadius'],
+  ): Result<true, string> {
+    for (let i = 0; i < configs.length; i++) {
+      const config = configs[i];
       const generator = config._generator;
       if (generator) {
-        if (typeof generator === 'string') return;
-        const { start, end, namePattern, valuePattern, step } = generator;
-        for (let i = start; i <= end; i += step) {
-          const name = namePattern.replace(/\{i}/g, i.toString());
-          const value = valuePattern.replace(/\{i}/g, i.toString());
-          this.#borderRadiusDesignToken.addBorderRadius(name, value);
+        if (typeof generator !== 'string') {
+          const { start, end, namePattern, valuePattern, step } = generator;
+          for (let j = start; j <= end; j += step) {
+            const name = namePattern.replace(/\{i}/g, j.toString());
+            const value = valuePattern.replace(/\{i}/g, j.toString());
+            const result = this.#borderRadiusDesignToken.addBorderRadius(
+              name,
+              value,
+            );
+            if (result.isErr()) {
+              return result.mapErr(
+                (err) => `Fail add border radius "${name}": ${err}`,
+              );
+            }
+          }
         }
       } else {
-        Object.entries(config).forEach(([name, value]) => {
-          this.#borderRadiusDesignToken.addBorderRadius(name, value);
-        });
+        const entries = Object.entries(config);
+        for (let j = 0; j < entries.length; j++) {
+          const [name, value] = entries[j];
+          const result = this.#borderRadiusDesignToken.addBorderRadius(
+            name,
+            value,
+          );
+          if (result.isErr()) {
+            return result.mapErr(
+              (err) => `Fail add border radius "${name}": ${err}`,
+            );
+          }
+        }
       }
-    });
+    }
+
+    return Ok(true);
   }
 
-  private loadSpacingTokens(configs: ThemeConfig['spacing']) {
-    configs.forEach((config) => {
+  private loadSpacingTokens(
+    configs: ThemeConfig['spacing'],
+  ): Result<true, string> {
+    for (let i = 0; i < configs.length; i++) {
+      const config = configs[i];
       const generator = config._generator;
       if (generator) {
-        if (typeof generator === 'string') return;
-        const { start, end, namePattern, valuePattern, step } = generator;
-        for (let i = start; i <= end; i += step) {
-          const name = namePattern.replace(/\{i}/g, i.toString());
-          const value = valuePattern.replace(/\{i}/g, i.toString());
-          this.#spacingDesignToken.addSpacing(name, value);
+        if (typeof generator !== 'string') {
+          const { start, end, namePattern, valuePattern, step } = generator;
+          for (let j = start; j <= end; j += step) {
+            const name = namePattern.replace(/\{i}/g, j.toString());
+            const value = valuePattern.replace(/\{i}/g, j.toString());
+            const result = this.#spacingDesignToken.addSpacing(name, value);
+            if (result.isErr()) {
+              return result.mapErr(
+                (err) => `Fail add spacing "${name}": ${err}`,
+              );
+            }
+          }
         }
       } else {
-        Object.entries(config).forEach(([name, value]) => {
-          this.#spacingDesignToken.addSpacing(name, value);
-        });
+        const entries = Object.entries(config);
+        for (let j = 0; j < entries.length; j++) {
+          const [name, value] = entries[j];
+          const result = this.#spacingDesignToken.addSpacing(name, value);
+          if (result.isErr()) {
+            return result.mapErr((err) => `Fail add spacing "${name}": ${err}`);
+          }
+        }
       }
-    });
+    }
+
+    return Ok(true);
   }
 
-  private loadFontFamilyTokens(configs: ThemeConfig['fontFamily']) {
-    configs.forEach((config) => {
-      Object.entries(config).forEach(([name, value]) => {
-        this.#fontFamilyDesignToken.addFontFamily(name, value);
-      });
-    });
+  private loadFontFamilyTokens(
+    configs: ThemeConfig['fontFamily'],
+  ): Result<true, string> {
+    for (let i = 0; i < configs.length; i++) {
+      const entries = Object.entries(configs[i]);
+      for (let j = 0; j < entries.length; j++) {
+        const [name, value] = entries[j];
+
+        const result = this.#fontFamilyDesignToken.addFontFamily(name, value);
+        if (result.isErr()) {
+          return result.mapErr(
+            (err) => `Fail add font family "${name}": ${err}`,
+          );
+        }
+      }
+    }
+    return Ok(true);
   }
 
   private loadFontWeightTokens(configs: ThemeConfig['fontWeight']) {
@@ -342,50 +441,103 @@ export class TokenManager {
     });
   }
 
-  private loadLineHeightTokens(configs: ThemeConfig['lineHeight']) {
-    configs.forEach((config) => {
+  private loadLineHeightTokens(
+    configs: ThemeConfig['lineHeight'],
+  ): Result<true, string> {
+    for (let i = 0; i < configs.length; i++) {
+      const config = configs[i];
       const generator = config._generator;
       if (generator) {
-        if (typeof generator === 'string') return;
-        const { start, end, namePattern, valuePattern, step } = generator;
-        for (let i = start; i <= end; i += step) {
-          const name = namePattern.replace(/\{i}/g, i.toString());
-          const value = valuePattern.replace(/\{i}/g, i.toString());
-          this.#lineHeightDesignToken.addLineHeight(name, value);
+        if (typeof generator !== 'string') {
+          const { start, end, namePattern, valuePattern, step } = generator;
+          for (let j = start; j <= end; j += step) {
+            const name = namePattern.replace(/\{i}/g, j.toString());
+            const value = valuePattern.replace(/\{i}/g, j.toString());
+            const result = this.#lineHeightDesignToken.addLineHeight(
+              name,
+              value,
+            );
+            if (result.isErr()) {
+              return result.mapErr(
+                (err) => `Fail add line height "${name}": ${err}`,
+              );
+            }
+          }
         }
       } else {
-        Object.entries(config).forEach(([name, value]) => {
-          this.#lineHeightDesignToken.addLineHeight(name, value);
-        });
+        const entries = Object.entries(config);
+        for (let j = 0; j < entries.length; j++) {
+          const [name, value] = entries[j];
+          const result = this.#lineHeightDesignToken.addLineHeight(name, value);
+          if (result.isErr()) {
+            return result.mapErr(
+              (err) => `Fail add line height "${name}": ${err}`,
+            );
+          }
+        }
       }
-    });
+    }
+
+    return Ok(true);
   }
 
-  private loadFontSizeTokens(configs: ThemeConfig['fontSize']) {
-    configs.forEach((config) => {
+  private loadFontSizeTokens(
+    configs: ThemeConfig['fontSize'],
+  ): Result<true, string> {
+    for (let i = 0; i < configs.length; i++) {
+      const config = configs[i];
       const generator = config._generator;
       if (generator) {
-        if (typeof generator === 'string') return;
-        const { start, end, namePattern, valuePattern, step } = generator;
-        for (let i = start; i <= end; i += step) {
-          const name = namePattern.replace(/\{i}/g, i.toString());
-          const value = valuePattern.replace(/\{i}/g, i.toString());
-          this.#fontSizeDesignToken.addFontSize(name, value);
+        if (typeof generator !== 'string') {
+          const { start, end, namePattern, valuePattern, step } = generator;
+          for (let j = start; j <= end; j += step) {
+            const name = namePattern.replace(/\{i}/g, j.toString());
+            const value = valuePattern.replace(/\{i}/g, j.toString());
+            const result = this.#fontSizeDesignToken.addFontSize(name, value);
+            if (result.isErr()) {
+              return result.mapErr(
+                (err) => `Fail add font size "${name}": ${err}`,
+              );
+            }
+          }
         }
       } else {
-        Object.entries(config).forEach(([name, value]) => {
-          this.#fontSizeDesignToken.addFontSize(name, value);
-        });
+        const entries = Object.entries(config);
+        for (let j = 0; j < entries.length; j++) {
+          const [name, value] = entries[j];
+          const result = this.#fontSizeDesignToken.addFontSize(name, value);
+          if (result.isErr()) {
+            return result.mapErr(
+              (err) => `Fail add font size "${name}": ${err}`,
+            );
+          }
+        }
       }
-    });
+    }
+
+    return Ok(true);
   }
 
-  private loadLetterSpacingTokens(configs: ThemeConfig['letterSpacing']) {
-    configs.forEach((config) => {
-      Object.entries(config).forEach(([name, value]) => {
-        this.#letterSpacingDesignToken.addLetterSpacing(name, value);
-      });
-    });
+  private loadLetterSpacingTokens(
+    configs: ThemeConfig['letterSpacing'],
+  ): Result<true, string> {
+    for (let i = 0; i < configs.length; i++) {
+      const config = configs[i];
+      const entries = Object.entries(config);
+      for (let j = 0; j < entries.length; j++) {
+        const [name, value] = entries[j];
+        const result = this.#letterSpacingDesignToken.addLetterSpacing(
+          name,
+          value,
+        );
+        if (result.isErr()) {
+          return result.mapErr(
+            (err) => `Fail add letter spacing "${name}": ${err}`,
+          );
+        }
+      }
+    }
+    return Ok(true);
   }
 
   private loadTypographyTokens(configs: ThemeConfig['typography']) {
@@ -407,22 +559,38 @@ export class TokenManager {
     });
   }
 
-  private loadZIndexTokens(configs: ThemeConfig['zIndex']) {
-    configs.forEach((config) => {
+  private loadZIndexTokens(
+    configs: ThemeConfig['zIndex'],
+  ): Result<true, string> {
+    for (let i = 0; i < configs.length; i++) {
+      const config = configs[i];
       const generator = config._generator;
       if (generator) {
-        if (typeof generator === 'string') return;
-        const { start, end, namePattern, valuePattern, step } = generator;
-        for (let i = start; i <= end; i += step) {
-          const name = namePattern.replace(/\{i}/g, i.toString());
-          const value = valuePattern.replace(/\{i}/g, i.toString());
-          this.#zIndexDesignToken.addZIndex(name, value);
+        if (typeof generator !== 'string') {
+          const { start, end, namePattern, valuePattern, step } = generator;
+          for (let j = start; j <= end; j += step) {
+            const name = namePattern.replace(/\{i}/g, j.toString());
+            const value = valuePattern.replace(/\{i}/g, j.toString());
+            const result = this.#zIndexDesignToken.addZIndex(name, value);
+            if (result.isErr()) {
+              return result.mapErr(
+                (err) => `Fail add z-index "${name}": ${err}`,
+              );
+            }
+          }
         }
       } else {
-        Object.entries(config).forEach(([name, value]) => {
-          this.#zIndexDesignToken.addZIndex(name, value);
-        });
+        const entries = Object.entries(config);
+        for (let j = 0; j < entries.length; j++) {
+          const [name, value] = entries[j];
+          const result = this.#zIndexDesignToken.addZIndex(name, value);
+          if (result.isErr()) {
+            return result.mapErr((err) => `Fail add z-index "${name}": ${err}`);
+          }
+        }
       }
-    });
+    }
+
+    return Ok(true);
   }
 }

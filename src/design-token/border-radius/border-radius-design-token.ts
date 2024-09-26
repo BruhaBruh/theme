@@ -1,5 +1,6 @@
 import { DesignTokenType } from '@/types/design-token-type';
 import { TailwindConfig } from '@/types/tailwind';
+import { Err, Ok, Result } from '@bruhabruh/type-safe';
 import { DesignToken } from '../design-token';
 
 export class BorderRadiusDesignToken extends DesignToken {
@@ -12,28 +13,35 @@ export class BorderRadiusDesignToken extends DesignToken {
     this.addToken('full', '9999px');
   }
 
-  addBorderRadius(name: string, borderRadius: string): void {
+  addBorderRadius(name: string, borderRadius: string): Result<true, string> {
     const cssValue = this.resolveReferences(borderRadius);
     const value = cssValue.replace(this.#cssVariablePattern, (match) => {
       return this.resolveAbsoluteValue(match);
     });
     if (this.#cssVariablePattern.test(value)) {
-      throw new Error(`fail get absolute variable value of ${value}`);
+      return Err(`fail get absolute variable value of ${value}`);
     }
     const calculatedValue = this.calculate(value);
-    this.addToken(name, calculatedValue, {
+    if (calculatedValue.isErr()) {
+      return calculatedValue.mapErr(
+        (err) => `Fail calculate border radius: ${err}`,
+      );
+    }
+    this.addToken(name, calculatedValue.unwrap(), {
       key: [name],
-      value: calculatedValue,
+      value: calculatedValue.unwrap(),
     });
+    return Ok(true);
   }
 
   override tailwindConfig(): TailwindConfig {
     const borderRadius: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
-      borderRadius[token.name] = token.css
-        ? `${token.css.keyVariable} /* ${token.value} */`
-        : token.value;
+      borderRadius[token.name] = token.css.mapOr(
+        token.value,
+        (css) => `${css.keyVariable} /* ${token.value} */`,
+      );
     });
 
     return {
@@ -46,7 +54,9 @@ export class BorderRadiusDesignToken extends DesignToken {
   override resolveAbsoluteValue(value: string): string {
     if (!(value.startsWith('var(') && value.endsWith(')'))) return value;
     const cssVar = value.slice(4, -1);
-    const token = this.tokens.find((t) => t.css && t.css.key === cssVar);
+    const token = this.tokens.find((t) =>
+      t.css.isSomeAnd((css) => css.key === cssVar),
+    );
     if (!token) return super.resolveAbsoluteValue(value);
     return token.value;
   }

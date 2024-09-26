@@ -8,7 +8,11 @@ import { TailwindConfig } from './types/tailwind';
 export const theme = {};
 
 const loadThemeManagers = (config: Config) => {
-  const themesConfig = loadThemes(config);
+  const themesConfigResult = loadThemes(config);
+  if (themesConfigResult.isErr()) {
+    throw new Error('Fail load themes: ' + themesConfigResult.unwrapErr());
+  }
+  const themesConfig = themesConfigResult.unwrap();
 
   const themeManagers: ThemeManager[] = [];
 
@@ -20,7 +24,12 @@ const loadThemeManagers = (config: Config) => {
         themesConfig.prefix,
         themeConfig,
       );
-      themeManager.load(themesConfig.themes);
+      const loadResult = themeManager.load(themesConfig.themes);
+      if (loadResult.isErr()) {
+        throw new Error(
+          `Fail load theme "${themeName}": ` + loadResult.unwrapErr(),
+        );
+      }
 
       themeManagers.push(themeManager);
     });

@@ -12,4 +12,7 @@ module.exports = {
     project: './tsconfig.node.json',
     tsconfigRootDir: __dirname,
   },
+  rules: {
+    'new-cap': ['error', { capIsNewExceptions: ['Some', 'None', 'Ok', 'Err'] }],
+  },
 };

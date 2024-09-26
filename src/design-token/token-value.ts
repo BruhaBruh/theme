@@ -1,3 +1,5 @@
+import { None, Option, Some } from '@bruhabruh/type-safe';
+
 type CSS = {
   key: string;
   value: string;
@@ -10,7 +12,7 @@ type FullCSS = CSS & {
 export class TokenValue {
   readonly #name: string;
   readonly #value: string;
-  readonly #css: FullCSS | null = null;
+  readonly #css: Option<FullCSS> = None;
 
   static create(name: string, value: string, css?: CSS) {
     return new TokenValue(name, value, css);
@@ -19,7 +21,9 @@ export class TokenValue {
   private constructor(name: string, value: string, css?: CSS) {
     this.#name = name;
     this.#value = value;
-    this.#css = css ? { ...css, keyVariable: `var(${css.key})` } : null;
+    if (css) {
+      this.#css = Some({ ...css, keyVariable: `var(${css.key})` });
+    }
   }
 
   get name(): string {
@@ -30,7 +34,7 @@ export class TokenValue {
     return this.#value;
   }
 
-  get css(): FullCSS | null {
+  get css(): Option<FullCSS> {
     return this.#css;
   }
 }

@@ -1,0 +1,551 @@
+{
+  "$ref": "#/definitions/theme-config",
+  "definitions": {
+    "theme-config": {
+      "type": "object",
+      "properties": {
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of themes dependencies.\nDefault: []",
+          "default": []
+        },
+        "selectors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of CSS selectors.\nDefault: []",
+          "default": []
+        },
+        "color": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string",
+                    "description": "Color value"
+                  },
+                  "description": "Color token record name to value.\nRequired"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "_generator": {
+                      "type": "object",
+                      "properties": {
+                        "base": {
+                          "type": "string",
+                          "description": "Base color value.\nRequired"
+                        },
+                        "modifier": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "min": {
+                                  "type": "number",
+                                  "default": 50,
+                                  "description": "Minimal token modifier.\nDefault 50"
+                                },
+                                "max": {
+                                  "type": "number",
+                                  "default": 1000,
+                                  "description": "Maximum token modifier.\nDefault 1000"
+                                },
+                                "step": {
+                                  "type": "number",
+                                  "default": 50,
+                                  "description": "Step for token modifier.\nDefault 50"
+                                }
+                              },
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "description": "Modifier generator settings.\nOptional"
+                        }
+                      },
+                      "required": ["base"],
+                      "additionalProperties": false,
+                      "description": "Color generator settings.\nRequired"
+                    }
+                  },
+                  "required": ["_generator"],
+                  "additionalProperties": false,
+                  "description": "Color token generator.\nRequired"
+                }
+              ],
+              "description": "Color token record name to value.\nRequired"
+            },
+            "description": "Color tokens.\nRequired"
+          },
+          "description": "List of Color tokens.\nDefault: []",
+          "default": []
+        },
+        "background": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "description": "Color value or reference like {color.white.100}"
+            },
+            "description": "Background Color token record name to value.\nRequired"
+          },
+          "description": "List of Background Color tokens.\nDefault: []",
+          "default": []
+        },
+        "text": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "description": "Color value or reference like {color.white.100}"
+            },
+            "description": "Text Color token record name to value.\nRequired"
+          },
+          "description": "List of Text Color tokens.\nDefault: []",
+          "default": []
+        },
+        "border": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "description": "Color value or reference like {color.white.100}"
+            },
+            "description": "Border Color token record name to value.\nRequired"
+          },
+          "description": "List of Border Color tokens.\nDefault: []",
+          "default": []
+        },
+        "ring": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "description": "Color value or reference like {color.white.100}"
+            },
+            "description": "Ring Color token record name to value.\nRequired"
+          },
+          "description": "List of Ring Color tokens.\nDefault: []",
+          "default": []
+        },
+        "fill": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "description": "Color value or reference like {color.white.100}"
+            },
+            "description": "Fill Color token record name to value.\nRequired"
+          },
+          "description": "List of Fill Color tokens.\nDefault: []",
+          "default": []
+        },
+        "outline": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "description": "Color value or reference like {color.white.100}"
+            },
+            "description": "Outline Color token record name to value.\nRequired"
+          },
+          "description": "List of Outline Color tokens.\nDefault: []",
+          "default": []
+        },
+        "stroke": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "description": "Color value or reference like {color.white.100}"
+            },
+            "description": "Stroke Color token record name to value.\nRequired"
+          },
+          "description": "List of Stroke Color tokens.\nDefault: []",
+          "default": []
+        },
+        "borderRadius": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string",
+                  "description": "Border Radius value or reference like {border-radius.base}.\nSupport calculation like {border-radius.base} + 2px"
+                },
+                "description": "Border Radius token record name to value.\nRequired"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "_generator": {
+                    "type": "object",
+                    "properties": {
+                      "start": {
+                        "type": "number",
+                        "description": "Start number.\nRequired"
+                      },
+                      "end": {
+                        "type": "number",
+                        "description": "End number.\nRequired"
+                      },
+                      "namePattern": {
+                        "type": "string",
+                        "description": "Name pattern.\nDefault: \"{i}\"",
+                        "default": "{i}"
+                      },
+                      "valuePattern": {
+                        "type": "string",
+                        "description": "Value pattern.\nDefault: \"{i}px\"",
+                        "default": "{i}px"
+                      },
+                      "step": {
+                        "type": "number",
+                        "description": "Step.\nDefault: 1",
+                        "default": 1
+                      }
+                    },
+                    "required": ["start", "end"],
+                    "additionalProperties": false,
+                    "description": "Border Radius generator settings.\nRequired"
+                  }
+                },
+                "required": ["_generator"],
+                "additionalProperties": false,
+                "description": "Border Radius token generator.\nRequired"
+              }
+            ],
+            "description": "Border Radius token record name to value.\nRequired"
+          },
+          "description": "List of Border Radius tokens.\nDefault: []",
+          "default": []
+        },
+        "spacing": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string",
+                  "description": "Spacing value or reference like {spacing.base}.\nSupport calculation like {spacing.base} + 2px"
+                },
+                "description": "Spacing token record name to value.\nRequired"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "_generator": {
+                    "type": "object",
+                    "properties": {
+                      "start": {
+                        "type": "number",
+                        "description": "Start number.\nRequired"
+                      },
+                      "end": {
+                        "type": "number",
+                        "description": "End number.\nRequired"
+                      },
+                      "namePattern": {
+                        "type": "string",
+                        "description": "Name pattern.\nDefault: \"{i}\"",
+                        "default": "{i}"
+                      },
+                      "valuePattern": {
+                        "type": "string",
+                        "description": "Value pattern.\nDefault: \"{i}px\"",
+                        "default": "{i}px"
+                      },
+                      "step": {
+                        "type": "number",
+                        "description": "Step.\nDefault: 1",
+                        "default": 1
+                      }
+                    },
+                    "required": ["start", "end"],
+                    "additionalProperties": false,
+                    "description": "Spacing token generator.\nRequired"
+                  }
+                },
+                "required": ["_generator"],
+                "additionalProperties": false,
+                "description": "Spacing token generator.\nRequired"
+              }
+            ],
+            "description": "Spacing token record name to value.\nRequired"
+          },
+          "description": "List of Spacing tokens.\nDefault: []",
+          "default": []
+        },
+        "fontFamily": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "description": "Font Family value or reference like {font-family.base}"
+            },
+            "description": "Font Family token record name to value.\nRequired"
+          },
+          "description": "List of Font Family tokens.\nDefault: []",
+          "default": []
+        },
+        "fontWeight": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "description": "Font Weight value or reference like {font-weight.base}"
+            },
+            "description": "Font Weight token record name to value.\nRequired"
+          },
+          "description": "List of Font Weight tokens.\nDefault: []",
+          "default": []
+        },
+        "lineHeight": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string",
+                  "description": "Line Height value or reference like {line-height.base}"
+                },
+                "description": "Line Height token record name to value.\nRequired"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "_generator": {
+                    "type": "object",
+                    "properties": {
+                      "start": {
+                        "type": "number",
+                        "description": "Start number.\nRequired"
+                      },
+                      "end": {
+                        "type": "number",
+                        "description": "End number.\nRequired"
+                      },
+                      "namePattern": {
+                        "type": "string",
+                        "description": "Name pattern.\nDefault: \"{i}\"",
+                        "default": "{i}"
+                      },
+                      "valuePattern": {
+                        "type": "string",
+                        "description": "Value pattern.\nDefault: \"{i}\"",
+                        "default": "{i}px"
+                      },
+                      "step": {
+                        "type": "number",
+                        "description": "Step.\nDefault: 1",
+                        "default": 1
+                      }
+                    },
+                    "required": ["start", "end"],
+                    "additionalProperties": false,
+                    "description": "Line Height token generator.\nRequired"
+                  }
+                },
+                "required": ["_generator"],
+                "additionalProperties": false,
+                "description": "Line Height token generator.\nRequired"
+              }
+            ],
+            "description": "Line Height token record name to value.\nRequired"
+          },
+          "description": "List of Line Height tokens.\nDefault: []",
+          "default": []
+        },
+        "fontSize": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string",
+                  "description": "Font Size value or reference like {font-size.base}"
+                },
+                "description": "Font Size token record name to value.\nRequired"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "_generator": {
+                    "type": "object",
+                    "properties": {
+                      "start": {
+                        "type": "number",
+                        "description": "Start number.\nRequired"
+                      },
+                      "end": {
+                        "type": "number",
+                        "description": "End number.\nRequired"
+                      },
+                      "namePattern": {
+                        "type": "string",
+                        "description": "Name pattern.\nDefault: \"{i}\"",
+                        "default": "{i}"
+                      },
+                      "valuePattern": {
+                        "type": "string",
+                        "description": "Value pattern.\nDefault: \"{i}\"",
+                        "default": "{i}px"
+                      },
+                      "step": {
+                        "type": "number",
+                        "description": "Step.\nDefault: 1",
+                        "default": 1
+                      }
+                    },
+                    "required": ["start", "end"],
+                    "additionalProperties": false,
+                    "description": "Font Size token generator.\nRequired"
+                  }
+                },
+                "required": ["_generator"],
+                "additionalProperties": false,
+                "description": "Font Size token generator.\nRequired"
+              }
+            ],
+            "description": "Font Size token record name to value.\nRequired"
+          },
+          "description": "List of Font Size tokens.\nDefault: []",
+          "default": []
+        },
+        "letterSpacing": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "description": "Letter Spacing value or reference like {letter-spacing.base}"
+            },
+            "description": "Letter Spacing token record name to value.\nRequired"
+          },
+          "description": "List of Letter Spacing tokens.\nDefault: []",
+          "default": []
+        },
+        "typography": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "fontFamily": {
+                  "type": ["string", "null"],
+                  "description": "Font Family value or reference like {font-family.base}.\nOptional"
+                },
+                "fontWeight": {
+                  "type": ["string", "null"],
+                  "description": "Font Weight value or reference like {font-weight.base}.\nOptional"
+                },
+                "lineHeight": {
+                  "type": ["string", "null"],
+                  "description": "Line Height value or reference like {line-height.base}.\nOptional"
+                },
+                "fontSize": {
+                  "type": ["string", "null"],
+                  "description": "Font Size value or reference like {font-size.base}.\nOptional"
+                },
+                "letterSpacing": {
+                  "type": ["string", "null"],
+                  "description": "Letter Spacing value or reference like {letter-spacing.base}.\nOptional"
+                }
+              },
+              "additionalProperties": false,
+              "description": "Typography token settings.\nRequired"
+            },
+            "description": "Typography token record name to settings.\nRequired"
+          },
+          "description": "List of Typography tokens.\nDefault: []",
+          "default": []
+        },
+        "zIndex": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string",
+                  "description": "Z-Index value or reference like {z-index.base}"
+                },
+                "description": "Z-Index token record name to value.\nRequired"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "_generator": {
+                    "type": "object",
+                    "properties": {
+                      "start": {
+                        "type": "number",
+                        "description": "Start number.\nRequired"
+                      },
+                      "end": {
+                        "type": "number",
+                        "description": "End number.\nRequired"
+                      },
+                      "namePattern": {
+                        "type": "string",
+                        "description": "Name pattern.\nDefault: \"{i}\"",
+                        "default": "{i}"
+                      },
+                      "valuePattern": {
+                        "type": "string",
+                        "description": "Value pattern.\nDefault: \"{i}\"",
+                        "default": "{i}"
+                      },
+                      "step": {
+                        "type": "number",
+                        "description": "Step.\nDefault: 1",
+                        "default": 1
+                      }
+                    },
+                    "required": ["start", "end"],
+                    "additionalProperties": false,
+                    "description": "Z-Index token generator.\nRequired"
+                  }
+                },
+                "required": ["_generator"],
+                "additionalProperties": false,
+                "description": "Z-Index token generator.\nRequired"
+              }
+            ],
+            "description": "Z-Index token record name to value.\nRequired"
+          },
+          "description": "List of Z-Index tokens.\nDefault: []",
+          "default": []
+        }
+      },
+      "additionalProperties": false,
+      "description": "Theme Config for @bruhabruh/theme"
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

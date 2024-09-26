@@ -30,9 +30,10 @@ export class FontWeightDesignToken extends DesignToken {
     const fontWeight: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
-      fontWeight[token.name] = token.css
-        ? `${token.css.keyVariable} /* ${token.value} */`
-        : token.value;
+      fontWeight[token.name] = token.css.mapOr(
+        token.value,
+        (css) => `${css.keyVariable} /* ${token.value} */`,
+      );
     });
 
     return {
@@ -45,7 +46,9 @@ export class FontWeightDesignToken extends DesignToken {
   override resolveAbsoluteValue(value: string): string {
     if (!(value.startsWith('var(') && value.endsWith(')'))) return value;
     const cssVar = value.slice(4, -1);
-    const token = this.tokens.find((t) => t.css && t.css.key === cssVar);
+    const token = this.tokens.find((t) =>
+      t.css.isSomeAnd((css) => css.key === cssVar),
+    );
     if (!token) return super.resolveAbsoluteValue(value);
     return token.value;
   }

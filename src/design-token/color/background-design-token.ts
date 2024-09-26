@@ -36,9 +36,11 @@ export class BackgroundDesignToken extends DesignToken {
     const backgroundColor: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
-      backgroundColor[token.name] = token.css
-        ? `rgb(from ${token.css.keyVariable} r g b / <alpha-value>) /* ${token.value} */`
-        : `${token.value}`;
+      backgroundColor[token.name] = token.css.mapOr(
+        token.value,
+        (css) =>
+          `rgb(from ${css.keyVariable} r g b / <alpha-value>) /* ${token.value} */`,
+      );
       colors[`${token.name}-${this.type}`] = backgroundColor[token.name];
     });
 
@@ -55,14 +57,16 @@ export class BackgroundDesignToken extends DesignToken {
   override resolveReferences(line: string): string {
     const withColors = this.#colorDesignToken.resolveReferences(line);
     return withColors.replace(this.referenceRegExp, (match, reference) => {
-      return this.resolveReference(reference) || match;
+      return this.resolveReference(reference).unwrapOr(match);
     });
   }
 
   override resolveAbsoluteValue(value: string): string {
     if (!(value.startsWith('var(') && value.endsWith(')'))) return value;
     const cssVar = value.slice(4, -1);
-    const token = this.tokens.find((t) => t.css && t.css.key === cssVar);
+    const token = this.tokens.find((t) =>
+      t.css.isSomeAnd((css) => css.key === cssVar),
+    );
     if (!token) return this.#colorDesignToken.resolveAbsoluteValue(value);
     return token.value;
   }

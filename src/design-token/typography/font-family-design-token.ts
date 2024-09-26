@@ -1,5 +1,6 @@
 import { DesignTokenType } from '@/types/design-token-type';
 import { TailwindConfig } from '@/types/tailwind';
+import { Err, Ok, Result } from '@bruhabruh/type-safe';
 import { DesignToken } from '../design-token';
 
 export class FontFamilyDesignToken extends DesignToken {
@@ -10,7 +11,10 @@ export class FontFamilyDesignToken extends DesignToken {
     super({ type: FontFamilyDesignToken.type, prefix });
   }
 
-  addFontFamily(name: string, ...fontFamilyArray: string[]): void {
+  addFontFamily(
+    name: string,
+    ...fontFamilyArray: string[]
+  ): Result<true, string> {
     const fontFamily = fontFamilyArray
       .flatMap((v) => v.split(',').map((i) => i.trim()))
       .filter((v) => v.length > 0)
@@ -20,21 +24,24 @@ export class FontFamilyDesignToken extends DesignToken {
       return this.resolveAbsoluteValue(match);
     });
     if (this.#cssVariablePattern.test(value)) {
-      throw new Error(`fail get absolute variable value of ${value}`);
+      return Err(`fail get absolute variable value of ${value}`);
     }
     this.addToken(name, value, {
       key: [name],
       value: cssValue,
     });
+
+    return Ok(true);
   }
 
   override tailwindConfig(): TailwindConfig {
     const fontFamily: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
-      fontFamily[token.name] = token.css
-        ? `${token.css.keyVariable} /* ${token.value} */`
-        : token.value;
+      fontFamily[token.name] = token.css.mapOr(
+        token.value,
+        (css) => `${css.keyVariable} /* ${token.value} */`,
+      );
     });
 
     return {
@@ -47,7 +54,9 @@ export class FontFamilyDesignToken extends DesignToken {
   override resolveAbsoluteValue(value: string): string {
     if (!(value.startsWith('var(') && value.endsWith(')'))) return value;
     const cssVar = value.slice(4, -1);
-    const token = this.tokens.find((t) => t.css && t.css.key === cssVar);
+    const token = this.tokens.find((t) =>
+      t.css.isSomeAnd((css) => css.key === cssVar),
+    );
     if (!token) return super.resolveAbsoluteValue(value);
     return token.value;
   }

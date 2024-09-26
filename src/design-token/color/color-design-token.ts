@@ -1,5 +1,6 @@
 import { DesignTokenType } from '@/types/design-token-type';
 import { TailwindConfig } from '@/types/tailwind';
+import { Err, Ok, Result } from '@bruhabruh/type-safe';
 import { Oklch, formatHex, interpolate, oklch } from 'culori';
 import { DesignToken } from '../design-token';
 
@@ -35,22 +36,35 @@ export class ColorDesignToken extends DesignToken {
     name: string,
     baseColor: string,
     options: ColorGenerateOptions = {},
-  ) {
+  ): Result<true, string> {
     const baseColorOklch = this.oklchFromStringWithReferences(baseColor);
-    const color = this.color(baseColorOklch, options);
+    if (baseColorOklch.isErr()) {
+      return baseColorOklch.mapErr(
+        (err) => `Fail convert base color "${baseColor}" to oklch: ${err}`,
+      );
+    }
+    const color = this.color(baseColorOklch.unwrap(), options);
 
-    Object.entries(color).forEach(([key, value]) => {
+    if (color.isErr()) {
+      return color.mapErr((err) => `Fail generate color "${name}": ${err}`);
+    }
+
+    Object.entries(color.unwrap()).forEach(([key, value]) => {
       this.addColor(`${name}-${key}`, value);
     });
+
+    return Ok(true);
   }
 
   override tailwindConfig(): TailwindConfig {
     const colors: Record<string, string | Record<string, string>> = {};
 
     this.tokens.forEach((token) => {
-      const value = token.css
-        ? `rgb(from ${token.css.keyVariable} r g b / <alpha-value>) /* ${token.value} */`
-        : `${token.value}`;
+      const value = token.css.mapOr(
+        token.value,
+        (css) =>
+          `rgb(from ${css.keyVariable} r g b / <alpha-value>) /* ${token.value} */`,
+      );
 
       if (!token.name.includes('-')) {
         colors[token.name] = value;
@@ -76,7 +90,9 @@ export class ColorDesignToken extends DesignToken {
   override resolveAbsoluteValue(value: string): string {
     if (!(value.startsWith('var(') && value.endsWith(')'))) return value;
     const cssVar = value.slice(4, -1);
-    const token = this.tokens.find((t) => t.css && t.css.key === cssVar);
+    const token = this.tokens.find((t) =>
+      t.css.isSomeAnd((css) => css.key === cssVar),
+    );
     if (!token) return super.resolveAbsoluteValue(value);
     return token.value;
   }
@@ -91,22 +107,22 @@ export class ColorDesignToken extends DesignToken {
     return super.variable({ type, parts: [this.type, ...parts] });
   }
 
-  private oklchFromStringWithReferences(ref: string): Oklch {
+  private oklchFromStringWithReferences(ref: string): Result<Oklch, string> {
     const reference = this.resolveReferences(ref);
     const value = this.resolveAbsoluteValue(reference);
     try {
       const color = oklch(value);
       if (!color) throw new Error();
-      return color;
+      return Ok(color);
     } catch (ignore) {
-      throw new Error(`fail convert ${reference} with ${value} to rgb object`);
+      return Err(`Fail convert ${reference} with ${value} to rgb object`);
     }
   }
 
   private color(
     base: Oklch,
     { modifierGenerator = {} }: ColorGenerateOptions,
-  ): Record<string, string> {
+  ): Result<Record<string, string>, string> {
     const result: Record<string, string> = {};
 
     const { min = 50, max = 950, step = 50 } = modifierGenerator;
@@ -114,17 +130,21 @@ export class ColorDesignToken extends DesignToken {
     const interpolator = interpolate(['#ffffff', base, '#000000'], 'cubehelix');
 
     for (let modifier = min; modifier <= max; modifier += step) {
-      const color = interpolator(
-        this.normalize(modifier, {
-          minInput: min,
-          maxInput: max,
-        }),
-      );
-      if (!color) throw new Error(`invalid color: ${color}`);
+      const normalized = this.normalize(modifier, {
+        minInput: min,
+        maxInput: max,
+      });
+      if (normalized.isErr()) {
+        return normalized.mapErr(
+          (err) => `Fail normalize modifier ${modifier}: ${err}`,
+        );
+      }
+      const color = interpolator(normalized.unwrap());
+      if (!color) return Err(`Invalid color: ${color}`);
       result[modifier] = formatHex(color);
     }
 
-    return result;
+    return Ok(result);
   }
 
   private normalize(
@@ -140,32 +160,24 @@ export class ColorDesignToken extends DesignToken {
       minOutput?: number;
       maxOutput?: number;
     },
-  ): number {
+  ): Result<number, string> {
     if (minInput === maxInput) {
-      throw new Error('minInput and maxInput should not be equal');
+      return Err('minInput and maxInput should not be equal');
     }
     if (minInput > maxInput) {
-      throw new Error('minInput should be less than maxInput');
+      return Err('minInput should be less than maxInput');
     }
     if (minOutput === maxOutput) {
-      throw new Error('minOutput and maxOutput should not be equal');
+      return Err('minOutput and maxOutput should not be equal');
     }
     if (minOutput > maxOutput) {
-      throw new Error('minOutput should be less than maxOutput');
+      return Err('minOutput should be less than maxOutput');
     }
 
     const normalized =
       ((value - minInput) * (maxOutput - minOutput)) / (maxInput - minInput) +
       minOutput;
 
-    return Math.max(Math.min(normalized, maxOutput), minOutput);
-  }
-
-  private easeOutSine(t: number): number {
-    return Math.sin((t * Math.PI) / 2);
-  }
-
-  private easeInOutSine(t: number): number {
-    return -(Math.cos(Math.PI * t) - 1) / 2;
+    return Ok(Math.max(Math.min(normalized, maxOutput), minOutput));
   }
 }

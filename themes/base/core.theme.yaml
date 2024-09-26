@@ -1,0 +1,93 @@
+# yaml-language-server: $schema=../../schema/theme-config.schema.json
+
+dependencies: []
+selectors:
+  - :root
+
+color:
+  - neutral:
+      _generator:
+        base: '#3A4454'
+        modifier:
+          min: 0
+          max: 100
+          step: 1
+  - blue:
+      _generator:
+        base: '#2563eb'
+        modifier:
+          min: 0
+          max: 100
+          step: 1
+  - green:
+      _generator:
+        base: '#22c55e'
+        modifier:
+          min: 0
+          max: 100
+          step: 1
+  - yellow:
+      _generator:
+        base: '#fde047'
+        modifier:
+          min: 0
+          max: 100
+          step: 1
+  - red:
+      _generator:
+        base: '#dc2626'
+        modifier:
+          min: 0
+          max: 100
+          step: 1
+
+spacing:
+  - base: 0.25rem
+  - 0: 0px
+  - 0.25: '{spacing.base} * 0.25'
+  - 0.5: '{spacing.base} * 0.5'
+  - 0.75: '{spacing.base} * 0.75'
+  - _generator:
+      start: 1
+      end: 16
+      step: 0.5
+      valuePattern: '{spacing.base} * {i}'
+  - _generator:
+      start: 20
+      end: 64
+      step: 4
+      valuePattern: '{spacing.base} * {i}'
+  - 72: '{spacing.base} * 72'
+  - 80: '{spacing.base} * 80'
+  - 96: '{spacing.base} * 96'
+
+fontFamily:
+  - sans: 'Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+  - serif: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif'
+  - mono: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
+
+fontSize:
+  - base: 1rem
+  - xs: '{font-size.base} - 4px'
+  - sm: '{font-size.base} - 2px'
+  - md: '{font-size.base}'
+  - lg: '{font-size.base} + 2px'
+  - xl: '{font-size.base} + 4px'
+  - 2xl: '{font-size.base} + 8px'
+  - 3xl: '{font-size.base} + 14px'
+  - 4xl: '{font-size.base} + 20px'
+  - 5xl: '{font-size.base} + 32px'
+  - 6xl: '{font-size.base} + 44px'
+  - 7xl: '{font-size.base} + 56px'
+  - 8xl: '{font-size.base} + 80px'
+  - 9xl: '{font-size.base} + 112px'
+
+zIndex:
+  - _generator:
+      start: 1
+      end: 5
+      step: 1
+  - _generator:
+      start: 0
+      end: 300
+      step: 5

@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../schema/theme-config.schema.json
+
+dependencies:
+  - core
+selectors:
+  - :root
+  - '[data-theme="light"]'
+
+color:
+  - primary:
+      DEFAULT: '{color.blue.60}'
+      container: '{color.blue.10}'
+      foreground: '{color.blue.75}'
+  - on-primary:
+      DEFAULT: '{color.blue.0}'
+      container: '{color.blue.90}'
+  - secondary:
+      DEFAULT: '{color.neutral.60}'
+      container: '{color.neutral.10}'
+      foreground: '{color.neutral.75}'
+  - on-secondary:
+      DEFAULT: '{color.neutral.0}'
+      container: '{color.neutral.90}'
+  - info:
+      DEFAULT: '{color.blue.60}'
+      container: '{color.blue.10}'
+      foreground: '{color.blue.75}'
+  - on-info:
+      DEFAULT: '{color.blue.0}'
+      container: '{color.blue.90}'
+  - success:
+      DEFAULT: '{color.green.60}'
+      container: '{color.green.10}'
+      foreground: '{color.green.85}'
+  - on-success:
+      DEFAULT: '{color.green.100}'
+      container: '{color.green.90}'
+  - caution:
+      DEFAULT: '{color.yellow.60}'
+      container: '{color.yellow.10}'
+      foreground: '{color.yellow.85}'
+  - on-caution:
+      DEFAULT: '{color.yellow.100}'
+      container: '{color.yellow.90}'
+  - critical:
+      DEFAULT: '{color.red.60}'
+      container: '{color.red.10}'
+      foreground: '{color.red.75}'
+  - on-critical:
+      DEFAULT: '{color.red.0}'
+      container: '{color.red.90}'
+  - surface:
+      dim: '{color.neutral.13}'
+      DEFAULT: '{color.neutral.2}'
+      bright: '{color.neutral.2}'
+      container-lowest: '{color.neutral.0}'
+      container-low: '{color.neutral.4}'
+      container: '{color.neutral.6}'
+      container-high: '{color.neutral.8}'
+      container-highest: '{color.neutral.10}'
+  - on-surface:
+      DEFAULT: '{color.neutral.90}'
+      variant: '{color.neutral.70}'
+  - outline:
+      DEFAULT: '{color.neutral.20}'
+      variant: '{color.neutral.15}'

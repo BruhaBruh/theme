@@ -2,6 +2,7 @@ import { Calculator } from '@/lib/calculator';
 import { CSSVariables } from '@/types/css-variables';
 import { DesignTokenType } from '@/types/design-token-type';
 import { TailwindConfig, TailwindPluginApi } from '@/types/tailwind';
+import { Err, None, Ok, Option, Result, Some } from '@bruhabruh/type-safe';
 import { TokenValue } from './token-value';
 
 export class DesignToken {
@@ -14,7 +15,7 @@ export class DesignToken {
   readonly #valueInPixelPattern = /(\d+\.?\d?\d*)px/g;
   readonly #invalidValuePattern =
     /pt|pc|in|cm|mm|q|[^r]em|ex|ch|w|h|min|max|%|fr|s|ms|deg|rad|grad|turn|vh|vw|vi|vb/g;
-  #designTokenReference: DesignToken | null = null;
+  #designTokenReference: Option<DesignToken> = None;
 
   protected constructor({
     type,
@@ -45,12 +46,11 @@ export class DesignToken {
   get cssVariables(): CSSVariables {
     const cssVariables: CSSVariables = {};
 
-    this.#tokens
-      .map((token) => token.css)
-      .filter((css) => css !== null)
-      .forEach((css) => {
+    this.#tokens.forEach((token) => {
+      token.css.inspect((css) => {
         cssVariables[css.key] = css.value;
       });
+    });
 
     return cssVariables;
   }
@@ -63,8 +63,8 @@ export class DesignToken {
     return this.#calculator;
   }
 
-  set designTokenReference(designTokenReference: DesignToken | null) {
-    this.#designTokenReference = designTokenReference;
+  set designTokenReference(designTokenReference: DesignToken) {
+    this.#designTokenReference = Some(designTokenReference);
   }
 
   css(): string[] {
@@ -78,20 +78,20 @@ export class DesignToken {
   resolveReferences(line: string): string {
     const res = line.replace(this.#referenceRegExp, (match, reference) => {
       const resolved = this.resolveReference(reference);
-      if (resolved) return resolved;
-      return match;
+      return resolved.unwrapOr(match);
     });
-    return this.#designTokenReference?.resolveReferences(res) || res;
+    return this.#designTokenReference.mapOr(res, (ref) =>
+      ref.resolveReferences(res),
+    );
   }
 
-  resolveReference(ref: string): string | null {
+  resolveReference(ref: string): Option<string> {
     const reference = ref.replace(/\./g, '-');
     const token = this.tokens.find(
       (t) => t.name.replace(/\./g, '-') === reference,
     );
-    if (!token) return null;
-    if (token.css === null) return token.value;
-    return token.css.keyVariable;
+    if (!token) return None;
+    return Some(token.css.mapOr(token.value, (css) => css.keyVariable));
   }
 
   applyTailwind(_api: TailwindPluginApi): void {}
@@ -101,7 +101,10 @@ export class DesignToken {
   }
 
   resolveAbsoluteValue(value: string): string {
-    return this.#designTokenReference?.resolveAbsoluteValue(value) || value;
+    if (this.#designTokenReference.isNone()) {
+      return value;
+    }
+    return this.#designTokenReference.unwrap().resolveAbsoluteValue(value);
   }
 
   protected addToken(
@@ -164,24 +167,40 @@ export class DesignToken {
     return `var(${variable})`;
   }
 
-  protected calculate(value: string): string {
+  protected calculate(value: string): Result<string, string> {
     const v = value.replace(/,/g, '.');
-    if (this.#invalidValuePattern.test(v)) return v;
-    if (this.#valueAsOnlyOneNumberPattern.test(v)) return v;
+    if (this.#invalidValuePattern.test(v)) return Ok(v);
+    if (this.#valueAsOnlyOneNumberPattern.test(v)) return Ok(v);
 
-    const inRem = this.changePxToRem(v);
+    const changeResult = this.changePxToRem(v);
+    if (changeResult.isErr()) {
+      return changeResult;
+    }
+    const inRem = changeResult.unwrap();
     const withoutRem = inRem.replace(/rem/g, '');
     const result = this.calculator.calculate(withoutRem);
-    return `${result}rem`;
+    if (result.isErr()) {
+      return result;
+    }
+    return Ok(`${result.unwrap()}rem`);
   }
 
-  protected changePxToRem(value: string): string {
-    return value.replace(this.#valueInPixelPattern, (match, v) => {
-      try {
-        return `${parseFloat(v) / 16}rem`;
-      } catch (ignore) {
-        throw new Error(`fail convert ${match} to rem`);
+  protected changePxToRem(value: string): Result<string, string> {
+    try {
+      const replaced = value.replace(this.#valueInPixelPattern, (match, v) => {
+        try {
+          return `${parseFloat(v) / 16}rem`;
+        } catch (ignore) {
+          throw new Error(`fail convert ${match} to rem`);
+        }
+      });
+      return Ok(replaced);
+    } catch (e) {
+      if (e instanceof Error) {
+        return Err(e.message);
+      } else {
+        return Err(`Fail convert ${value} to rem`);
       }
-    });
+    }
   }
 }

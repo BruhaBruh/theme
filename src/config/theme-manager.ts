@@ -1,5 +1,6 @@
 import { cleanObject } from '@/lib/clean-object';
 import { TailwindConfig, TailwindPluginApi } from '@/types/tailwind';
+import { Err, Ok, Result } from '@bruhabruh/type-safe';
 import { ThemeConfig } from './schema/theme-config';
 import { ThemesConfig } from './schema/themes-config';
 import { TokenManager } from './token-manager';
@@ -26,16 +27,19 @@ export class ThemeManager {
     this.#tokenManager.applyGlobalTokenManager(globalTokenManager);
   }
 
-  load(themes: ThemesConfig['themes'], dependedBy: string[] = []) {
+  load(
+    themes: ThemesConfig['themes'],
+    dependedBy: string[] = [],
+  ): Result<true, string> {
     if (dependedBy.includes(this.#name)) {
-      throw new Error(
-        `dependency cycle detected: ${[...dependedBy, this.#name].join(' -> ')}`,
+      return Err(
+        `Dependency cycle detected: ${[...dependedBy, this.#name].join(' -> ')}`,
       );
     }
 
-    this.#config.dependencies.forEach((name) => {
-      if (!themes[name])
-        throw new Error(`dependency theme ${name} is not found`);
+    for (let i = 0; i < this.#config.dependencies.length; i++) {
+      const name = this.#config.dependencies[i];
+      if (!themes[name]) return Err(`Dependency theme "${name}" is not found`);
       const dependencyThemeManager = new ThemeManager(
         name,
         this.#prefix,
@@ -43,14 +47,32 @@ export class ThemeManager {
         this.#globalTokenManager,
       );
       dependencyThemeManager.#isDependency = true;
-      dependencyThemeManager.load(themes, [...dependedBy, this.#name]);
-    });
+      const loadResult = dependencyThemeManager.load(themes, [
+        ...dependedBy,
+        this.#name,
+      ]);
+      if (loadResult.isErr()) {
+        return loadResult.mapErr(
+          (err) => `Load dependency theme "${name}" failed: ${err}`,
+        );
+      }
+    }
 
     if (this.#isDependency) {
-      this.#globalTokenManager.load(this.#config);
+      const loadResult = this.#globalTokenManager.load(this.#config);
+      if (loadResult.isErr()) {
+        return loadResult.mapErr(
+          (err) => `Load global token manager failed: ${err}`,
+        );
+      }
     } else {
-      this.#tokenManager.load(this.#config);
+      const loadResult = this.#tokenManager.load(this.#config);
+      if (loadResult.isErr()) {
+        return loadResult.mapErr((err) => `Load token manager failed: ${err}`);
+      }
     }
+
+    return Ok(true);
   }
 
   css(): string[] {

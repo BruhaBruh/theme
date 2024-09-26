@@ -5,7 +5,7 @@ describe('token-value', () => {
     const token = TokenValue.create('name', 'value');
     expect(token.name).toBe('name');
     expect(token.value).toBe('value');
-    expect(token.css).toBe(null);
+    expect(token.css.isNone()).toBeTruthy();
   });
 
   test('create w/ css', () => {
@@ -15,9 +15,9 @@ describe('token-value', () => {
     });
     expect(token.name).toBe('name');
     expect(token.value).toBe('value');
-    expect(token.css).not.toBe(null);
-    expect(token.css?.key).toBe('css-key');
-    expect(token.css?.value).toBe('css-value');
-    expect(token.css?.keyVariable).toBe('var(css-key)');
+    expect(token.css.isSome()).toBeTruthy();
+    expect(token.css.unwrap().key).toBe('css-key');
+    expect(token.css.unwrap().value).toBe('css-value');
+    expect(token.css.unwrap().keyVariable).toBe('var(css-key)');
   });
 });
