@@ -40,7 +40,6 @@
     "@types/culori": "^2.1.1",
     "@types/eslint": "^9.6.1",
     "@types/node": "^22.7.4",
-    "@typescript-eslint/parser": "^8.7.0",
     "@vitest/coverage-v8": "^2.1.1",
     "eslint": "^9.11.1",
     "husky": "^9.1.6",
