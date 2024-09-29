@@ -190,7 +190,7 @@ export class DesignToken {
       const replaced = value.replace(this.#valueInPixelPattern, (match, v) => {
         try {
           return `${parseFloat(v) / 16}rem`;
-        } catch (ignore) {
+        } catch {
           throw new Error(`fail convert ${match} to rem`);
         }
       });

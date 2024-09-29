@@ -114,7 +114,7 @@ export class ColorDesignToken extends DesignToken {
       const color = oklch(value);
       if (!color) throw new Error();
       return Ok(color);
-    } catch (ignore) {
+    } catch {
       return Err(`Fail convert ${reference} with ${value} to rgb object`);
     }
   }

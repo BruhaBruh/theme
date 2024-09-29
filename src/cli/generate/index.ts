@@ -91,7 +91,7 @@ const loadThemesTokensProcess = (
         '\n\t',
         loadResult.unwrapErr(),
       );
-      return process.exit(0);
+      process.exit(0);
     }
 
     themeManagers.push([themeName.toString(), themeManager]);

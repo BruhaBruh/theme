@@ -5,14 +5,5 @@
     "paths": {
       "@/*": ["./src/*"]
     }
-  },
-  "include": [
-    "src",
-    ".eslintrc.cjs",
-    "commitlint.config.cjs",
-    ".prettierrc.cjs",
-    "tsup.config.ts",
-    "vitest.config.ts"
-  ],
-  "exclude": ["node_modules", "dist"]
+  }
 }

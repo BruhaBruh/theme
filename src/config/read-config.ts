@@ -23,7 +23,7 @@ export const readConfig = (
     }
 
     return Err(zodFlattenError(result.error));
-  } catch (e) {
+  } catch {
     return Err(`Fail read file at ${path}`);
   }
 };

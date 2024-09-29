@@ -1,6 +1,6 @@
 {
   "name": "@bruhabruh/theme",
-  "version": "3.4.0",
+  "version": "3.4.1",
   "type": "module",
   "description": "BruhaBruh Theme with CLI",
   "author": "BruhaBruh",
@@ -31,26 +31,26 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@bruhabruh/eslint-config": "^1.0.0",
-    "@bruhabruh/prettier-config": "^1.1.0",
-    "@bruhabruh/tsconfig": "^1.0.0",
-    "@commitlint/cli": "^19.3.0",
-    "@commitlint/config-conventional": "^19.2.2",
-    "@commitlint/types": "^19.0.3",
+    "@bruhabruh/eslint-config": "^1.1.1",
+    "@bruhabruh/prettier-config": "^1.1.1",
+    "@bruhabruh/tsconfig": "^1.0.1",
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
+    "@commitlint/types": "^19.5.0",
     "@types/culori": "^2.1.1",
-    "@types/eslint": "^8.56.10",
-    "@types/node": "^20.14.9",
-    "@typescript-eslint/parser": "^7.14.1",
-    "@vitest/coverage-v8": "^2.0.5",
-    "eslint": "^8",
-    "husky": "^9.0.11",
+    "@types/eslint": "^9.6.1",
+    "@types/node": "^22.7.4",
+    "@typescript-eslint/parser": "^8.7.0",
+    "@vitest/coverage-v8": "^2.1.1",
+    "eslint": "^9.11.1",
+    "husky": "^9.1.6",
     "nano-staged": "^0.8.0",
-    "prettier": "^3.3.2",
-    "tailwindcss": "^3.4.4",
-    "tsup": "^8.1.0",
+    "prettier": "^3.3.3",
+    "tailwindcss": "^3.4.13",
+    "tsup": "^8.3.0",
     "tsx": "^4.19.1",
-    "typescript": "^5.5.4",
-    "vitest": "^2.0.5"
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.1"
   },
   "nano-staged": {
     "*.{js,ts}": [
@@ -61,14 +61,14 @@
     ]
   },
   "dependencies": {
-    "@bruhabruh/type-safe": "^1.1.0",
+    "@bruhabruh/type-safe": "^1.1.1",
     "chalk": "^5.3.0",
     "commander": "^12.1.0",
     "culori": "^4.0.1",
     "glob": "^11.0.0",
     "math-expression-evaluator": "^2.0.5",
     "ts-deepmerge": "^7.0.1",
-    "yaml": "^2.4.5",
+    "yaml": "^2.5.1",
     "zod": "^3.23.8",
     "zod-to-json-schema": "^3.23.3"
   },
