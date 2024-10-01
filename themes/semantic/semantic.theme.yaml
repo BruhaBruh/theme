@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../../schema/theme-config.schema.json
+# yaml-language-server: $schema=../../../theme/schema/theme-config.schema.json
 
 dependencies:
   - light
@@ -7,13 +7,9 @@ selectors:
   - :root
 
 borderRadius:
-  - base: 0.75rem
-  - 4xs: '{border-radius.base} - 16px'
-  - 3.5xs: '{border-radius.base} - 14px'
+  - base: 1rem
   - 3xs: '{border-radius.base} - 12px'
-  - 2.5xs: '{border-radius.base} - 10px'
   - 2xs: '{border-radius.base} - 8px'
-  - 1.5xs: '{border-radius.base} - 6px'
   - xs: '{border-radius.base} - 4px'
   - sm: '{border-radius.base} - 2px'
   - md: '{border-radius.base} + 2px'
@@ -36,60 +32,18 @@ spacing:
   - 5xl: '{spacing.20}'
   - 6xl: '{spacing.24}'
 
-typography:
-  - h1:
-      fontSize: '{font-size.5xl}'
-      fontWeight: '{font-weight.extrabold}'
-      lineHeight: '{line-height.normal}'
-      letterSpacing: '{letter-spacing.tight}'
-  - h2:
-      fontSize: '{font-size.3xl}'
-      fontWeight: '{font-weight.semibold}'
-      lineHeight: '{line-height.normal}'
-      letterSpacing: '{letter-spacing.tight}'
-  - h3:
-      fontSize: '{font-size.2xl}'
-      fontWeight: '{font-weight.semibold}'
-      lineHeight: '{line-height.normal}'
-      letterSpacing: '{letter-spacing.tight}'
-  - h4:
-      fontSize: '{font-size.xl}'
-      fontWeight: '{font-weight.semibold}'
-      lineHeight: '{line-height.snug}'
-      letterSpacing: '{letter-spacing.tight}'
-  - h5:
-      fontSize: '{font-size.lg}'
-      fontWeight: '{font-weight.medium}'
-      lineHeight: '{line-height.snug}'
-  - h6:
-      fontSize: '{font-size.md}'
-      fontWeight: '{font-weight.medium}'
-      lineHeight: '{line-height.snug}'
-  - body1:
-      fontSize: '{font-size.lg}'
-      fontWeight: '{font-weight.normal}'
-      lineHeight: '{line-height.normal}'
-  - body2:
-      fontSize: '{font-size.md}'
-      fontWeight: '{font-weight.normal}'
-      lineHeight: '{line-height.normal}'
-  - body3:
-      fontSize: '{font-size.sm}'
-      fontWeight: '{font-weight.normal}'
-      lineHeight: '{line-height.normal}'
-  - body4:
-      fontSize: '{font-size.xs}'
-      fontWeight: '{font-weight.normal}'
-      lineHeight: '{line-height.normal}'
-  - large:
-      fontSize: '{font-size.lg}'
-      fontWeight: '{font-weight.medium}'
-      lineHeight: '{line-height.tight}'
-  - medium:
-      fontSize: '{font-size.md}'
-      fontWeight: '{font-weight.medium}'
-      lineHeight: '{line-height.tight}'
-  - small:
-      fontSize: '{font-size.sm}'
-      fontWeight: '{font-weight.medium}'
-      lineHeight: '{line-height.tight}'
+fontSize:
+  - base: 1rem
+  - xs: '{font-size.base} - 4px'
+  - sm: '{font-size.base} - 2px'
+  - md: '{font-size.base}'
+  - lg: '{font-size.base} + 2px'
+  - xl: '{font-size.base} + 4px'
+  - 2xl: '{font-size.base} + 8px'
+  - 3xl: '{font-size.base} + 14px'
+  - 4xl: '{font-size.base} + 20px'
+  - 5xl: '{font-size.base} + 32px'
+  - 6xl: '{font-size.base} + 44px'
+  - 7xl: '{font-size.base} + 56px'
+  - 8xl: '{font-size.base} + 80px'
+  - 9xl: '{font-size.base} + 112px'

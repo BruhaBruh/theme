@@ -1,0 +1,149 @@
+# yaml-language-server: $schema=../../../theme/schema/theme-config.schema.json
+
+dependencies:
+  - semantic
+selectors:
+  - :root
+
+fontSize:
+  - display-large: '3.5625rem'
+  - display-medium: '2.8125rem'
+  - display-small: '2.25rem'
+  - headline-large: '2rem'
+  - headline-medium: '1.75rem'
+  - headline-small: '1.5rem'
+  - title-large: '1.375rem'
+  - title-medium: '1rem'
+  - title-small: '0.875rem'
+  - body-large: '1rem'
+  - body-medium: '0.875rem'
+  - body-small: '0.75rem'
+  - label-large: '0.875rem'
+  - label-medium: '0.75rem'
+  - label-small: '0.6875rem'
+
+lineHeight:
+  - display-large: '4rem'
+  - display-medium: '3.25rem'
+  - display-small: '2.75rem'
+  - headline-large: '2.5rem'
+  - headline-medium: '2.25rem'
+  - headline-small: '2rem'
+  - title-large: '1.75rem'
+  - title-medium: '1.5rem'
+  - title-small: '1.25rem'
+  - body-large: '1.5rem'
+  - body-medium: '1.25rem'
+  - body-small: '1rem'
+  - label-large: '1.25rem'
+  - label-medium: '1rem'
+  - label-small: '1rem'
+
+letterSpacing:
+  - display-large: '-0.021rem'
+  - display-medium: '0rem'
+  - display-small: '0rem'
+  - headline-large: '0rem'
+  - headline-medium: '0rem'
+  - headline-small: '0rem'
+  - title-large: '0rem'
+  - title-medium: '0.013rem'
+  - title-small: '0.008rem'
+  - body-large: '0.042rem'
+  - body-medium: '0.021rem'
+  - body-small: '0.033rem'
+  - label-large: '0.008rem'
+  - label-medium: '0.042rem'
+  - label-small: '0.042rem'
+
+typography:
+  - display-large:
+      fontFamily: '{font-family.sans}'
+      fontSize: '{font-size.display-large}'
+      fontWeight: '{font-weight.normal}'
+      lineHeight: '{line-height.display-large}'
+      letterSpacing: '{letter-spacing.display-large}'
+    display-medium:
+      fontFamily: '{font-family.sans}'
+      fontSize: '{font-size.display-medium}'
+      fontWeight: '{font-weight.normal}'
+      lineHeight: '{line-height.display-medium}'
+      letterSpacing: '{letter-spacing.display-medium}'
+    display-small:
+      fontFamily: '{font-family.sans}'
+      fontSize: '{font-size.display-small}'
+      fontWeight: '{font-weight.normal}'
+      lineHeight: '{line-height.display-small}'
+      letterSpacing: '{letter-spacing.display-small}'
+  - headline-large:
+      fontFamily: '{font-family.sans}'
+      fontSize: '{font-size.headline-large}'
+      fontWeight: '{font-weight.normal}'
+      lineHeight: '{line-height.headline-large}'
+      letterSpacing: '{letter-spacing.headline-large}'
+    headline-medium:
+      fontFamily: '{font-family.sans}'
+      fontSize: '{font-size.headline-medium}'
+      fontWeight: '{font-weight.normal}'
+      lineHeight: '{line-height.headline-medium}'
+      letterSpacing: '{letter-spacing.headline-medium}'
+    headline-small:
+      fontFamily: '{font-family.sans}'
+      fontSize: '{font-size.headline-small}'
+      fontWeight: '{font-weight.normal}'
+      lineHeight: '{line-height.headline-small}'
+      letterSpacing: '{letter-spacing.headline-small}'
+  - title-large:
+      fontFamily: '{font-family.sans}'
+      fontSize: '{font-size.title-large}'
+      fontWeight: '{font-weight.normal}'
+      lineHeight: '{line-height.title-large}'
+      letterSpacing: '{letter-spacing.title-large}'
+    title-medium:
+      fontFamily: '{font-family.sans}'
+      fontSize: '{font-size.title-medium}'
+      fontWeight: '{font-weight.medium}'
+      lineHeight: '{line-height.title-medium}'
+      letterSpacing: '{letter-spacing.title-medium}'
+    title-small:
+      fontFamily: '{font-family.sans}'
+      fontSize: '{font-size.title-small}'
+      fontWeight: '{font-weight.medium}'
+      lineHeight: '{line-height.title-small}'
+      letterSpacing: '{letter-spacing.title-small}'
+  - body-large:
+      fontFamily: '{font-family.sans}'
+      fontSize: '{font-size.body-large}'
+      fontWeight: '{font-weight.normal}'
+      lineHeight: '{line-height.body-large}'
+      letterSpacing: '{letter-spacing.body-large}'
+    body-medium:
+      fontFamily: '{font-family.sans}'
+      fontSize: '{font-size.body-medium}'
+      fontWeight: '{font-weight.normal}'
+      lineHeight: '{line-height.body-medium}'
+      letterSpacing: '{letter-spacing.body-medium}'
+    body-small:
+      fontFamily: '{font-family.sans}'
+      fontSize: '{font-size.body-small}'
+      fontWeight: '{font-weight.normal}'
+      lineHeight: '{line-height.body-small}'
+      letterSpacing: '{letter-spacing.body-small}'
+  - label-large:
+      fontFamily: '{font-family.sans}'
+      fontSize: '{font-size.label-large}'
+      fontWeight: '{font-weight.medium}'
+      lineHeight: '{line-height.label-large}'
+      letterSpacing: '{letter-spacing.label-large}'
+    label-medium:
+      fontFamily: '{font-family.sans}'
+      fontSize: '{font-size.label-medium}'
+      fontWeight: '{font-weight.medium}'
+      lineHeight: '{line-height.label-medium}'
+      letterSpacing: '{letter-spacing.label-medium}'
+    label-small:
+      fontFamily: '{font-family.sans}'
+      fontSize: '{font-size.label-small}'
+      fontWeight: '{font-weight.medium}'
+      lineHeight: '{line-height.label-small}'
+      letterSpacing: '{letter-spacing.label-small}'

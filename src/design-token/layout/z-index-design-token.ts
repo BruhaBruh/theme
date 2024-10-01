@@ -11,7 +11,11 @@ export class ZIndexDesignToken extends DesignToken {
     super({ type: ZIndexDesignToken.type, prefix });
   }
 
-  addZIndex(name: string, zIndex: string): Result<true, string> {
+  addZIndex(
+    name: string,
+    zIndex: string,
+    includeCss = true,
+  ): Result<true, string> {
     const cssValue = this.resolveReferences(zIndex);
     const value = cssValue.replace(this.#cssVariablePattern, (match) => {
       return this.resolveAbsoluteValue(match);
@@ -25,10 +29,16 @@ export class ZIndexDesignToken extends DesignToken {
         (err) => `Fail calculate border radius: ${err}`,
       );
     }
-    this.addToken(name, calculatedValue.unwrap(), {
-      key: [name],
-      value: calculatedValue.unwrap(),
-    });
+    this.addToken(
+      name,
+      calculatedValue.unwrap(),
+      includeCss
+        ? {
+            key: [name],
+            value: calculatedValue.unwrap(),
+          }
+        : undefined,
+    );
     return Ok(true);
   }
 

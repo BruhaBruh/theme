@@ -571,7 +571,11 @@ export class TokenManager {
           for (let j = start; j <= end; j += step) {
             const name = namePattern.replace(/\{i}/g, j.toString());
             const value = valuePattern.replace(/\{i}/g, j.toString());
-            const result = this.#zIndexDesignToken.addZIndex(name, value);
+            const result = this.#zIndexDesignToken.addZIndex(
+              name,
+              value,
+              false,
+            );
             if (result.isErr()) {
               return result.mapErr(
                 (err) => `Fail add z-index "${name}": ${err}`,

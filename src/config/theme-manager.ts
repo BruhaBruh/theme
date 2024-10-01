@@ -80,9 +80,21 @@ export class ThemeManager {
 
     const [inSelector, outSelector] = this.#tokenManager.css();
 
-    const selectors = Array.from(
-      new Set([`.${this.#name}`, ...this.#config.selectors]),
-    ).sort((a) => (a === ':root' ? -1 : 1));
+    const selectors = Array.from(new Set(this.#config.selectors)).sort((a) => {
+      if (a.startsWith(':')) {
+        return 0;
+      }
+      if (a.startsWith('.')) {
+        return 1;
+      }
+      if (a.startsWith('#')) {
+        return 2;
+      }
+      if (a.startsWith('[data-')) {
+        return 3;
+      }
+      return 4;
+    });
 
     const tokens = inSelector.map((v) => `  ${v}`);
 
