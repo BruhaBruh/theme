@@ -26,7 +26,6 @@ export class DesignToken {
   }) {
     this.#type = type;
     this.#prefix = prefix;
-    // eslint-disable-next-line security/detect-non-literal-regexp
     this.#referenceRegExp = new RegExp(`\\{${type}\\.([^\\}]+)\\}`, 'g');
     this.#tokens = [];
   }

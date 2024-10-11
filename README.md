@@ -4,13 +4,13 @@
 
 TailwindCSS
 
-```
+```bash
 npx @bruhabruh/theme tailwind -o tailwind.json -c bruhabruh.theme.json -s 2
 ```
 
 CSS
 
-```
+```bash
 npx @bruhabruh/theme css -o theme.css -s 2
 ```
 
