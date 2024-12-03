@@ -26,20 +26,20 @@ export class FontSizeDesignToken extends DesignToken {
       );
     }
     this.addToken(name, calculatedValue.unwrap(), {
-      key: [name],
-      value: calculatedValue.unwrap(),
+      humanReadableValue: this.changeRemToPx(calculatedValue.unwrap()).unwrap(),
+      css: {
+        key: [name],
+        value: calculatedValue.unwrap(),
+      },
     });
     return Ok(true);
   }
 
-  override tailwindConfig(): TailwindConfig {
+  override tailwindConfig(absolute: boolean): TailwindConfig {
     const fontSize: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
-      fontSize[token.name] = token.css.mapOr(
-        token.value,
-        (css) => `${css.keyVariable} /* ${token.value} */`,
-      );
+      fontSize[token.name] = token.toTailwindString({ absolute });
     });
 
     return {

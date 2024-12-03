@@ -2,26 +2,41 @@
 
 prefix: 'pw'
 content: ./themes/**/*.theme.yaml
+absolute: false
 output:
   all:
-    css: ./.generated/theme.css
-    json: ./.generated/theme.json
+    css:
+      - destination: ./.generated/theme.css
+    json:
+      - destination: ./.generated/theme.json
 
   themes:
     core:
-      css: ./.generated/core/theme.css
-      json: ./.generated/core/theme.json
-      js: ./.generated/core/theme.js
-      ts: ./.generated/core/theme.ts
+      css:
+        - destination: ./.generated/core/theme.css
+      json:
+        - destination: ./.generated/core/theme.json
+      js:
+        - destination: ./.generated/core/theme.js
+      ts:
+        - destination: ./.generated/core/theme.ts
 
     light:
-      css: ./.generated/light/theme.css
-      json: ./.generated/light/theme.json
-      js: ./.generated/light/theme.js
-      ts: ./.generated/light/theme.ts
+      css:
+        - destination: ./.generated/light/theme.css
+      json:
+        - destination: ./.generated/light/theme.json
+      js:
+        - destination: ./.generated/light/theme.js
+      ts:
+        - destination: ./.generated/light/theme.ts
 
     dark:
-      css: ./.generated/light/theme.css
-      json: ./.generated/light/theme.json
-      js: ./.generated/light/theme.js
-      ts: ./.generated/light/theme.ts
+      css:
+        - destination: ./.generated/dark/theme.css
+      json:
+        - destination: ./.generated/dark/theme.json
+      js:
+        - destination: ./.generated/dark/theme.js
+      ts:
+        - destination: ./.generated/dark/theme.ts

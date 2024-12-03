@@ -6,39 +6,37 @@ describe('fill-design-token', () => {
 
   beforeEach(() => {
     const colorDesignToken = new ColorDesignToken();
-    colorDesignToken.generateColor('neutral', '#292B33', {
-      type: 'neutral',
-    });
+    colorDesignToken.generateColor('neutral', '#292B33');
     fillDesignToken = new FillDesignToken(colorDesignToken);
   });
 
   describe('add fill color', () => {
     test('css variables', () => {
       fillDesignToken.addFillColor('primary', '{color.neutral.950}');
-      expect(fillDesignToken.cssVariables).toStrictEqual({
+      expect(fillDesignToken.cssVariables(false)).toStrictEqual({
         '--fill-primary': 'var(--color-neutral-950)',
       });
     });
 
     test('css', () => {
       fillDesignToken.addFillColor('primary', '{color.neutral.950}');
-      expect(fillDesignToken.css()).toStrictEqual([
+      expect(fillDesignToken.css(false)).toStrictEqual([
         '--fill-primary: var(--color-neutral-950);',
       ]);
     });
 
     test('tailwind config', () => {
       fillDesignToken.addFillColor('primary', '{color.neutral.950}');
-      expect(fillDesignToken.tailwindConfig()).toStrictEqual({
+      expect(fillDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           extend: {
             colors: {
               'primary-fill':
-                'rgb(from var(--fill-primary) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--fill-primary) r g b / <alpha-value>)',
             },
             fillColor: {
               primary:
-                'rgb(from var(--fill-primary) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--fill-primary) r g b / <alpha-value>)',
             },
           },
         },
@@ -48,9 +46,7 @@ describe('fill-design-token', () => {
     describe('with prefix', () => {
       beforeEach(() => {
         const colorDesignToken = new ColorDesignToken({ prefix: 'pw' });
-        colorDesignToken.generateColor('neutral', '#292B33', {
-          type: 'neutral',
-        });
+        colorDesignToken.generateColor('neutral', '#292B33');
         fillDesignToken = new FillDesignToken(colorDesignToken, {
           prefix: 'pw',
         });
@@ -58,30 +54,30 @@ describe('fill-design-token', () => {
 
       test('css variables', () => {
         fillDesignToken.addFillColor('primary', '{color.neutral.950}');
-        expect(fillDesignToken.cssVariables).toStrictEqual({
+        expect(fillDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-fill-primary': 'var(--pw-color-neutral-950)',
         });
       });
 
       test('css', () => {
         fillDesignToken.addFillColor('primary', '{color.neutral.950}');
-        expect(fillDesignToken.css()).toStrictEqual([
+        expect(fillDesignToken.css(false)).toStrictEqual([
           '--pw-fill-primary: var(--pw-color-neutral-950);',
         ]);
       });
 
       test('tailwind config', () => {
         fillDesignToken.addFillColor('primary', '{color.neutral.950}');
-        expect(fillDesignToken.tailwindConfig()).toStrictEqual({
+        expect(fillDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             extend: {
               colors: {
                 'primary-fill':
-                  'rgb(from var(--pw-fill-primary) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-fill-primary) r g b / <alpha-value>)',
               },
               fillColor: {
                 primary:
-                  'rgb(from var(--pw-fill-primary) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-fill-primary) r g b / <alpha-value>)',
               },
             },
           },
@@ -94,7 +90,7 @@ describe('fill-design-token', () => {
     test('css variables', () => {
       fillDesignToken.addFillColor('fill', '{color.neutral.950}');
       fillDesignToken.addFillColor('button', '{fill.fill}');
-      expect(fillDesignToken.cssVariables).toStrictEqual({
+      expect(fillDesignToken.cssVariables(false)).toStrictEqual({
         '--fill-fill': 'var(--color-neutral-950)',
         '--fill-button': 'var(--fill-fill)',
       });
@@ -103,7 +99,7 @@ describe('fill-design-token', () => {
     test('css', () => {
       fillDesignToken.addFillColor('fill', '{color.neutral.950}');
       fillDesignToken.addFillColor('button', '{fill.fill}');
-      expect(fillDesignToken.css()).toStrictEqual([
+      expect(fillDesignToken.css(false)).toStrictEqual([
         '--fill-fill: var(--color-neutral-950);',
         '--fill-button: var(--fill-fill);',
       ]);
@@ -112,19 +108,19 @@ describe('fill-design-token', () => {
     test('tailwind config', () => {
       fillDesignToken.addFillColor('fill', '{color.neutral.950}');
       fillDesignToken.addFillColor('button', '{fill.fill}');
-      expect(fillDesignToken.tailwindConfig()).toStrictEqual({
+      expect(fillDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           extend: {
             colors: {
               'fill-fill':
-                'rgb(from var(--fill-fill) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--fill-fill) r g b / <alpha-value>)',
               'button-fill':
-                'rgb(from var(--fill-button) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--fill-button) r g b / <alpha-value>)',
             },
             fillColor: {
-              fill: 'rgb(from var(--fill-fill) r g b / <alpha-value>) /* #000000 */',
+              fill: '/* #000000 */ rgb(from var(--fill-fill) r g b / <alpha-value>)',
               button:
-                'rgb(from var(--fill-button) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--fill-button) r g b / <alpha-value>)',
             },
           },
         },
@@ -134,9 +130,7 @@ describe('fill-design-token', () => {
     describe('with prefix', () => {
       beforeEach(() => {
         const colorDesignToken = new ColorDesignToken({ prefix: 'pw' });
-        colorDesignToken.generateColor('neutral', '#292B33', {
-          type: 'neutral',
-        });
+        colorDesignToken.generateColor('neutral', '#292B33');
         fillDesignToken = new FillDesignToken(colorDesignToken, {
           prefix: 'pw',
         });
@@ -145,7 +139,7 @@ describe('fill-design-token', () => {
       test('css variables', () => {
         fillDesignToken.addFillColor('primary', '{color.neutral.950}');
         fillDesignToken.addFillColor('button', '{fill.primary}');
-        expect(fillDesignToken.cssVariables).toStrictEqual({
+        expect(fillDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-fill-primary': 'var(--pw-color-neutral-950)',
           '--pw-fill-button': 'var(--pw-fill-primary)',
         });
@@ -154,7 +148,7 @@ describe('fill-design-token', () => {
       test('css', () => {
         fillDesignToken.addFillColor('primary', '{color.neutral.950}');
         fillDesignToken.addFillColor('button', '{fill.primary}');
-        expect(fillDesignToken.css()).toStrictEqual([
+        expect(fillDesignToken.css(false)).toStrictEqual([
           '--pw-fill-primary: var(--pw-color-neutral-950);',
           '--pw-fill-button: var(--pw-fill-primary);',
         ]);
@@ -163,20 +157,20 @@ describe('fill-design-token', () => {
       test('tailwind config', () => {
         fillDesignToken.addFillColor('primary', '{color.neutral.950}');
         fillDesignToken.addFillColor('button', '{fill.primary}');
-        expect(fillDesignToken.tailwindConfig()).toStrictEqual({
+        expect(fillDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             extend: {
               colors: {
                 'primary-fill':
-                  'rgb(from var(--pw-fill-primary) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-fill-primary) r g b / <alpha-value>)',
                 'button-fill':
-                  'rgb(from var(--pw-fill-button) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-fill-button) r g b / <alpha-value>)',
               },
               fillColor: {
                 primary:
-                  'rgb(from var(--pw-fill-primary) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-fill-primary) r g b / <alpha-value>)',
                 button:
-                  'rgb(from var(--pw-fill-button) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-fill-button) r g b / <alpha-value>)',
               },
             },
           },

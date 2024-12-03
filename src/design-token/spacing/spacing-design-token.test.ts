@@ -10,22 +10,24 @@ describe('spacing-design-token', () => {
   describe('add border radius', () => {
     test('css variables', () => {
       spacingDesignToken.addSpacing('base', '1rem');
-      expect(spacingDesignToken.cssVariables).toStrictEqual({
+      expect(spacingDesignToken.cssVariables(false)).toStrictEqual({
         '--spacing-base': '1rem',
       });
     });
 
     test('css', () => {
       spacingDesignToken.addSpacing('base', '1rem');
-      expect(spacingDesignToken.css()).toStrictEqual(['--spacing-base: 1rem;']);
+      expect(spacingDesignToken.css(false)).toStrictEqual([
+        '--spacing-base: 1rem;',
+      ]);
     });
 
     test('tailwind config', () => {
       spacingDesignToken.addSpacing('base', '1rem');
-      expect(spacingDesignToken.tailwindConfig()).toStrictEqual({
+      expect(spacingDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           spacing: {
-            base: 'var(--spacing-base) /* 1rem */',
+            base: '/* 16px = 1rem */ var(--spacing-base)',
           },
         },
       });
@@ -38,24 +40,24 @@ describe('spacing-design-token', () => {
 
       test('css variables', () => {
         spacingDesignToken.addSpacing('base', '1rem');
-        expect(spacingDesignToken.cssVariables).toStrictEqual({
+        expect(spacingDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-spacing-base': '1rem',
         });
       });
 
       test('css', () => {
         spacingDesignToken.addSpacing('base', '1rem');
-        expect(spacingDesignToken.css()).toStrictEqual([
+        expect(spacingDesignToken.css(false)).toStrictEqual([
           '--pw-spacing-base: 1rem;',
         ]);
       });
 
       test('tailwind config', () => {
         spacingDesignToken.addSpacing('base', '1rem');
-        expect(spacingDesignToken.tailwindConfig()).toStrictEqual({
+        expect(spacingDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             spacing: {
-              base: 'var(--pw-spacing-base) /* 1rem */',
+              base: '/* 16px = 1rem */ var(--pw-spacing-base)',
             },
           },
         });
@@ -67,7 +69,7 @@ describe('spacing-design-token', () => {
     test('css variables', () => {
       spacingDesignToken.addSpacing('base', '1rem');
       spacingDesignToken.addSpacing('sm', '{spacing.base} - 4px');
-      expect(spacingDesignToken.cssVariables).toStrictEqual({
+      expect(spacingDesignToken.cssVariables(false)).toStrictEqual({
         '--spacing-base': '1rem',
         '--spacing-sm': '0.75rem',
       });
@@ -76,7 +78,7 @@ describe('spacing-design-token', () => {
     test('css', () => {
       spacingDesignToken.addSpacing('base', '1rem');
       spacingDesignToken.addSpacing('sm', '{spacing.base} - 4px');
-      expect(spacingDesignToken.css()).toStrictEqual([
+      expect(spacingDesignToken.css(false)).toStrictEqual([
         '--spacing-base: 1rem;',
         '--spacing-sm: 0.75rem;',
       ]);
@@ -85,11 +87,11 @@ describe('spacing-design-token', () => {
     test('tailwind config', () => {
       spacingDesignToken.addSpacing('base', '1rem');
       spacingDesignToken.addSpacing('sm', '{spacing.base} - 4px');
-      expect(spacingDesignToken.tailwindConfig()).toStrictEqual({
+      expect(spacingDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           spacing: {
-            base: 'var(--spacing-base) /* 1rem */',
-            sm: 'var(--spacing-sm) /* 0.75rem */',
+            base: '/* 16px = 1rem */ var(--spacing-base)',
+            sm: '/* 12px = 0.75rem */ var(--spacing-sm)',
           },
         },
       });
@@ -101,7 +103,7 @@ describe('spacing-design-token', () => {
       spacingDesignToken.addSpacing('1', '1rem');
       spacingDesignToken.addSpacing('0.5', '{spacing.1} / 2');
       spacingDesignToken.addSpacing('0.25', '{spacing.0.5} / 2');
-      expect(spacingDesignToken.cssVariables).toStrictEqual({
+      expect(spacingDesignToken.cssVariables(false)).toStrictEqual({
         '--spacing-1': '1rem',
         '--spacing-0\\.5': '0.5rem',
         '--spacing-0\\.25': '0.25rem',
@@ -112,7 +114,7 @@ describe('spacing-design-token', () => {
       spacingDesignToken.addSpacing('1', '1rem');
       spacingDesignToken.addSpacing('0.5', '{spacing.1} / 2');
       spacingDesignToken.addSpacing('0.25', '{spacing.0.5} / 2');
-      expect(spacingDesignToken.css()).toStrictEqual([
+      expect(spacingDesignToken.css(false)).toStrictEqual([
         '--spacing-1: 1rem;',
         '--spacing-0\\.5: 0.5rem;',
         '--spacing-0\\.25: 0.25rem;',
@@ -123,12 +125,12 @@ describe('spacing-design-token', () => {
       spacingDesignToken.addSpacing('1', '1rem');
       spacingDesignToken.addSpacing('0.5', '{spacing.1} / 2');
       spacingDesignToken.addSpacing('0.25', '{spacing.0.5} / 2');
-      expect(spacingDesignToken.tailwindConfig()).toStrictEqual({
+      expect(spacingDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           spacing: {
-            '1': 'var(--spacing-1) /* 1rem */',
-            '0.5': 'var(--spacing-0\\.5) /* 0.5rem */',
-            '0.25': 'var(--spacing-0\\.25) /* 0.25rem */',
+            '1': '/* 16px = 1rem */ var(--spacing-1)',
+            '0.5': '/* 8px = 0.5rem */ var(--spacing-0\\.5)',
+            '0.25': '/* 4px = 0.25rem */ var(--spacing-0\\.25)',
           },
         },
       });

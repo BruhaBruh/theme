@@ -10,19 +10,21 @@ describe('color-design-token', () => {
   describe('add color', () => {
     test('css variables', () => {
       colorDesignToken.addColor('white', '#ffffff');
-      expect(colorDesignToken.cssVariables).toStrictEqual({
+      expect(colorDesignToken.cssVariables(false)).toStrictEqual({
         '--color-white': '#ffffff',
       });
     });
 
     test('css', () => {
       colorDesignToken.addColor('white', '#ffffff');
-      expect(colorDesignToken.css()).toStrictEqual(['--color-white: #ffffff;']);
+      expect(colorDesignToken.css(false)).toStrictEqual([
+        '--color-white: #ffffff;',
+      ]);
     });
 
     test('tailwind config', () => {
       colorDesignToken.addColor('white', '#ffffff');
-      expect(colorDesignToken.tailwindConfig()).toStrictEqual({
+      expect(colorDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           colors: {
             current: 'currentColor',
@@ -31,7 +33,7 @@ describe('color-design-token', () => {
             transparent: 'transparent',
             unset: 'unset',
             white:
-              'rgb(from var(--color-white) r g b / <alpha-value>) /* #ffffff */',
+              '/* #ffffff */ rgb(from var(--color-white) r g b / <alpha-value>)',
           },
         },
       });
@@ -45,7 +47,7 @@ describe('color-design-token', () => {
       test('css variables', () => {
         colorDesignToken.addColor('white', '#ffffff');
         colorDesignToken.addColor('white-example', '#ffffff');
-        expect(colorDesignToken.cssVariables).toStrictEqual({
+        expect(colorDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-color-white': '#ffffff',
           '--pw-color-white-example': '#ffffff',
         });
@@ -53,14 +55,14 @@ describe('color-design-token', () => {
 
       test('css', () => {
         colorDesignToken.addColor('white', '#ffffff');
-        expect(colorDesignToken.css()).toStrictEqual([
+        expect(colorDesignToken.css(false)).toStrictEqual([
           '--pw-color-white: #ffffff;',
         ]);
       });
 
       test('tailwind config', () => {
         colorDesignToken.addColor('white', '#ffffff');
-        expect(colorDesignToken.tailwindConfig()).toStrictEqual({
+        expect(colorDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             colors: {
               current: 'currentColor',
@@ -69,7 +71,7 @@ describe('color-design-token', () => {
               transparent: 'transparent',
               unset: 'unset',
               white:
-                'rgb(from var(--pw-color-white) r g b / <alpha-value>) /* #ffffff */',
+                '/* #ffffff */ rgb(from var(--pw-color-white) r g b / <alpha-value>)',
             },
           },
         });
@@ -81,7 +83,7 @@ describe('color-design-token', () => {
     test('css variables', () => {
       colorDesignToken.addColor('white', '#ffffff');
       colorDesignToken.addColor('background', '{color.white}');
-      expect(colorDesignToken.cssVariables).toStrictEqual({
+      expect(colorDesignToken.cssVariables(false)).toStrictEqual({
         '--color-white': '#ffffff',
         '--color-background': 'var(--color-white)',
       });
@@ -90,7 +92,7 @@ describe('color-design-token', () => {
     test('css', () => {
       colorDesignToken.addColor('white', '#ffffff');
       colorDesignToken.addColor('background', '{color.white}');
-      expect(colorDesignToken.css()).toStrictEqual([
+      expect(colorDesignToken.css(false)).toStrictEqual([
         '--color-white: #ffffff;',
         '--color-background: var(--color-white);',
       ]);
@@ -100,7 +102,7 @@ describe('color-design-token', () => {
       colorDesignToken.addColor('white', '#ffffff');
       colorDesignToken.addColor('background', '{color.white}');
       colorDesignToken.addColor('button', '{color.background}');
-      expect(colorDesignToken.tailwindConfig()).toStrictEqual({
+      expect(colorDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           colors: {
             current: 'currentColor',
@@ -109,11 +111,11 @@ describe('color-design-token', () => {
             transparent: 'transparent',
             unset: 'unset',
             white:
-              'rgb(from var(--color-white) r g b / <alpha-value>) /* #ffffff */',
+              '/* #ffffff */ rgb(from var(--color-white) r g b / <alpha-value>)',
             background:
-              'rgb(from var(--color-background) r g b / <alpha-value>) /* #ffffff */',
+              '/* #ffffff */ rgb(from var(--color-background) r g b / <alpha-value>)',
             button:
-              'rgb(from var(--color-button) r g b / <alpha-value>) /* #ffffff */',
+              '/* #ffffff */ rgb(from var(--color-button) r g b / <alpha-value>)',
           },
         },
       });
@@ -127,7 +129,7 @@ describe('color-design-token', () => {
       test('css variables', () => {
         colorDesignToken.addColor('white', '#ffffff');
         colorDesignToken.addColor('background', '{color.white}');
-        expect(colorDesignToken.cssVariables).toStrictEqual({
+        expect(colorDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-color-white': '#ffffff',
           '--pw-color-background': 'var(--pw-color-white)',
         });
@@ -136,7 +138,7 @@ describe('color-design-token', () => {
       test('css', () => {
         colorDesignToken.addColor('white', '#ffffff');
         colorDesignToken.addColor('background', '{color.white}');
-        expect(colorDesignToken.css()).toStrictEqual([
+        expect(colorDesignToken.css(false)).toStrictEqual([
           '--pw-color-white: #ffffff;',
           '--pw-color-background: var(--pw-color-white);',
         ]);
@@ -146,7 +148,7 @@ describe('color-design-token', () => {
         colorDesignToken.addColor('white', '#ffffff');
         colorDesignToken.addColor('background', '{color.white}');
         colorDesignToken.addColor('button', '{color.background}');
-        expect(colorDesignToken.tailwindConfig()).toStrictEqual({
+        expect(colorDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             colors: {
               current: 'currentColor',
@@ -155,11 +157,11 @@ describe('color-design-token', () => {
               transparent: 'transparent',
               unset: 'unset',
               white:
-                'rgb(from var(--pw-color-white) r g b / <alpha-value>) /* #ffffff */',
+                '/* #ffffff */ rgb(from var(--pw-color-white) r g b / <alpha-value>)',
               background:
-                'rgb(from var(--pw-color-background) r g b / <alpha-value>) /* #ffffff */',
+                '/* #ffffff */ rgb(from var(--pw-color-background) r g b / <alpha-value>)',
               button:
-                'rgb(from var(--pw-color-button) r g b / <alpha-value>) /* #ffffff */',
+                '/* #ffffff */ rgb(from var(--pw-color-button) r g b / <alpha-value>)',
             },
           },
         });
@@ -171,7 +173,7 @@ describe('color-design-token', () => {
     test('css variables', () => {
       colorDesignToken.generateColor('neutral', '#292B33');
       colorDesignToken.generateColor('green', '#29CC29');
-      expect(colorDesignToken.cssVariables).toStrictEqual({
+      expect(colorDesignToken.cssVariables(false)).toStrictEqual({
         '--color-green-100': '#dfffdf',
         '--color-green-150': '#c1fec1',
         '--color-green-200': '#a5fba5',
@@ -216,7 +218,7 @@ describe('color-design-token', () => {
     test('css', () => {
       colorDesignToken.generateColor('neutral', '#292B33');
       colorDesignToken.generateColor('green', '#29CC29');
-      expect(colorDesignToken.css()).toStrictEqual([
+      expect(colorDesignToken.css(false)).toStrictEqual([
         '--color-neutral-50: #ffffff;',
         '--color-neutral-100: #e6e7ec;',
         '--color-neutral-150: #ced0d8;',
@@ -261,89 +263,89 @@ describe('color-design-token', () => {
     test('tailwind config', () => {
       colorDesignToken.generateColor('neutral', '#292B33');
       colorDesignToken.generateColor('green', '#29CC29');
-      expect(colorDesignToken.tailwindConfig()).toStrictEqual({
+      expect(colorDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           colors: {
             current: 'currentColor',
             green: {
               '100':
-                'rgb(from var(--color-green-100) r g b / <alpha-value>) /* #dfffdf */',
+                '/* #dfffdf */ rgb(from var(--color-green-100) r g b / <alpha-value>)',
               '150':
-                'rgb(from var(--color-green-150) r g b / <alpha-value>) /* #c1fec1 */',
+                '/* #c1fec1 */ rgb(from var(--color-green-150) r g b / <alpha-value>)',
               '200':
-                'rgb(from var(--color-green-200) r g b / <alpha-value>) /* #a5fba5 */',
+                '/* #a5fba5 */ rgb(from var(--color-green-200) r g b / <alpha-value>)',
               '250':
-                'rgb(from var(--color-green-250) r g b / <alpha-value>) /* #8bf78b */',
+                '/* #8bf78b */ rgb(from var(--color-green-250) r g b / <alpha-value>)',
               '300':
-                'rgb(from var(--color-green-300) r g b / <alpha-value>) /* #74f174 */',
+                '/* #74f174 */ rgb(from var(--color-green-300) r g b / <alpha-value>)',
               '350':
-                'rgb(from var(--color-green-350) r g b / <alpha-value>) /* #5eea5e */',
+                '/* #5eea5e */ rgb(from var(--color-green-350) r g b / <alpha-value>)',
               '400':
-                'rgb(from var(--color-green-400) r g b / <alpha-value>) /* #4ae14a */',
+                '/* #4ae14a */ rgb(from var(--color-green-400) r g b / <alpha-value>)',
               '450':
-                'rgb(from var(--color-green-450) r g b / <alpha-value>) /* #39d739 */',
-              '50': 'rgb(from var(--color-green-50) r g b / <alpha-value>) /* #ffffff */',
+                '/* #39d739 */ rgb(from var(--color-green-450) r g b / <alpha-value>)',
+              '50': '/* #ffffff */ rgb(from var(--color-green-50) r g b / <alpha-value>)',
               '500':
-                'rgb(from var(--color-green-500) r g b / <alpha-value>) /* #29cc29 */',
+                '/* #29cc29 */ rgb(from var(--color-green-500) r g b / <alpha-value>)',
               '550':
-                'rgb(from var(--color-green-550) r g b / <alpha-value>) /* #19bd19 */',
+                '/* #19bd19 */ rgb(from var(--color-green-550) r g b / <alpha-value>)',
               '600':
-                'rgb(from var(--color-green-600) r g b / <alpha-value>) /* #0dac0d */',
+                '/* #0dac0d */ rgb(from var(--color-green-600) r g b / <alpha-value>)',
               '650':
-                'rgb(from var(--color-green-650) r g b / <alpha-value>) /* #029902 */',
+                '/* #029902 */ rgb(from var(--color-green-650) r g b / <alpha-value>)',
               '700':
-                'rgb(from var(--color-green-700) r g b / <alpha-value>) /* #008500 */',
+                '/* #008500 */ rgb(from var(--color-green-700) r g b / <alpha-value>)',
               '750':
-                'rgb(from var(--color-green-750) r g b / <alpha-value>) /* #006e00 */',
+                '/* #006e00 */ rgb(from var(--color-green-750) r g b / <alpha-value>)',
               '800':
-                'rgb(from var(--color-green-800) r g b / <alpha-value>) /* #005500 */',
+                '/* #005500 */ rgb(from var(--color-green-800) r g b / <alpha-value>)',
               '850':
-                'rgb(from var(--color-green-850) r g b / <alpha-value>) /* #003b00 */',
+                '/* #003b00 */ rgb(from var(--color-green-850) r g b / <alpha-value>)',
               '900':
-                'rgb(from var(--color-green-900) r g b / <alpha-value>) /* #001e00 */',
+                '/* #001e00 */ rgb(from var(--color-green-900) r g b / <alpha-value>)',
               '950':
-                'rgb(from var(--color-green-950) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--color-green-950) r g b / <alpha-value>)',
             },
             inherit: 'inherit',
             initial: 'initial',
             neutral: {
               '100':
-                'rgb(from var(--color-neutral-100) r g b / <alpha-value>) /* #e6e7ec */',
+                '/* #e6e7ec */ rgb(from var(--color-neutral-100) r g b / <alpha-value>)',
               '150':
-                'rgb(from var(--color-neutral-150) r g b / <alpha-value>) /* #ced0d8 */',
+                '/* #ced0d8 */ rgb(from var(--color-neutral-150) r g b / <alpha-value>)',
               '200':
-                'rgb(from var(--color-neutral-200) r g b / <alpha-value>) /* #b5b8c3 */',
+                '/* #b5b8c3 */ rgb(from var(--color-neutral-200) r g b / <alpha-value>)',
               '250':
-                'rgb(from var(--color-neutral-250) r g b / <alpha-value>) /* #9da0ae */',
+                '/* #9da0ae */ rgb(from var(--color-neutral-250) r g b / <alpha-value>)',
               '300':
-                'rgb(from var(--color-neutral-300) r g b / <alpha-value>) /* #858997 */',
+                '/* #858997 */ rgb(from var(--color-neutral-300) r g b / <alpha-value>)',
               '350':
-                'rgb(from var(--color-neutral-350) r g b / <alpha-value>) /* #6e717f */',
+                '/* #6e717f */ rgb(from var(--color-neutral-350) r g b / <alpha-value>)',
               '400':
-                'rgb(from var(--color-neutral-400) r g b / <alpha-value>) /* #575a67 */',
+                '/* #575a67 */ rgb(from var(--color-neutral-400) r g b / <alpha-value>)',
               '450':
-                'rgb(from var(--color-neutral-450) r g b / <alpha-value>) /* #40424d */',
-              '50': 'rgb(from var(--color-neutral-50) r g b / <alpha-value>) /* #ffffff */',
+                '/* #40424d */ rgb(from var(--color-neutral-450) r g b / <alpha-value>)',
+              '50': '/* #ffffff */ rgb(from var(--color-neutral-50) r g b / <alpha-value>)',
               '500':
-                'rgb(from var(--color-neutral-500) r g b / <alpha-value>) /* #292b33 */',
+                '/* #292b33 */ rgb(from var(--color-neutral-500) r g b / <alpha-value>)',
               '550':
-                'rgb(from var(--color-neutral-550) r g b / <alpha-value>) /* #24262d */',
+                '/* #24262d */ rgb(from var(--color-neutral-550) r g b / <alpha-value>)',
               '600':
-                'rgb(from var(--color-neutral-600) r g b / <alpha-value>) /* #202128 */',
+                '/* #202128 */ rgb(from var(--color-neutral-600) r g b / <alpha-value>)',
               '650':
-                'rgb(from var(--color-neutral-650) r g b / <alpha-value>) /* #1b1d22 */',
+                '/* #1b1d22 */ rgb(from var(--color-neutral-650) r g b / <alpha-value>)',
               '700':
-                'rgb(from var(--color-neutral-700) r g b / <alpha-value>) /* #17181d */',
+                '/* #17181d */ rgb(from var(--color-neutral-700) r g b / <alpha-value>)',
               '750':
-                'rgb(from var(--color-neutral-750) r g b / <alpha-value>) /* #121317 */',
+                '/* #121317 */ rgb(from var(--color-neutral-750) r g b / <alpha-value>)',
               '800':
-                'rgb(from var(--color-neutral-800) r g b / <alpha-value>) /* #0e0e11 */',
+                '/* #0e0e11 */ rgb(from var(--color-neutral-800) r g b / <alpha-value>)',
               '850':
-                'rgb(from var(--color-neutral-850) r g b / <alpha-value>) /* #090a0c */',
+                '/* #090a0c */ rgb(from var(--color-neutral-850) r g b / <alpha-value>)',
               '900':
-                'rgb(from var(--color-neutral-900) r g b / <alpha-value>) /* #050506 */',
+                '/* #050506 */ rgb(from var(--color-neutral-900) r g b / <alpha-value>)',
               '950':
-                'rgb(from var(--color-neutral-950) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--color-neutral-950) r g b / <alpha-value>)',
             },
             transparent: 'transparent',
             unset: 'unset',

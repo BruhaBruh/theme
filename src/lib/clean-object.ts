@@ -21,6 +21,7 @@ type FilteredObject<T extends Record<string, any>> = {
     ? never
     : K]: FilteredInputType<T[K]>;
 };
+
 export const cleanObject = <T extends InputType>(
   input: T,
 ): FilteredInputType<T> => {

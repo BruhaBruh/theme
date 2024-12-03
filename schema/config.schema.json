@@ -14,6 +14,11 @@
           "description": "Path to theme configs.\nDefault: \"./themes/*.theme.yaml\"",
           "default": "./themes/*.theme.yaml"
         },
+        "absolute": {
+          "type": "boolean",
+          "description": "Output w/ absolute values.\nDefault: false",
+          "default": false
+        },
         "output": {
           "type": "object",
           "properties": {
@@ -21,20 +26,88 @@
               "type": "object",
               "properties": {
                 "css": {
-                  "type": ["string", "null"],
-                  "description": "CSS output path of theme.\nOptional"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "destination": {
+                        "type": ["string", "null"],
+                        "description": "CSS output path of theme.\nOptional"
+                      },
+                      "absolute": {
+                        "type": ["boolean", "null"],
+                        "description": "CSS output w/ absolute values.\nOptional"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "description": "CSS output options.\nDefault: {}",
+                    "default": {}
+                  },
+                  "description": "CSS output options.\nDefault: []",
+                  "default": []
                 },
                 "json": {
-                  "type": ["string", "null"],
-                  "description": "TailwindCSS JSON output path of theme.\nOptional"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "destination": {
+                        "type": ["string", "null"],
+                        "description": "TailwindCSS JSON output path of theme.\nOptional"
+                      },
+                      "absolute": {
+                        "type": ["boolean", "null"],
+                        "description": "TailwindCSS JSON output w/ absolute values.\nOptional"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "description": "TailwindCSS JSON output options.\nDefault: {}",
+                    "default": {}
+                  },
+                  "description": "TailwindCSS JSON output options.\nDefault: []",
+                  "default": []
                 },
                 "js": {
-                  "type": ["string", "null"],
-                  "description": "TailwindCSS JS output path of theme.\nOptional"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "destination": {
+                        "type": ["string", "null"],
+                        "description": "TailwindCSS JS output path of theme.\nOptional"
+                      },
+                      "absolute": {
+                        "type": ["boolean", "null"],
+                        "description": "TailwindCSS JS output w/ absolute values.\nOptional"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "description": "TailwindCSS JS output options.\nDefault: {}",
+                    "default": {}
+                  },
+                  "description": "TailwindCSS JS output options.\nDefault: []",
+                  "default": []
                 },
                 "ts": {
-                  "type": ["string", "null"],
-                  "description": "TailwindCSS TS output path of theme.\nOptional"
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "destination": {
+                        "type": ["string", "null"],
+                        "description": "TailwindCSS TS output path of theme.\nOptional"
+                      },
+                      "absolute": {
+                        "type": ["boolean", "null"],
+                        "description": "TailwindCSS TS output w/ absolute values.\\nOptional"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "description": "TailwindCSS TS output options.\nDefault: {}",
+                    "default": {}
+                  },
+                  "description": "TailwindCSS TS output options.\nDefault: []",
+                  "default": []
                 }
               },
               "additionalProperties": false,
@@ -44,38 +117,14 @@
             "themes": {
               "type": "object",
               "additionalProperties": {
-                "type": "object",
-                "properties": {
-                  "css": {
-                    "type": ["string", "null"],
-                    "description": "CSS output path of theme.\nOptional"
-                  },
-                  "json": {
-                    "type": ["string", "null"],
-                    "description": "TailwindCSS JSON output path of theme.\nOptional"
-                  },
-                  "js": {
-                    "type": ["string", "null"],
-                    "description": "TailwindCSS JS output path of theme.\nOptional"
-                  },
-                  "ts": {
-                    "type": ["string", "null"],
-                    "description": "TailwindCSS TS output path of theme.\nOptional"
-                  }
-                },
-                "additionalProperties": false,
-                "description": "Output for theme.\nDefault: {}",
-                "default": {}
+                "$ref": "#/definitions/config/properties/output/properties/all"
               },
               "default": {}
             }
           },
           "additionalProperties": false,
           "description": "Output configuration.\nDefault: { all: {}, themes: {} }",
-          "default": {
-            "all": {},
-            "themes": {}
-          }
+          "default": {}
         }
       },
       "additionalProperties": false,

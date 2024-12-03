@@ -11,11 +11,7 @@ export class ZIndexDesignToken extends DesignToken {
     super({ type: ZIndexDesignToken.type, prefix });
   }
 
-  addZIndex(
-    name: string,
-    zIndex: string,
-    includeCss = true,
-  ): Result<true, string> {
+  addZIndex(name: string, zIndex: string): Result<true, string> {
     const cssValue = this.resolveReferences(zIndex);
     const value = cssValue.replace(this.#cssVariablePattern, (match) => {
       return this.resolveAbsoluteValue(match);
@@ -29,27 +25,15 @@ export class ZIndexDesignToken extends DesignToken {
         (err) => `Fail calculate border radius: ${err}`,
       );
     }
-    this.addToken(
-      name,
-      calculatedValue.unwrap(),
-      includeCss
-        ? {
-            key: [name],
-            value: calculatedValue.unwrap(),
-          }
-        : undefined,
-    );
+    this.addToken(name, calculatedValue.unwrap());
     return Ok(true);
   }
 
-  override tailwindConfig(): TailwindConfig {
+  override tailwindConfig(absolute: boolean): TailwindConfig {
     const zIndex: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
-      zIndex[token.name] = token.css.mapOr(
-        token.value,
-        (css) => `${css.keyVariable} /* ${token.value} */`,
-      );
+      zIndex[token.name] = token.toTailwindString({ absolute });
     });
 
     return {

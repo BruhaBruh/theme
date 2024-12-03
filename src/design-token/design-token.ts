@@ -13,6 +13,7 @@ export class DesignToken {
   readonly #calculator = new Calculator();
   readonly #valueAsOnlyOneNumberPattern = /^\d+\.?\d?\d*$/g;
   readonly #valueInPixelPattern = /(\d+\.?\d?\d*)px/g;
+  readonly #valueInRemPattern = /(\d+\.?\d?\d*)rem/g;
   readonly #invalidValuePattern =
     /pt|pc|in|cm|mm|q|[^r]em|ex|ch|w|h|min|max|%|fr|s|ms|deg|rad|grad|turn|vh|vw|vi|vb/g;
   #designTokenReference: Option<DesignToken> = None;
@@ -42,18 +43,6 @@ export class DesignToken {
     return [...this.#tokens];
   }
 
-  get cssVariables(): CSSVariables {
-    const cssVariables: CSSVariables = {};
-
-    this.#tokens.forEach((token) => {
-      token.css.inspect((css) => {
-        cssVariables[css.key] = css.value;
-      });
-    });
-
-    return cssVariables;
-  }
-
   get referenceRegExp(): RegExp {
     return this.#referenceRegExp;
   }
@@ -64,14 +53,6 @@ export class DesignToken {
 
   set designTokenReference(designTokenReference: DesignToken) {
     this.#designTokenReference = Some(designTokenReference);
-  }
-
-  css(): string[] {
-    const lines: string[] = [];
-    Object.entries(this.cssVariables).forEach(([key, value]) => {
-      lines.push(`${key}: ${value};`);
-    });
-    return lines;
   }
 
   resolveReferences(line: string): string {
@@ -93,9 +74,35 @@ export class DesignToken {
     return Some(token.css.mapOr(token.value, (css) => css.keyVariable));
   }
 
-  applyTailwind(_api: TailwindPluginApi): void {}
+  applyTailwind(_absolute: boolean, _api: TailwindPluginApi): void {}
 
-  tailwindConfig(): TailwindConfig {
+  cssVariables(absolute: boolean): CSSVariables {
+    const cssVariables: CSSVariables = {};
+
+    this.#tokens.forEach((token) => {
+      if (absolute) {
+        token.css.inspect((css) => {
+          cssVariables[css.key] = token.value;
+        });
+      } else {
+        token.css.inspect((css) => {
+          cssVariables[css.key] = css.value;
+        });
+      }
+    });
+
+    return cssVariables;
+  }
+
+  css(absolute: boolean): string[] {
+    const lines: string[] = [];
+    Object.entries(this.cssVariables(absolute)).forEach(([key, value]) => {
+      lines.push(`${key}: ${value};`);
+    });
+    return lines;
+  }
+
+  tailwindConfig(_absolute: boolean): TailwindConfig {
     return {};
   }
 
@@ -109,10 +116,16 @@ export class DesignToken {
   protected addToken(
     name: string,
     value: string,
-    css?: {
-      key: (string | undefined)[];
-      value: string | (string | undefined)[];
-    },
+    {
+      humanReadableValue,
+      css,
+    }: {
+      humanReadableValue?: string;
+      css?: {
+        key: (string | undefined)[];
+        value: string | (string | undefined)[];
+      };
+    } = {},
   ) {
     const tokenIndexToOverride = this.tokens.findIndex((v) => v.name === name);
     if (tokenIndexToOverride) {
@@ -128,13 +141,24 @@ export class DesignToken {
               parts: css.value,
             });
       this.#tokens.push(
-        TokenValue.create(name, value, {
-          key: keyVariable,
-          value: valueVariable,
+        TokenValue.create({
+          name,
+          value,
+          humanReadableValue,
+          css: {
+            key: keyVariable,
+            value: valueVariable,
+          },
         }),
       );
     } else {
-      this.#tokens.push(TokenValue.create(name, value));
+      this.#tokens.push(
+        TokenValue.create({
+          name,
+          value,
+          humanReadableValue,
+        }),
+      );
     }
   }
 
@@ -199,6 +223,25 @@ export class DesignToken {
         return Err(e.message);
       } else {
         return Err(`Fail convert ${value} to rem`);
+      }
+    }
+  }
+
+  protected changeRemToPx(value: string): Result<string, string> {
+    try {
+      const replaced = value.replace(this.#valueInRemPattern, (match, v) => {
+        try {
+          return `${parseFloat(v) * 16}px`;
+        } catch {
+          throw new Error(`fail convert ${match} to px`);
+        }
+      });
+      return Ok(replaced);
+    } catch (e) {
+      if (e instanceof Error) {
+        return Err(e.message);
+      } else {
+        return Err(`Fail convert ${value} to px`);
       }
     }
   }

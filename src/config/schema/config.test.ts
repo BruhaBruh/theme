@@ -7,8 +7,14 @@ describe('config schema', () => {
     expect(result.data).toStrictEqual({
       prefix: '',
       content: './themes/*.theme.yaml',
+      absolute: false,
       output: {
-        all: {},
+        all: {
+          css: [],
+          js: [],
+          json: [],
+          ts: [],
+        },
         themes: {},
       },
     });

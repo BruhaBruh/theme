@@ -46,7 +46,7 @@ export const themePlugin = plugin.withOptions<Omit<Partial<Config>, 'output'>>(
       api.addVariant('starting', '@starting-style');
 
       themeManagers.forEach((themeManager) => {
-        themeManager.applyTailwind(api);
+        themeManager.applyTailwind(config.absolute, api);
       });
     };
   },
@@ -58,7 +58,9 @@ export const themePlugin = plugin.withOptions<Omit<Partial<Config>, 'output'>>(
 
     tailwindConfig = merge(
       tailwindConfig,
-      ...themeManagers.map((themeManager) => themeManager.tailwindConfig()),
+      ...themeManagers.map((themeManager) =>
+        themeManager.tailwindConfig(config.absolute),
+      ),
     );
 
     return tailwindConfig;

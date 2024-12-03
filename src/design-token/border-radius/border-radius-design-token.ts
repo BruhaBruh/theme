@@ -28,20 +28,20 @@ export class BorderRadiusDesignToken extends DesignToken {
       );
     }
     this.addToken(name, calculatedValue.unwrap(), {
-      key: [name],
-      value: calculatedValue.unwrap(),
+      humanReadableValue: this.changeRemToPx(calculatedValue.unwrap()).unwrap(),
+      css: {
+        key: [name],
+        value: calculatedValue.unwrap(),
+      },
     });
     return Ok(true);
   }
 
-  override tailwindConfig(): TailwindConfig {
+  override tailwindConfig(absolute: boolean): TailwindConfig {
     const borderRadius: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
-      borderRadius[token.name] = token.css.mapOr(
-        token.value,
-        (css) => `${css.keyVariable} /* ${token.value} */`,
-      );
+      borderRadius[token.name] = token.toTailwindString({ absolute });
     });
 
     return {

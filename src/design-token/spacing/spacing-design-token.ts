@@ -26,20 +26,20 @@ export class SpacingDesignToken extends DesignToken {
       );
     }
     this.addToken(name, calculatedValue.unwrap(), {
-      key: [name],
-      value: calculatedValue.unwrap(),
+      humanReadableValue: this.changeRemToPx(calculatedValue.unwrap()).unwrap(),
+      css: {
+        key: [name],
+        value: calculatedValue.unwrap(),
+      },
     });
     return Ok(true);
   }
 
-  override tailwindConfig(): TailwindConfig {
+  override tailwindConfig(absolute: boolean): TailwindConfig {
     const spacing: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
-      spacing[token.name] = token.css.mapOr(
-        token.value,
-        (css) => `${css.keyVariable} /* ${token.value} */`,
-      );
+      spacing[token.name] = token.toTailwindString({ absolute });
     });
 
     return {

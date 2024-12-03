@@ -10,10 +10,47 @@ export const themesConfigSchema = z.object({
         .object({
           _output: z
             .object({
-              css: z.string().nullish(),
-              json: z.string().nullish(),
-              js: z.string().nullish(),
-              ts: z.string().nullish(),
+              css: z
+                .array(
+                  z
+                    .object({
+                      destination: z.string().nullish(),
+                      absolute: z.boolean().nullish(),
+                    })
+                    .default({}),
+                )
+                .default([]),
+              json: z
+                .array(
+                  z
+                    .object({
+                      destination: z.string().nullish(),
+                      absolute: z.boolean().nullish(),
+                    })
+                    .default({}),
+                )
+                .default([]),
+              js: z
+                .array(
+                  z
+                    .object({
+                      destination: z.string().nullish(),
+                      absolute: z.boolean().nullish(),
+                    })
+                    .default({}),
+                )
+                .describe('TailwindCSS JS output options.\nDefault: []')
+                .default([]),
+              ts: z
+                .array(
+                  z
+                    .object({
+                      destination: z.string().nullish(),
+                      absolute: z.boolean().nullish(),
+                    })
+                    .default({}),
+                )
+                .default([]),
             })
             .default({}),
         })

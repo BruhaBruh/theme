@@ -21,19 +21,18 @@ export class FontWeightDesignToken extends DesignToken {
   addFontWeight(name: string, fontWeight: string): void {
     const cssValue = this.resolveReferences(fontWeight);
     this.addToken(name, this.resolveAbsoluteValue(cssValue), {
-      key: [name],
-      value: cssValue,
+      css: {
+        key: [name],
+        value: cssValue,
+      },
     });
   }
 
-  override tailwindConfig(): TailwindConfig {
+  override tailwindConfig(absolute: boolean): TailwindConfig {
     const fontWeight: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
-      fontWeight[token.name] = token.css.mapOr(
-        token.value,
-        (css) => `${css.keyVariable} /* ${token.value} */`,
-      );
+      fontWeight[token.name] = token.toTailwindString({ absolute });
     });
 
     return {

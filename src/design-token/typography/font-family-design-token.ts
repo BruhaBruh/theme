@@ -27,21 +27,20 @@ export class FontFamilyDesignToken extends DesignToken {
       return Err(`fail get absolute variable value of ${value}`);
     }
     this.addToken(name, value, {
-      key: [name],
-      value: cssValue,
+      css: {
+        key: [name],
+        value: cssValue,
+      },
     });
 
     return Ok(true);
   }
 
-  override tailwindConfig(): TailwindConfig {
+  override tailwindConfig(absolute: boolean): TailwindConfig {
     const fontFamily: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
-      fontFamily[token.name] = token.css.mapOr(
-        token.value,
-        (css) => `${css.keyVariable} /* ${token.value} */`,
-      );
+      fontFamily[token.name] = token.toTailwindString({ absolute });
     });
 
     return {

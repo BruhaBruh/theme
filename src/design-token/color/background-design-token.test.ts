@@ -16,7 +16,7 @@ describe('background-design-token', () => {
         'background',
         '{color.neutral.950}',
       );
-      expect(backgroundDesignToken.cssVariables).toStrictEqual({
+      expect(backgroundDesignToken.cssVariables(false)).toStrictEqual({
         '--bg-background': 'var(--color-neutral-950)',
       });
     });
@@ -26,7 +26,7 @@ describe('background-design-token', () => {
         'background',
         '{color.neutral.950}',
       );
-      expect(backgroundDesignToken.css()).toStrictEqual([
+      expect(backgroundDesignToken.css(false)).toStrictEqual([
         '--bg-background: var(--color-neutral-950);',
       ]);
     });
@@ -36,16 +36,16 @@ describe('background-design-token', () => {
         'background',
         '{color.neutral.950}',
       );
-      expect(backgroundDesignToken.tailwindConfig()).toStrictEqual({
+      expect(backgroundDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           extend: {
             colors: {
               'background-bg':
-                'rgb(from var(--bg-background) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--bg-background) r g b / <alpha-value>)',
             },
             backgroundColor: {
               background:
-                'rgb(from var(--bg-background) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--bg-background) r g b / <alpha-value>)',
             },
           },
         },
@@ -55,9 +55,7 @@ describe('background-design-token', () => {
     describe('with prefix', () => {
       beforeEach(() => {
         const colorDesignToken = new ColorDesignToken({ prefix: 'pw' });
-        colorDesignToken.generateColor('neutral', '#292B33', {
-          type: 'neutral',
-        });
+        colorDesignToken.generateColor('neutral', '#292B33');
         backgroundDesignToken = new BackgroundDesignToken(colorDesignToken, {
           prefix: 'pw',
         });
@@ -68,7 +66,7 @@ describe('background-design-token', () => {
           'background',
           '{color.neutral.950}',
         );
-        expect(backgroundDesignToken.cssVariables).toStrictEqual({
+        expect(backgroundDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-bg-background': 'var(--pw-color-neutral-950)',
         });
       });
@@ -78,7 +76,7 @@ describe('background-design-token', () => {
           'background',
           '{color.neutral.950}',
         );
-        expect(backgroundDesignToken.css()).toStrictEqual([
+        expect(backgroundDesignToken.css(false)).toStrictEqual([
           '--pw-bg-background: var(--pw-color-neutral-950);',
         ]);
       });
@@ -88,16 +86,16 @@ describe('background-design-token', () => {
           'background',
           '{color.neutral.950}',
         );
-        expect(backgroundDesignToken.tailwindConfig()).toStrictEqual({
+        expect(backgroundDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             extend: {
               colors: {
                 'background-bg':
-                  'rgb(from var(--pw-bg-background) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-bg-background) r g b / <alpha-value>)',
               },
               backgroundColor: {
                 background:
-                  'rgb(from var(--pw-bg-background) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-bg-background) r g b / <alpha-value>)',
               },
             },
           },
@@ -113,7 +111,7 @@ describe('background-design-token', () => {
         '{color.neutral.950}',
       );
       backgroundDesignToken.addBackgroundColor('button', '{bg.background}');
-      expect(backgroundDesignToken.cssVariables).toStrictEqual({
+      expect(backgroundDesignToken.cssVariables(false)).toStrictEqual({
         '--bg-background': 'var(--color-neutral-950)',
         '--bg-button': 'var(--bg-background)',
       });
@@ -125,7 +123,7 @@ describe('background-design-token', () => {
         '{color.neutral.950}',
       );
       backgroundDesignToken.addBackgroundColor('button', '{bg.background}');
-      expect(backgroundDesignToken.css()).toStrictEqual([
+      expect(backgroundDesignToken.css(false)).toStrictEqual([
         '--bg-background: var(--color-neutral-950);',
         '--bg-button: var(--bg-background);',
       ]);
@@ -137,20 +135,20 @@ describe('background-design-token', () => {
         '{color.neutral.950}',
       );
       backgroundDesignToken.addBackgroundColor('button', '{bg.background}');
-      expect(backgroundDesignToken.tailwindConfig()).toStrictEqual({
+      expect(backgroundDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           extend: {
             colors: {
               'background-bg':
-                'rgb(from var(--bg-background) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--bg-background) r g b / <alpha-value>)',
               'button-bg':
-                'rgb(from var(--bg-button) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--bg-button) r g b / <alpha-value>)',
             },
             backgroundColor: {
               background:
-                'rgb(from var(--bg-background) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--bg-background) r g b / <alpha-value>)',
               button:
-                'rgb(from var(--bg-button) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--bg-button) r g b / <alpha-value>)',
             },
           },
         },
@@ -160,9 +158,7 @@ describe('background-design-token', () => {
     describe('with prefix', () => {
       beforeEach(() => {
         const colorDesignToken = new ColorDesignToken({ prefix: 'pw' });
-        colorDesignToken.generateColor('neutral', '#292B33', {
-          type: 'neutral',
-        });
+        colorDesignToken.generateColor('neutral', '#292B33');
         backgroundDesignToken = new BackgroundDesignToken(colorDesignToken, {
           prefix: 'pw',
         });
@@ -174,7 +170,7 @@ describe('background-design-token', () => {
           '{color.neutral.950}',
         );
         backgroundDesignToken.addBackgroundColor('button', '{bg.background}');
-        expect(backgroundDesignToken.cssVariables).toStrictEqual({
+        expect(backgroundDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-bg-background': 'var(--pw-color-neutral-950)',
           '--pw-bg-button': 'var(--pw-bg-background)',
         });
@@ -186,7 +182,7 @@ describe('background-design-token', () => {
           '{color.neutral.950}',
         );
         backgroundDesignToken.addBackgroundColor('button', '{bg.background}');
-        expect(backgroundDesignToken.css()).toStrictEqual([
+        expect(backgroundDesignToken.css(false)).toStrictEqual([
           '--pw-bg-background: var(--pw-color-neutral-950);',
           '--pw-bg-button: var(--pw-bg-background);',
         ]);
@@ -198,20 +194,20 @@ describe('background-design-token', () => {
           '{color.neutral.950}',
         );
         backgroundDesignToken.addBackgroundColor('button', '{bg.background}');
-        expect(backgroundDesignToken.tailwindConfig()).toStrictEqual({
+        expect(backgroundDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             extend: {
               colors: {
                 'background-bg':
-                  'rgb(from var(--pw-bg-background) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-bg-background) r g b / <alpha-value>)',
                 'button-bg':
-                  'rgb(from var(--pw-bg-button) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-bg-button) r g b / <alpha-value>)',
               },
               backgroundColor: {
                 background:
-                  'rgb(from var(--pw-bg-background) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-bg-background) r g b / <alpha-value>)',
                 button:
-                  'rgb(from var(--pw-bg-button) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-bg-button) r g b / <alpha-value>)',
               },
             },
           },

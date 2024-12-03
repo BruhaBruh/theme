@@ -26,21 +26,23 @@ export class BackgroundDesignToken extends DesignToken {
   addBackgroundColor(name: string, color: string): void {
     const cssValue = this.resolveReferences(color);
     this.addToken(name, this.resolveAbsoluteValue(cssValue), {
-      key: [name],
-      value: cssValue,
+      humanReadableValue: this.resolveAbsoluteValue(cssValue),
+      css: {
+        key: [name],
+        value: cssValue,
+      },
     });
   }
 
-  override tailwindConfig(): TailwindConfig {
+  override tailwindConfig(absolute: boolean): TailwindConfig {
     const colors: Record<string, string> = {};
     const backgroundColor: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
-      backgroundColor[token.name] = token.css.mapOr(
-        token.value,
-        (css) =>
-          `rgb(from ${css.keyVariable} r g b / <alpha-value>) /* ${token.value} */`,
-      );
+      backgroundColor[token.name] = token.toTailwindString({
+        absolute,
+        mapper: (variable) => `rgb(from ${variable} r g b / <alpha-value>)`,
+      });
       colors[`${token.name}-${this.type}`] = backgroundColor[token.name];
     });
 

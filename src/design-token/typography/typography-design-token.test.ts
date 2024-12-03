@@ -52,7 +52,7 @@ describe('typography-design-token', () => {
     };
   });
 
-  describe('add paragraph spacing', () => {
+  describe('add typography', () => {
     test('apply tailwind', () => {
       typographyDesignToken.addTypography('only-font-family', {
         fontFamily: 'serif',
@@ -79,7 +79,7 @@ describe('typography-design-token', () => {
         fontSize: '1rem',
         fontWeight: '500',
       });
-      typographyDesignToken.applyTailwind(pluginApi);
+      typographyDesignToken.applyTailwind(false, pluginApi);
       expect(utilities).toStrictEqual({
         '.typography-only-font-family': {
           'font-family': 'serif',
@@ -135,7 +135,7 @@ describe('typography-design-token', () => {
         fontSize: '1rem',
         fontWeight: '500',
       });
-      expect(typographyDesignToken.css()).toStrictEqual([
+      expect(typographyDesignToken.css(false)).toStrictEqual([
         '.typography-only-font-family {',
         '  font-family: serif;',
         '}',
@@ -171,7 +171,7 @@ describe('typography-design-token', () => {
     });
   });
 
-  describe('add paragraph spacing w/ reference', () => {
+  describe('add typography w/ reference', () => {
     test('apply tailwind', () => {
       typographyDesignToken.addTypography('all', {
         fontSize: '{font-size.xs}',
@@ -180,7 +180,7 @@ describe('typography-design-token', () => {
         fontWeight: '{font-weight.medium}',
         lineHeight: '{line-height.normal}',
       });
-      typographyDesignToken.applyTailwind(pluginApi);
+      typographyDesignToken.applyTailwind(false, pluginApi);
       expect(utilities).toStrictEqual({
         '.typography-all': {
           'font-family': 'var(--font-family-serif)',
@@ -200,7 +200,7 @@ describe('typography-design-token', () => {
         fontWeight: '{font-weight.medium}',
         lineHeight: '{line-height.normal}',
       });
-      expect(typographyDesignToken.css()).toStrictEqual([
+      expect(typographyDesignToken.css(false)).toStrictEqual([
         '.typography-all {',
         '  font-family: var(--font-family-serif);',
         '  font-weight: 500;',

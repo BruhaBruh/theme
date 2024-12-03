@@ -75,10 +75,10 @@ export class ThemeManager {
     return Ok(true);
   }
 
-  css(): string[] {
+  css(absolute: boolean): string[] {
     const lines: string[] = [];
 
-    const [inSelector, outSelector] = this.#tokenManager.css();
+    const [inSelector, outSelector] = this.#tokenManager.css(absolute);
 
     const selectors = Array.from(new Set(this.#config.selectors)).sort((a) => {
       if (a.startsWith(':')) {
@@ -108,8 +108,8 @@ export class ThemeManager {
     return lines;
   }
 
-  applyTailwind(api: TailwindPluginApi): void {
-    const [inSelector] = this.#tokenManager.css();
+  applyTailwind(absolute: boolean, api: TailwindPluginApi): void {
+    const [inSelector] = this.#tokenManager.css(absolute);
 
     const selectors = Array.from(
       new Set([`.${this.#name}`, ...this.#config.selectors]),
@@ -127,12 +127,12 @@ export class ThemeManager {
       [selectors.join(', ')]: tokens,
     });
 
-    this.#tokenManager.applyTailwind(api);
+    this.#tokenManager.applyTailwind(absolute, api);
   }
 
-  tailwindConfig(): TailwindConfig {
+  tailwindConfig(absolute: boolean): TailwindConfig {
     return cleanObject(
-      this.#tokenManager.tailwindConfig(),
+      this.#tokenManager.tailwindConfig(absolute),
     ) as unknown as TailwindConfig;
   }
 }

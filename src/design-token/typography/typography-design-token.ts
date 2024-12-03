@@ -72,9 +72,17 @@ export class TypographyDesignToken extends DesignToken {
     this.#typographies[name] = newTypography;
   }
 
-  override applyTailwind({ addUtilities }: TailwindPluginApi): void {
-    Object.entries(this.#typographies).forEach(([name, typography]) => {
+  override applyTailwind(
+    absolute: boolean,
+    { addUtilities }: TailwindPluginApi,
+  ): void {
+    Object.entries(this.#typographies).forEach(([name, rawTypography]) => {
       const css: Record<string, string> = {};
+
+      let typography = rawTypography;
+      if (absolute) {
+        typography = this.resolveAbsoluteTypography(rawTypography);
+      }
 
       if (typography.fontFamily) {
         css['font-family'] = typography.fontFamily;
@@ -98,12 +106,17 @@ export class TypographyDesignToken extends DesignToken {
     });
   }
 
-  override css(): string[] {
+  override css(absolute: boolean): string[] {
     const css: string[] = [];
 
     Object.entries(this.#typographies).forEach(
-      ([name, typography], index, arr) => {
+      ([name, rawTypography], index, arr) => {
         css.push(`.typography-${name} {`);
+
+        let typography = rawTypography;
+        if (absolute) {
+          typography = this.resolveAbsoluteTypography(rawTypography);
+        }
 
         if (typography.fontFamily) {
           css.push(`  font-family: ${typography.fontFamily};`);
@@ -129,5 +142,31 @@ export class TypographyDesignToken extends DesignToken {
     );
 
     return css;
+  }
+
+  private resolveAbsoluteTypography({
+    fontFamily,
+    fontWeight,
+    lineHeight,
+    fontSize,
+    letterSpacing,
+  }: Typography): Typography {
+    return {
+      fontFamily: fontFamily
+        ? this.#fontFamilyDesignToken.resolveAbsoluteValue(fontFamily)
+        : undefined,
+      fontWeight: fontWeight
+        ? this.#fontWeightDesignToken.resolveAbsoluteValue(fontWeight)
+        : undefined,
+      lineHeight: lineHeight
+        ? this.#lineHeightDesignToken.resolveAbsoluteValue(lineHeight)
+        : undefined,
+      fontSize: fontSize
+        ? this.#fontSizeDesignToken.resolveAbsoluteValue(fontSize)
+        : undefined,
+      letterSpacing: letterSpacing
+        ? this.#letterSpacingDesignToken.resolveAbsoluteValue(letterSpacing)
+        : undefined,
+    };
   }
 }

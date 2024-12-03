@@ -27,8 +27,11 @@ export class ColorDesignToken extends DesignToken {
   addColor(name: string, color: string): void {
     const cssValue = this.resolveReferences(color);
     this.addToken(name, this.resolveAbsoluteValue(cssValue), {
-      key: [name],
-      value: cssValue,
+      humanReadableValue: this.resolveAbsoluteValue(cssValue),
+      css: {
+        key: [name],
+        value: cssValue,
+      },
     });
   }
 
@@ -56,15 +59,14 @@ export class ColorDesignToken extends DesignToken {
     return Ok(true);
   }
 
-  override tailwindConfig(): TailwindConfig {
+  override tailwindConfig(absolute: boolean): TailwindConfig {
     const colors: Record<string, string | Record<string, string>> = {};
 
     this.tokens.forEach((token) => {
-      const value = token.css.mapOr(
-        token.value,
-        (css) =>
-          `rgb(from ${css.keyVariable} r g b / <alpha-value>) /* ${token.value} */`,
-      );
+      const value = token.toTailwindString({
+        absolute,
+        mapper: (variable) => `rgb(from ${variable} r g b / <alpha-value>)`,
+      });
 
       if (!token.name.includes('-')) {
         colors[token.name] = value;

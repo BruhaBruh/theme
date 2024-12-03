@@ -62,7 +62,7 @@ const loadThemesConfigProcess = (config: Config): ThemesConfig => {
   return themesConfigResult.unwrap();
 };
 
-const writeFileProcess = (pathToFile: string, data: string): true => {
+const writeToFileProcess = (pathToFile: string, data: string): true => {
   const result = writeToFile(pathToFile, data);
   if (result.isErr()) {
     logError('Fail write file:', '\n\t', result.unwrapErr());
@@ -101,39 +101,70 @@ const loadThemesTokensProcess = (
 };
 
 const outputTheme = (
+  globalAbsolute: boolean,
   themeName: string,
   themeManager: ThemeManager,
-  outputConfig: ThemesConfig['themes'][string]['_output'],
+  output: ThemesConfig['themes'][string]['_output'],
 ) => {
-  logInfo(`Output "${themeName}" theme...`);
-  if (outputConfig.css) {
+  logInfo(`Output all themes...`);
+  if (output.css?.length) {
     logInfo(`CSS output "${themeName}" theme...`);
-    writeFileProcess(outputConfig.css, themeManager.css().join('\r\n'));
+    const options = output.css.filter((v) => v.destination) as OutputOptions;
+
+    options.forEach(({ destination, absolute }) => {
+      const file = themeManager
+        .css(typeof absolute === 'boolean' ? absolute : globalAbsolute)
+        .join('\r\n');
+
+      writeToFileProcess(destination, file);
+    });
   }
-  let tailwindConfig: TailwindConfig = {};
-  if (outputConfig.js || outputConfig.ts || outputConfig.json) {
-    tailwindConfig = themeManager.tailwindConfig();
-  }
-  if (outputConfig.js) {
+
+  if (output.js?.length) {
     logInfo(`TailwindCSS JS output "${themeName}" theme...`);
-    const file = `export const theme = ${JSON.stringify(tailwindConfig, null, 2)}\r\n`;
-    writeFileProcess(outputConfig.js, file);
+    const options = output.js.filter((v) => v.destination) as OutputOptions;
+
+    options.forEach(({ destination, absolute }) => {
+      const tailwindConfig = themeManager.tailwindConfig(
+        typeof absolute === 'boolean' ? absolute : globalAbsolute,
+      );
+
+      const file = `export const theme = ${JSON.stringify(tailwindConfig, null, 2)}\r\n`;
+      writeToFileProcess(destination, file);
+    });
   }
-  if (outputConfig.ts) {
+
+  if (output.ts?.length) {
     logInfo(`TailwindCSS TS output "${themeName}" theme...`);
-    const file = `export const theme = ${JSON.stringify(tailwindConfig, null, 2)} as const\r\n`;
-    writeFileProcess(outputConfig.ts, file);
+    const options = output.ts.filter((v) => v.destination) as OutputOptions;
+
+    options.forEach(({ destination, absolute }) => {
+      const tailwindConfig = themeManager.tailwindConfig(
+        typeof absolute === 'boolean' ? absolute : globalAbsolute,
+      );
+
+      const file = `export const theme = ${JSON.stringify(tailwindConfig, null, 2)} as const;\r\n`;
+      writeToFileProcess(destination, file);
+    });
   }
-  if (outputConfig.json) {
+
+  if (output.json?.length) {
     logInfo(`TailwindCSS JSON output "${themeName}" theme...`);
-    writeFileProcess(
-      outputConfig.json,
-      JSON.stringify(tailwindConfig, null, 2),
-    );
+    const options = output.json.filter((v) => v.destination) as OutputOptions;
+
+    options.forEach(({ destination, absolute }) => {
+      const tailwindConfig = themeManager.tailwindConfig(
+        typeof absolute === 'boolean' ? absolute : globalAbsolute,
+      );
+
+      const file = `${JSON.stringify(tailwindConfig, null, 2)}\r\n`;
+      writeToFileProcess(destination, file);
+    });
   }
 };
 
 const outputThemes = (
+  globalAbsolute: boolean,
   themes: Entries<ThemesConfig['themes']>,
   themeManagers: [string, ThemeManager][],
 ) => {
@@ -144,47 +175,104 @@ const outputThemes = (
       process.exit(0);
     }
     const output = themeConfig._output;
-    if (output.css || output.js || output.json || output.ts) {
-      outputTheme(themeName.toString(), themeManger[1], output);
+    if (
+      output.css?.length ||
+      output.js?.length ||
+      output.json?.length ||
+      output.ts?.length
+    ) {
+      outputTheme(globalAbsolute, themeName.toString(), themeManger[1], output);
     }
   });
 };
 
+type OutputOptions = {
+  absolute: Config['output']['all']['css'][number]['absolute'];
+  destination: NonNullable<
+    Config['output']['all']['css'][number]['destination']
+  >;
+}[];
+
 const outputAll = (
+  globalAbsolute: boolean,
   output: Config['output']['all'],
   themeManagers: ThemeManager[],
 ) => {
   logInfo(`Output all themes...`);
-  if (output.css) {
+  if (output.css.length) {
     logInfo(`CSS output all themes...`);
-    writeToFile(
-      output.css,
-      themeManagers
-        .map((themeManager) => `${themeManager.css().join('\r\n')}\r\n`)
-        .join('\r\n'),
-    );
+    const options = output.css.filter((v) => v.destination) as OutputOptions;
+
+    options.forEach(({ destination, absolute }) => {
+      const file = themeManagers
+        .map(
+          (themeManager) =>
+            `${themeManager.css(typeof absolute === 'boolean' ? absolute : globalAbsolute).join('\r\n')}\r\n`,
+        )
+        .join('\r\n');
+
+      writeToFileProcess(destination, file);
+    });
   }
 
-  let tailwindConfig: TailwindConfig = {};
-  if (output.js || output.ts || output.json) {
-    tailwindConfig = merge(
-      tailwindConfig,
-      ...themeManagers.map((themeManager) => themeManager.tailwindConfig()),
-    );
-    if (output.js) {
-      logInfo(`TailwindCSS JS output all themes...`);
+  if (output.js.length) {
+    logInfo(`TailwindCSS JS output all themes...`);
+    const options = output.js.filter((v) => v.destination) as OutputOptions;
+
+    options.forEach(({ destination, absolute }) => {
+      let tailwindConfig: TailwindConfig = {};
+      tailwindConfig = merge(
+        tailwindConfig,
+        ...themeManagers.map((themeManager) =>
+          themeManager.tailwindConfig(
+            typeof absolute === 'boolean' ? absolute : globalAbsolute,
+          ),
+        ),
+      );
+
       const file = `export const theme = ${JSON.stringify(tailwindConfig, null, 2)}\r\n`;
-      writeToFile(output.js, file);
-    }
-    if (output.ts) {
-      logInfo(`TailwindCSS TS output all themes...`);
-      const file = `export const theme = ${JSON.stringify(tailwindConfig, null, 2)} as const\r\n`;
-      writeToFile(output.ts, file);
-    }
-    if (output.json) {
-      logInfo(`TailwindCSS JSON output all themes...`);
-      writeToFile(output.json, JSON.stringify(tailwindConfig, null, 2));
-    }
+      writeToFileProcess(destination, file);
+    });
+  }
+
+  if (output.ts.length) {
+    logInfo(`TailwindCSS TS output all themes...`);
+    const options = output.ts.filter((v) => v.destination) as OutputOptions;
+
+    options.forEach(({ destination, absolute }) => {
+      let tailwindConfig: TailwindConfig = {};
+      tailwindConfig = merge(
+        tailwindConfig,
+        ...themeManagers.map((themeManager) =>
+          themeManager.tailwindConfig(
+            typeof absolute === 'boolean' ? absolute : globalAbsolute,
+          ),
+        ),
+      );
+
+      const file = `export const theme = ${JSON.stringify(tailwindConfig, null, 2)} as const;\r\n`;
+      writeToFileProcess(destination, file);
+    });
+  }
+
+  if (output.json.length) {
+    logInfo(`TailwindCSS JSON output all themes...`);
+    const options = output.json.filter((v) => v.destination) as OutputOptions;
+
+    options.forEach(({ destination, absolute }) => {
+      let tailwindConfig: TailwindConfig = {};
+      tailwindConfig = merge(
+        tailwindConfig,
+        ...themeManagers.map((themeManager) =>
+          themeManager.tailwindConfig(
+            typeof absolute === 'boolean' ? absolute : globalAbsolute,
+          ),
+        ),
+      );
+
+      const file = `${JSON.stringify(tailwindConfig, null, 2)}\r\n`;
+      writeToFileProcess(destination, file);
+    });
   }
 };
 
@@ -211,14 +299,15 @@ export const applyGenerateCommand = (cli: Command) => {
 
       const themeManagers = loadThemesTokensProcess(themesConfig, sortedThemes);
 
-      outputThemes(sortedThemes, themeManagers);
+      outputThemes(config.absolute, sortedThemes, themeManagers);
       if (
-        config.output.all.css ||
-        config.output.all.js ||
-        config.output.all.json ||
-        config.output.all.ts
+        config.output.all.css.length ||
+        config.output.all.js.length ||
+        config.output.all.json.length ||
+        config.output.all.ts.length
       ) {
         outputAll(
+          config.absolute,
           config.output.all,
           themeManagers.map((v) => v[1]),
         );

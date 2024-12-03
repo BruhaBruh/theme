@@ -32,20 +32,20 @@ export class LetterSpacingDesignToken extends DesignToken {
       );
     }
     this.addToken(name, calculatedValue.unwrap(), {
-      key: [name],
-      value: calculatedValue.unwrap(),
+      humanReadableValue: this.changeRemToPx(calculatedValue.unwrap()).unwrap(),
+      css: {
+        key: [name],
+        value: calculatedValue.unwrap(),
+      },
     });
     return Ok(true);
   }
 
-  override tailwindConfig(): TailwindConfig {
+  override tailwindConfig(absolute: boolean): TailwindConfig {
     const letterSpacing: Record<string, string> = {};
 
     this.tokens.forEach((token) => {
-      letterSpacing[token.name] = token.css.mapOr(
-        token.value,
-        (css) => `${css.keyVariable} /* ${token.value} */`,
-      );
+      letterSpacing[token.name] = token.toTailwindString({ absolute });
     });
 
     return {

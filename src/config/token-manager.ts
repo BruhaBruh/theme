@@ -82,69 +82,69 @@ export class TokenManager {
     this.#zIndexDesignToken = new ZIndexDesignToken({ prefix });
   }
 
-  css(): [string[], string[]] {
+  css(absolute: boolean): [string[], string[]] {
     return [
       [
-        ...this.#colorDesignToken.css(),
-        ...this.#backgroundDesignToken.css(),
-        ...this.#textDesignToken.css(),
-        ...this.#fillDesignToken.css(),
-        ...this.#strokeDesignToken.css(),
-        ...this.#borderDesignToken.css(),
-        ...this.#outlineDesignToken.css(),
-        ...this.#ringDesignToken.css(),
-        ...this.#borderRadiusDesignToken.css(),
-        ...this.#spacingDesignToken.css(),
-        ...this.#fontFamilyDesignToken.css(),
-        ...this.#fontWeightDesignToken.css(),
-        ...this.#lineHeightDesignToken.css(),
-        ...this.#fontSizeDesignToken.css(),
-        ...this.#letterSpacingDesignToken.css(),
-        ...this.#zIndexDesignToken.css(),
+        ...this.#colorDesignToken.css(absolute),
+        ...this.#backgroundDesignToken.css(absolute),
+        ...this.#textDesignToken.css(absolute),
+        ...this.#fillDesignToken.css(absolute),
+        ...this.#strokeDesignToken.css(absolute),
+        ...this.#borderDesignToken.css(absolute),
+        ...this.#outlineDesignToken.css(absolute),
+        ...this.#ringDesignToken.css(absolute),
+        ...this.#borderRadiusDesignToken.css(absolute),
+        ...this.#spacingDesignToken.css(absolute),
+        ...this.#fontFamilyDesignToken.css(absolute),
+        ...this.#fontWeightDesignToken.css(absolute),
+        ...this.#lineHeightDesignToken.css(absolute),
+        ...this.#fontSizeDesignToken.css(absolute),
+        ...this.#letterSpacingDesignToken.css(absolute),
+        ...this.#zIndexDesignToken.css(absolute),
       ],
-      [...this.#typographyDesignToken.css()],
+      [...this.#typographyDesignToken.css(absolute)],
     ];
   }
 
-  applyTailwind(api: TailwindPluginApi): void {
-    this.#colorDesignToken.applyTailwind(api);
-    this.#backgroundDesignToken.applyTailwind(api);
-    this.#textDesignToken.applyTailwind(api);
-    this.#fillDesignToken.applyTailwind(api);
-    this.#strokeDesignToken.applyTailwind(api);
-    this.#borderDesignToken.applyTailwind(api);
-    this.#outlineDesignToken.applyTailwind(api);
-    this.#ringDesignToken.applyTailwind(api);
-    this.#borderRadiusDesignToken.applyTailwind(api);
-    this.#spacingDesignToken.applyTailwind(api);
-    this.#fontFamilyDesignToken.applyTailwind(api);
-    this.#fontWeightDesignToken.applyTailwind(api);
-    this.#lineHeightDesignToken.applyTailwind(api);
-    this.#fontSizeDesignToken.applyTailwind(api);
-    this.#letterSpacingDesignToken.applyTailwind(api);
-    this.#typographyDesignToken.applyTailwind(api);
-    this.#zIndexDesignToken.applyTailwind(api);
+  applyTailwind(absolute: boolean, api: TailwindPluginApi): void {
+    this.#colorDesignToken.applyTailwind(absolute, api);
+    this.#backgroundDesignToken.applyTailwind(absolute, api);
+    this.#textDesignToken.applyTailwind(absolute, api);
+    this.#fillDesignToken.applyTailwind(absolute, api);
+    this.#strokeDesignToken.applyTailwind(absolute, api);
+    this.#borderDesignToken.applyTailwind(absolute, api);
+    this.#outlineDesignToken.applyTailwind(absolute, api);
+    this.#ringDesignToken.applyTailwind(absolute, api);
+    this.#borderRadiusDesignToken.applyTailwind(absolute, api);
+    this.#spacingDesignToken.applyTailwind(absolute, api);
+    this.#fontFamilyDesignToken.applyTailwind(absolute, api);
+    this.#fontWeightDesignToken.applyTailwind(absolute, api);
+    this.#lineHeightDesignToken.applyTailwind(absolute, api);
+    this.#fontSizeDesignToken.applyTailwind(absolute, api);
+    this.#letterSpacingDesignToken.applyTailwind(absolute, api);
+    this.#typographyDesignToken.applyTailwind(absolute, api);
+    this.#zIndexDesignToken.applyTailwind(absolute, api);
   }
 
-  tailwindConfig(): TailwindConfig {
+  tailwindConfig(absolute: boolean): TailwindConfig {
     return merge(
-      this.#colorDesignToken.tailwindConfig(),
-      this.#backgroundDesignToken.tailwindConfig(),
-      this.#textDesignToken.tailwindConfig(),
-      this.#fillDesignToken.tailwindConfig(),
-      this.#strokeDesignToken.tailwindConfig(),
-      this.#borderDesignToken.tailwindConfig(),
-      this.#outlineDesignToken.tailwindConfig(),
-      this.#ringDesignToken.tailwindConfig(),
-      this.#borderRadiusDesignToken.tailwindConfig(),
-      this.#spacingDesignToken.tailwindConfig(),
-      this.#fontFamilyDesignToken.tailwindConfig(),
-      this.#fontWeightDesignToken.tailwindConfig(),
-      this.#lineHeightDesignToken.tailwindConfig(),
-      this.#fontSizeDesignToken.tailwindConfig(),
-      this.#letterSpacingDesignToken.tailwindConfig(),
-      this.#typographyDesignToken.tailwindConfig(),
-      this.#zIndexDesignToken.tailwindConfig(),
+      this.#colorDesignToken.tailwindConfig(absolute),
+      this.#backgroundDesignToken.tailwindConfig(absolute),
+      this.#textDesignToken.tailwindConfig(absolute),
+      this.#fillDesignToken.tailwindConfig(absolute),
+      this.#strokeDesignToken.tailwindConfig(absolute),
+      this.#borderDesignToken.tailwindConfig(absolute),
+      this.#outlineDesignToken.tailwindConfig(absolute),
+      this.#ringDesignToken.tailwindConfig(absolute),
+      this.#borderRadiusDesignToken.tailwindConfig(absolute),
+      this.#spacingDesignToken.tailwindConfig(absolute),
+      this.#fontFamilyDesignToken.tailwindConfig(absolute),
+      this.#fontWeightDesignToken.tailwindConfig(absolute),
+      this.#lineHeightDesignToken.tailwindConfig(absolute),
+      this.#fontSizeDesignToken.tailwindConfig(absolute),
+      this.#letterSpacingDesignToken.tailwindConfig(absolute),
+      this.#typographyDesignToken.tailwindConfig(absolute),
+      this.#zIndexDesignToken.tailwindConfig(absolute),
     );
   }
 
@@ -154,12 +154,12 @@ export class TokenManager {
       return colorResult.mapErr((err) => `Fail load color tokens: ${err}`);
     }
     this.loadBackgroundTokens(config.background);
-    this.loadTextTokens(config.text);
+    // this.loadTextTokens(config.text);
     this.loadBorderTokens(config.border);
-    this.loadRingTokens(config.ring);
-    this.loadFillTokens(config.fill);
-    this.loadOutlineTokens(config.outline);
-    this.loadStrokeTokens(config.stroke);
+    // this.loadRingTokens(config.ring);
+    // this.loadFillTokens(config.fill);
+    // this.loadOutlineTokens(config.outline);
+    // this.loadStrokeTokens(config.stroke);
 
     const borderRadiusResult = this.loadBorderRadiusTokens(config.borderRadius);
     if (borderRadiusResult.isErr()) {
@@ -571,11 +571,7 @@ export class TokenManager {
           for (let j = start; j <= end; j += step) {
             const name = namePattern.replace(/\{i}/g, j.toString());
             const value = valuePattern.replace(/\{i}/g, j.toString());
-            const result = this.#zIndexDesignToken.addZIndex(
-              name,
-              value,
-              false,
-            );
+            const result = this.#zIndexDesignToken.addZIndex(name, value);
             if (result.isErr()) {
               return result.mapErr(
                 (err) => `Fail add z-index "${name}": ${err}`,

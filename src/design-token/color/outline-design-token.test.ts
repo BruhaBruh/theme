@@ -6,39 +6,37 @@ describe('outline-design-token', () => {
 
   beforeEach(() => {
     const colorDesignToken = new ColorDesignToken();
-    colorDesignToken.generateColor('neutral', '#292B33', {
-      type: 'neutral',
-    });
+    colorDesignToken.generateColor('neutral', '#292B33');
     outlineDesignToken = new OutlineDesignToken(colorDesignToken);
   });
 
   describe('add outline color', () => {
     test('css variables', () => {
       outlineDesignToken.addOutlineColor('primary', '{color.neutral.950}');
-      expect(outlineDesignToken.cssVariables).toStrictEqual({
+      expect(outlineDesignToken.cssVariables(false)).toStrictEqual({
         '--outline-primary': 'var(--color-neutral-950)',
       });
     });
 
     test('css', () => {
       outlineDesignToken.addOutlineColor('primary', '{color.neutral.950}');
-      expect(outlineDesignToken.css()).toStrictEqual([
+      expect(outlineDesignToken.css(false)).toStrictEqual([
         '--outline-primary: var(--color-neutral-950);',
       ]);
     });
 
     test('tailwind config', () => {
       outlineDesignToken.addOutlineColor('primary', '{color.neutral.950}');
-      expect(outlineDesignToken.tailwindConfig()).toStrictEqual({
+      expect(outlineDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           extend: {
             colors: {
               'primary-outline':
-                'rgb(from var(--outline-primary) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--outline-primary) r g b / <alpha-value>)',
             },
             outlineColor: {
               primary:
-                'rgb(from var(--outline-primary) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--outline-primary) r g b / <alpha-value>)',
             },
           },
         },
@@ -48,9 +46,7 @@ describe('outline-design-token', () => {
     describe('with prefix', () => {
       beforeEach(() => {
         const colorDesignToken = new ColorDesignToken({ prefix: 'pw' });
-        colorDesignToken.generateColor('neutral', '#292B33', {
-          type: 'neutral',
-        });
+        colorDesignToken.generateColor('neutral', '#292B33');
         outlineDesignToken = new OutlineDesignToken(colorDesignToken, {
           prefix: 'pw',
         });
@@ -58,30 +54,30 @@ describe('outline-design-token', () => {
 
       test('css variables', () => {
         outlineDesignToken.addOutlineColor('primary', '{color.neutral.950}');
-        expect(outlineDesignToken.cssVariables).toStrictEqual({
+        expect(outlineDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-outline-primary': 'var(--pw-color-neutral-950)',
         });
       });
 
       test('css', () => {
         outlineDesignToken.addOutlineColor('primary', '{color.neutral.950}');
-        expect(outlineDesignToken.css()).toStrictEqual([
+        expect(outlineDesignToken.css(false)).toStrictEqual([
           '--pw-outline-primary: var(--pw-color-neutral-950);',
         ]);
       });
 
       test('tailwind config', () => {
         outlineDesignToken.addOutlineColor('primary', '{color.neutral.950}');
-        expect(outlineDesignToken.tailwindConfig()).toStrictEqual({
+        expect(outlineDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             extend: {
               colors: {
                 'primary-outline':
-                  'rgb(from var(--pw-outline-primary) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-outline-primary) r g b / <alpha-value>)',
               },
               outlineColor: {
                 primary:
-                  'rgb(from var(--pw-outline-primary) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-outline-primary) r g b / <alpha-value>)',
               },
             },
           },
@@ -94,7 +90,7 @@ describe('outline-design-token', () => {
     test('css variables', () => {
       outlineDesignToken.addOutlineColor('outline', '{color.neutral.950}');
       outlineDesignToken.addOutlineColor('button', '{outline.outline}');
-      expect(outlineDesignToken.cssVariables).toStrictEqual({
+      expect(outlineDesignToken.cssVariables(false)).toStrictEqual({
         '--outline-outline': 'var(--color-neutral-950)',
         '--outline-button': 'var(--outline-outline)',
       });
@@ -103,7 +99,7 @@ describe('outline-design-token', () => {
     test('css', () => {
       outlineDesignToken.addOutlineColor('outline', '{color.neutral.950}');
       outlineDesignToken.addOutlineColor('button', '{outline.outline}');
-      expect(outlineDesignToken.css()).toStrictEqual([
+      expect(outlineDesignToken.css(false)).toStrictEqual([
         '--outline-outline: var(--color-neutral-950);',
         '--outline-button: var(--outline-outline);',
       ]);
@@ -112,20 +108,20 @@ describe('outline-design-token', () => {
     test('tailwind config', () => {
       outlineDesignToken.addOutlineColor('outline', '{color.neutral.950}');
       outlineDesignToken.addOutlineColor('button', '{outline.outline}');
-      expect(outlineDesignToken.tailwindConfig()).toStrictEqual({
+      expect(outlineDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           extend: {
             colors: {
               'outline-outline':
-                'rgb(from var(--outline-outline) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--outline-outline) r g b / <alpha-value>)',
               'button-outline':
-                'rgb(from var(--outline-button) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--outline-button) r g b / <alpha-value>)',
             },
             outlineColor: {
               outline:
-                'rgb(from var(--outline-outline) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--outline-outline) r g b / <alpha-value>)',
               button:
-                'rgb(from var(--outline-button) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--outline-button) r g b / <alpha-value>)',
             },
           },
         },
@@ -135,9 +131,7 @@ describe('outline-design-token', () => {
     describe('with prefix', () => {
       beforeEach(() => {
         const colorDesignToken = new ColorDesignToken({ prefix: 'pw' });
-        colorDesignToken.generateColor('neutral', '#292B33', {
-          type: 'neutral',
-        });
+        colorDesignToken.generateColor('neutral', '#292B33');
         outlineDesignToken = new OutlineDesignToken(colorDesignToken, {
           prefix: 'pw',
         });
@@ -146,7 +140,7 @@ describe('outline-design-token', () => {
       test('css variables', () => {
         outlineDesignToken.addOutlineColor('primary', '{color.neutral.950}');
         outlineDesignToken.addOutlineColor('button', '{outline.primary}');
-        expect(outlineDesignToken.cssVariables).toStrictEqual({
+        expect(outlineDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-outline-primary': 'var(--pw-color-neutral-950)',
           '--pw-outline-button': 'var(--pw-outline-primary)',
         });
@@ -155,7 +149,7 @@ describe('outline-design-token', () => {
       test('css', () => {
         outlineDesignToken.addOutlineColor('primary', '{color.neutral.950}');
         outlineDesignToken.addOutlineColor('button', '{outline.primary}');
-        expect(outlineDesignToken.css()).toStrictEqual([
+        expect(outlineDesignToken.css(false)).toStrictEqual([
           '--pw-outline-primary: var(--pw-color-neutral-950);',
           '--pw-outline-button: var(--pw-outline-primary);',
         ]);
@@ -164,20 +158,20 @@ describe('outline-design-token', () => {
       test('tailwind config', () => {
         outlineDesignToken.addOutlineColor('primary', '{color.neutral.950}');
         outlineDesignToken.addOutlineColor('button', '{outline.primary}');
-        expect(outlineDesignToken.tailwindConfig()).toStrictEqual({
+        expect(outlineDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             extend: {
               colors: {
                 'primary-outline':
-                  'rgb(from var(--pw-outline-primary) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-outline-primary) r g b / <alpha-value>)',
                 'button-outline':
-                  'rgb(from var(--pw-outline-button) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-outline-button) r g b / <alpha-value>)',
               },
               outlineColor: {
                 primary:
-                  'rgb(from var(--pw-outline-primary) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-outline-primary) r g b / <alpha-value>)',
                 button:
-                  'rgb(from var(--pw-outline-button) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-outline-button) r g b / <alpha-value>)',
               },
             },
           },

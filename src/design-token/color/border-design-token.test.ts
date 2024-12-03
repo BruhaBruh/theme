@@ -6,39 +6,37 @@ describe('border-design-token', () => {
 
   beforeEach(() => {
     const colorDesignToken = new ColorDesignToken();
-    colorDesignToken.generateColor('neutral', '#292B33', {
-      type: 'neutral',
-    });
+    colorDesignToken.generateColor('neutral', '#292B33');
     borderDesignToken = new BorderDesignToken(colorDesignToken);
   });
 
   describe('add border color', () => {
     test('css variables', () => {
       borderDesignToken.addBorderColor('primary', '{color.neutral.950}');
-      expect(borderDesignToken.cssVariables).toStrictEqual({
+      expect(borderDesignToken.cssVariables(false)).toStrictEqual({
         '--border-primary': 'var(--color-neutral-950)',
       });
     });
 
     test('css', () => {
       borderDesignToken.addBorderColor('primary', '{color.neutral.950}');
-      expect(borderDesignToken.css()).toStrictEqual([
+      expect(borderDesignToken.css(false)).toStrictEqual([
         '--border-primary: var(--color-neutral-950);',
       ]);
     });
 
     test('tailwind config', () => {
       borderDesignToken.addBorderColor('primary', '{color.neutral.950}');
-      expect(borderDesignToken.tailwindConfig()).toStrictEqual({
+      expect(borderDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           extend: {
             colors: {
               'primary-border':
-                'rgb(from var(--border-primary) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--border-primary) r g b / <alpha-value>)',
             },
             borderColor: {
               primary:
-                'rgb(from var(--border-primary) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--border-primary) r g b / <alpha-value>)',
             },
           },
         },
@@ -48,9 +46,7 @@ describe('border-design-token', () => {
     describe('with prefix', () => {
       beforeEach(() => {
         const colorDesignToken = new ColorDesignToken({ prefix: 'pw' });
-        colorDesignToken.generateColor('neutral', '#292B33', {
-          type: 'neutral',
-        });
+        colorDesignToken.generateColor('neutral', '#292B33');
         borderDesignToken = new BorderDesignToken(colorDesignToken, {
           prefix: 'pw',
         });
@@ -58,30 +54,30 @@ describe('border-design-token', () => {
 
       test('css variables', () => {
         borderDesignToken.addBorderColor('primary', '{color.neutral.950}');
-        expect(borderDesignToken.cssVariables).toStrictEqual({
+        expect(borderDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-border-primary': 'var(--pw-color-neutral-950)',
         });
       });
 
       test('css', () => {
         borderDesignToken.addBorderColor('primary', '{color.neutral.950}');
-        expect(borderDesignToken.css()).toStrictEqual([
+        expect(borderDesignToken.css(false)).toStrictEqual([
           '--pw-border-primary: var(--pw-color-neutral-950);',
         ]);
       });
 
       test('tailwind config', () => {
         borderDesignToken.addBorderColor('primary', '{color.neutral.950}');
-        expect(borderDesignToken.tailwindConfig()).toStrictEqual({
+        expect(borderDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             extend: {
               colors: {
                 'primary-border':
-                  'rgb(from var(--pw-border-primary) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-border-primary) r g b / <alpha-value>)',
               },
               borderColor: {
                 primary:
-                  'rgb(from var(--pw-border-primary) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-border-primary) r g b / <alpha-value>)',
               },
             },
           },
@@ -94,7 +90,7 @@ describe('border-design-token', () => {
     test('css variables', () => {
       borderDesignToken.addBorderColor('border', '{color.neutral.950}');
       borderDesignToken.addBorderColor('button', '{border.border}');
-      expect(borderDesignToken.cssVariables).toStrictEqual({
+      expect(borderDesignToken.cssVariables(false)).toStrictEqual({
         '--border-border': 'var(--color-neutral-950)',
         '--border-button': 'var(--border-border)',
       });
@@ -103,7 +99,7 @@ describe('border-design-token', () => {
     test('css', () => {
       borderDesignToken.addBorderColor('border', '{color.neutral.950}');
       borderDesignToken.addBorderColor('button', '{border.border}');
-      expect(borderDesignToken.css()).toStrictEqual([
+      expect(borderDesignToken.css(false)).toStrictEqual([
         '--border-border: var(--color-neutral-950);',
         '--border-button: var(--border-border);',
       ]);
@@ -112,20 +108,20 @@ describe('border-design-token', () => {
     test('tailwind config', () => {
       borderDesignToken.addBorderColor('border', '{color.neutral.950}');
       borderDesignToken.addBorderColor('button', '{border.border}');
-      expect(borderDesignToken.tailwindConfig()).toStrictEqual({
+      expect(borderDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           extend: {
             colors: {
               'border-border':
-                'rgb(from var(--border-border) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--border-border) r g b / <alpha-value>)',
               'button-border':
-                'rgb(from var(--border-button) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--border-button) r g b / <alpha-value>)',
             },
             borderColor: {
               border:
-                'rgb(from var(--border-border) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--border-border) r g b / <alpha-value>)',
               button:
-                'rgb(from var(--border-button) r g b / <alpha-value>) /* #000000 */',
+                '/* #000000 */ rgb(from var(--border-button) r g b / <alpha-value>)',
             },
           },
         },
@@ -135,9 +131,7 @@ describe('border-design-token', () => {
     describe('with prefix', () => {
       beforeEach(() => {
         const colorDesignToken = new ColorDesignToken({ prefix: 'pw' });
-        colorDesignToken.generateColor('neutral', '#292B33', {
-          type: 'neutral',
-        });
+        colorDesignToken.generateColor('neutral', '#292B33');
         borderDesignToken = new BorderDesignToken(colorDesignToken, {
           prefix: 'pw',
         });
@@ -146,7 +140,7 @@ describe('border-design-token', () => {
       test('css variables', () => {
         borderDesignToken.addBorderColor('primary', '{color.neutral.950}');
         borderDesignToken.addBorderColor('button', '{border.primary}');
-        expect(borderDesignToken.cssVariables).toStrictEqual({
+        expect(borderDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-border-primary': 'var(--pw-color-neutral-950)',
           '--pw-border-button': 'var(--pw-border-primary)',
         });
@@ -155,7 +149,7 @@ describe('border-design-token', () => {
       test('css', () => {
         borderDesignToken.addBorderColor('primary', '{color.neutral.950}');
         borderDesignToken.addBorderColor('button', '{border.primary}');
-        expect(borderDesignToken.css()).toStrictEqual([
+        expect(borderDesignToken.css(false)).toStrictEqual([
           '--pw-border-primary: var(--pw-color-neutral-950);',
           '--pw-border-button: var(--pw-border-primary);',
         ]);
@@ -164,20 +158,20 @@ describe('border-design-token', () => {
       test('tailwind config', () => {
         borderDesignToken.addBorderColor('primary', '{color.neutral.950}');
         borderDesignToken.addBorderColor('button', '{border.primary}');
-        expect(borderDesignToken.tailwindConfig()).toStrictEqual({
+        expect(borderDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             extend: {
               colors: {
                 'primary-border':
-                  'rgb(from var(--pw-border-primary) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-border-primary) r g b / <alpha-value>)',
                 'button-border':
-                  'rgb(from var(--pw-border-button) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-border-button) r g b / <alpha-value>)',
               },
               borderColor: {
                 primary:
-                  'rgb(from var(--pw-border-primary) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-border-primary) r g b / <alpha-value>)',
                 button:
-                  'rgb(from var(--pw-border-button) r g b / <alpha-value>) /* #000000 */',
+                  '/* #000000 */ rgb(from var(--pw-border-button) r g b / <alpha-value>)',
               },
             },
           },

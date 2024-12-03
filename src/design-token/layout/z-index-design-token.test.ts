@@ -8,24 +8,12 @@ describe('z-index-design-token', () => {
   });
 
   describe('add z index', () => {
-    test('css variables', () => {
-      zIndexDesignToken.addZIndex('base', '1');
-      expect(zIndexDesignToken.cssVariables).toStrictEqual({
-        '--z-index-base': '1',
-      });
-    });
-
-    test('css', () => {
-      zIndexDesignToken.addZIndex('base', '1');
-      expect(zIndexDesignToken.css()).toStrictEqual(['--z-index-base: 1;']);
-    });
-
     test('tailwind config', () => {
       zIndexDesignToken.addZIndex('base', '1');
-      expect(zIndexDesignToken.tailwindConfig()).toStrictEqual({
+      expect(zIndexDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           zIndex: {
-            base: 'var(--z-index-base) /* 1 */',
+            base: '1',
           },
         },
       });
@@ -36,26 +24,12 @@ describe('z-index-design-token', () => {
         zIndexDesignToken = new ZIndexDesignToken({ prefix: 'pw' });
       });
 
-      test('css variables', () => {
-        zIndexDesignToken.addZIndex('base', '1');
-        expect(zIndexDesignToken.cssVariables).toStrictEqual({
-          '--pw-z-index-base': '1',
-        });
-      });
-
-      test('css', () => {
-        zIndexDesignToken.addZIndex('base', '1');
-        expect(zIndexDesignToken.css()).toStrictEqual([
-          '--pw-z-index-base: 1;',
-        ]);
-      });
-
       test('tailwind config', () => {
         zIndexDesignToken.addZIndex('base', '1');
-        expect(zIndexDesignToken.tailwindConfig()).toStrictEqual({
+        expect(zIndexDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             zIndex: {
-              base: 'var(--pw-z-index-base) /* 1 */',
+              base: '1',
             },
           },
         });
@@ -64,32 +38,14 @@ describe('z-index-design-token', () => {
   });
 
   describe('add z index w/ reference', () => {
-    test('css variables', () => {
-      zIndexDesignToken.addZIndex('base', '1');
-      zIndexDesignToken.addZIndex('2', '{z-index.base} + 1');
-      expect(zIndexDesignToken.cssVariables).toStrictEqual({
-        '--z-index-base': '1',
-        '--z-index-2': '2',
-      });
-    });
-
-    test('css', () => {
-      zIndexDesignToken.addZIndex('base', '1');
-      zIndexDesignToken.addZIndex('2', '{z-index.base} + 1');
-      expect(zIndexDesignToken.css()).toStrictEqual([
-        '--z-index-base: 1;',
-        '--z-index-2: 2;',
-      ]);
-    });
-
     test('tailwind config', () => {
       zIndexDesignToken.addZIndex('base', '1');
       zIndexDesignToken.addZIndex('2', '{z-index.base} + 1');
-      expect(zIndexDesignToken.tailwindConfig()).toStrictEqual({
+      expect(zIndexDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           zIndex: {
-            base: 'var(--z-index-base) /* 1 */',
-            2: 'var(--z-index-2) /* 2 */',
+            base: '1',
+            2: '2',
           },
         },
       });
@@ -100,32 +56,14 @@ describe('z-index-design-token', () => {
         zIndexDesignToken = new ZIndexDesignToken({ prefix: 'pw' });
       });
 
-      test('css variables', () => {
-        zIndexDesignToken.addZIndex('base', '1');
-        zIndexDesignToken.addZIndex('2', '{z-index.base} + 1');
-        expect(zIndexDesignToken.cssVariables).toStrictEqual({
-          '--pw-z-index-base': '1',
-          '--pw-z-index-2': '2',
-        });
-      });
-
-      test('css', () => {
-        zIndexDesignToken.addZIndex('base', '1');
-        zIndexDesignToken.addZIndex('2', '{z-index.base} + 1');
-        expect(zIndexDesignToken.css()).toStrictEqual([
-          '--pw-z-index-base: 1;',
-          '--pw-z-index-2: 2;',
-        ]);
-      });
-
       test('tailwind config', () => {
         zIndexDesignToken.addZIndex('base', '1');
         zIndexDesignToken.addZIndex('2', '{z-index.base} + 1');
-        expect(zIndexDesignToken.tailwindConfig()).toStrictEqual({
+        expect(zIndexDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             zIndex: {
-              base: 'var(--pw-z-index-base) /* 1 */',
-              2: 'var(--pw-z-index-2) /* 2 */',
+              base: '1',
+              2: '2',
             },
           },
         });

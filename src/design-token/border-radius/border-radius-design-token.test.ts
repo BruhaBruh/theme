@@ -10,24 +10,24 @@ describe('border-radius-design-token', () => {
   describe('add border radius', () => {
     test('css variables', () => {
       borderRadiusDesignToken.addBorderRadius('base', '1rem');
-      expect(borderRadiusDesignToken.cssVariables).toStrictEqual({
+      expect(borderRadiusDesignToken.cssVariables(false)).toStrictEqual({
         '--border-radius-base': '1rem',
       });
     });
 
     test('css', () => {
       borderRadiusDesignToken.addBorderRadius('base', '1rem');
-      expect(borderRadiusDesignToken.css()).toStrictEqual([
+      expect(borderRadiusDesignToken.css(false)).toStrictEqual([
         '--border-radius-base: 1rem;',
       ]);
     });
 
     test('tailwind config', () => {
       borderRadiusDesignToken.addBorderRadius('base', '1rem');
-      expect(borderRadiusDesignToken.tailwindConfig()).toStrictEqual({
+      expect(borderRadiusDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           borderRadius: {
-            base: 'var(--border-radius-base) /* 1rem */',
+            base: '/* 16px = 1rem */ var(--border-radius-base)',
             full: '9999px',
             none: '0px',
           },
@@ -42,24 +42,24 @@ describe('border-radius-design-token', () => {
 
       test('css variables', () => {
         borderRadiusDesignToken.addBorderRadius('base', '1rem');
-        expect(borderRadiusDesignToken.cssVariables).toStrictEqual({
+        expect(borderRadiusDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-border-radius-base': '1rem',
         });
       });
 
       test('css', () => {
         borderRadiusDesignToken.addBorderRadius('base', '1rem');
-        expect(borderRadiusDesignToken.css()).toStrictEqual([
+        expect(borderRadiusDesignToken.css(false)).toStrictEqual([
           '--pw-border-radius-base: 1rem;',
         ]);
       });
 
       test('tailwind config', () => {
         borderRadiusDesignToken.addBorderRadius('base', '1rem');
-        expect(borderRadiusDesignToken.tailwindConfig()).toStrictEqual({
+        expect(borderRadiusDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             borderRadius: {
-              base: 'var(--pw-border-radius-base) /* 1rem */',
+              base: '/* 16px = 1rem */ var(--pw-border-radius-base)',
               full: '9999px',
               none: '0px',
             },
@@ -76,7 +76,7 @@ describe('border-radius-design-token', () => {
         'sm',
         '{border-radius.base} - 4px',
       );
-      expect(borderRadiusDesignToken.cssVariables).toStrictEqual({
+      expect(borderRadiusDesignToken.cssVariables(false)).toStrictEqual({
         '--border-radius-base': '1rem',
         '--border-radius-sm': '0.75rem',
       });
@@ -88,7 +88,7 @@ describe('border-radius-design-token', () => {
         'sm',
         '{border-radius.base} - 4px',
       );
-      expect(borderRadiusDesignToken.css()).toStrictEqual([
+      expect(borderRadiusDesignToken.css(false)).toStrictEqual([
         '--border-radius-base: 1rem;',
         '--border-radius-sm: 0.75rem;',
       ]);
@@ -100,11 +100,11 @@ describe('border-radius-design-token', () => {
         'sm',
         '{border-radius.base} - 4px',
       );
-      expect(borderRadiusDesignToken.tailwindConfig()).toStrictEqual({
+      expect(borderRadiusDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           borderRadius: {
-            base: 'var(--border-radius-base) /* 1rem */',
-            sm: 'var(--border-radius-sm) /* 0.75rem */',
+            base: '/* 16px = 1rem */ var(--border-radius-base)',
+            sm: '/* 12px = 0.75rem */ var(--border-radius-sm)',
             full: '9999px',
             none: '0px',
           },
@@ -123,7 +123,7 @@ describe('border-radius-design-token', () => {
           'sm',
           '{border-radius.base} - 4px',
         );
-        expect(borderRadiusDesignToken.cssVariables).toStrictEqual({
+        expect(borderRadiusDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-border-radius-base': '1rem',
           '--pw-border-radius-sm': '0.75rem',
         });
@@ -135,7 +135,7 @@ describe('border-radius-design-token', () => {
           'sm',
           '{border-radius.base} - 4px',
         );
-        expect(borderRadiusDesignToken.css()).toStrictEqual([
+        expect(borderRadiusDesignToken.css(false)).toStrictEqual([
           '--pw-border-radius-base: 1rem;',
           '--pw-border-radius-sm: 0.75rem;',
         ]);
@@ -147,11 +147,11 @@ describe('border-radius-design-token', () => {
           'sm',
           '{border-radius.base} - 4px',
         );
-        expect(borderRadiusDesignToken.tailwindConfig()).toStrictEqual({
+        expect(borderRadiusDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             borderRadius: {
-              base: 'var(--pw-border-radius-base) /* 1rem */',
-              sm: 'var(--pw-border-radius-sm) /* 0.75rem */',
+              base: '/* 16px = 1rem */ var(--pw-border-radius-base)',
+              sm: '/* 12px = 0.75rem */ var(--pw-border-radius-sm)',
               full: '9999px',
               none: '0px',
             },

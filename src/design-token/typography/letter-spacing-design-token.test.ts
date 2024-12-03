@@ -10,21 +10,21 @@ describe('letter-spacing-design-token', () => {
   describe('add letter spacing', () => {
     test('css variables', () => {
       letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
-      expect(letterSpacingDesignToken.cssVariables).toStrictEqual({
+      expect(letterSpacingDesignToken.cssVariables(false)).toStrictEqual({
         '--letter-spacing-xs': '0.75rem',
       });
     });
 
     test('css', () => {
       letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
-      expect(letterSpacingDesignToken.css()).toStrictEqual([
+      expect(letterSpacingDesignToken.css(false)).toStrictEqual([
         '--letter-spacing-xs: 0.75rem;',
       ]);
     });
 
     test('tailwind config', () => {
       letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
-      expect(letterSpacingDesignToken.tailwindConfig()).toStrictEqual({
+      expect(letterSpacingDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           letterSpacing: {
             tighter: '-0.05em',
@@ -33,7 +33,7 @@ describe('letter-spacing-design-token', () => {
             wide: '0.025em',
             wider: '0.05em',
             widest: '0.1em',
-            xs: 'var(--letter-spacing-xs) /* 0.75rem */',
+            xs: '/* 12px = 0.75rem */ var(--letter-spacing-xs)',
           },
         },
       });
@@ -48,21 +48,21 @@ describe('letter-spacing-design-token', () => {
 
       test('css variables', () => {
         letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
-        expect(letterSpacingDesignToken.cssVariables).toStrictEqual({
+        expect(letterSpacingDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-letter-spacing-xs': '0.75rem',
         });
       });
 
       test('css', () => {
         letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
-        expect(letterSpacingDesignToken.css()).toStrictEqual([
+        expect(letterSpacingDesignToken.css(false)).toStrictEqual([
           '--pw-letter-spacing-xs: 0.75rem;',
         ]);
       });
 
       test('tailwind config', () => {
         letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
-        expect(letterSpacingDesignToken.tailwindConfig()).toStrictEqual({
+        expect(letterSpacingDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             letterSpacing: {
               tighter: '-0.05em',
@@ -71,7 +71,7 @@ describe('letter-spacing-design-token', () => {
               wide: '0.025em',
               wider: '0.05em',
               widest: '0.1em',
-              xs: 'var(--pw-letter-spacing-xs) /* 0.75rem */',
+              xs: '/* 12px = 0.75rem */ var(--pw-letter-spacing-xs)',
             },
           },
         });
@@ -83,7 +83,7 @@ describe('letter-spacing-design-token', () => {
     test('css variables', () => {
       letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
       letterSpacingDesignToken.addLetterSpacing('sm', '0.75rem + 0.125rem');
-      expect(letterSpacingDesignToken.cssVariables).toStrictEqual({
+      expect(letterSpacingDesignToken.cssVariables(false)).toStrictEqual({
         '--letter-spacing-xs': '0.75rem',
         '--letter-spacing-sm': '0.875rem',
       });
@@ -92,7 +92,7 @@ describe('letter-spacing-design-token', () => {
     test('css', () => {
       letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
       letterSpacingDesignToken.addLetterSpacing('sm', '0.75rem + 0.125rem');
-      expect(letterSpacingDesignToken.css()).toStrictEqual([
+      expect(letterSpacingDesignToken.css(false)).toStrictEqual([
         '--letter-spacing-xs: 0.75rem;',
         '--letter-spacing-sm: 0.875rem;',
       ]);
@@ -101,7 +101,7 @@ describe('letter-spacing-design-token', () => {
     test('tailwind config', () => {
       letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
       letterSpacingDesignToken.addLetterSpacing('sm', '0.75rem + 0.125rem');
-      expect(letterSpacingDesignToken.tailwindConfig()).toStrictEqual({
+      expect(letterSpacingDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           letterSpacing: {
             tighter: '-0.05em',
@@ -110,8 +110,8 @@ describe('letter-spacing-design-token', () => {
             wide: '0.025em',
             wider: '0.05em',
             widest: '0.1em',
-            xs: 'var(--letter-spacing-xs) /* 0.75rem */',
-            sm: 'var(--letter-spacing-sm) /* 0.875rem */',
+            xs: '/* 12px = 0.75rem */ var(--letter-spacing-xs)',
+            sm: '/* 14px = 0.875rem */ var(--letter-spacing-sm)',
           },
         },
       });
@@ -127,7 +127,7 @@ describe('letter-spacing-design-token', () => {
       test('css variables', () => {
         letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
         letterSpacingDesignToken.addLetterSpacing('sm', '0.75rem + 0.125rem');
-        expect(letterSpacingDesignToken.cssVariables).toStrictEqual({
+        expect(letterSpacingDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-letter-spacing-xs': '0.75rem',
           '--pw-letter-spacing-sm': '0.875rem',
         });
@@ -136,7 +136,7 @@ describe('letter-spacing-design-token', () => {
       test('css', () => {
         letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
         letterSpacingDesignToken.addLetterSpacing('sm', '0.75rem + 0.125rem');
-        expect(letterSpacingDesignToken.css()).toStrictEqual([
+        expect(letterSpacingDesignToken.css(false)).toStrictEqual([
           '--pw-letter-spacing-xs: 0.75rem;',
           '--pw-letter-spacing-sm: 0.875rem;',
         ]);
@@ -145,7 +145,7 @@ describe('letter-spacing-design-token', () => {
       test('tailwind config', () => {
         letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
         letterSpacingDesignToken.addLetterSpacing('sm', '0.75rem + 0.125rem');
-        expect(letterSpacingDesignToken.tailwindConfig()).toStrictEqual({
+        expect(letterSpacingDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             letterSpacing: {
               tighter: '-0.05em',
@@ -154,8 +154,8 @@ describe('letter-spacing-design-token', () => {
               wide: '0.025em',
               wider: '0.05em',
               widest: '0.1em',
-              xs: 'var(--pw-letter-spacing-xs) /* 0.75rem */',
-              sm: 'var(--pw-letter-spacing-sm) /* 0.875rem */',
+              xs: '/* 12px = 0.75rem */ var(--pw-letter-spacing-xs)',
+              sm: '/* 14px = 0.875rem */ var(--pw-letter-spacing-sm)',
             },
           },
         });

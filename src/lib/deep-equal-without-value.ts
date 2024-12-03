@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
+import { UnknownArray, UnknownRecord } from '@bruhabruh/type-safe';
+
 type PathPart = {
   type: 'key' | 'index';
   value: string | number;
@@ -28,8 +30,8 @@ type EqualError = {
 };
 
 const deepEqualObjectsWithoutValue = (
-  left: Record<string, unknown>,
-  right: Record<string, unknown>,
+  left: UnknownRecord,
+  right: UnknownRecord,
   previousPath: PathPart[] = [],
 ): [boolean, EqualError | null] => {
   const compare = (keys: string[]): [boolean, EqualError | null] => {
@@ -68,8 +70,8 @@ const deepEqualObjectsWithoutValue = (
         ];
       }
       const [isSame, message] = deepEqualWithoutValue(
-        leftValue as Record<string, unknown>,
-        rightValue as Record<string, unknown>,
+        leftValue as UnknownRecord,
+        rightValue as UnknownRecord,
         path,
       );
       if (!isSame) return [isSame, message];
@@ -87,8 +89,8 @@ const deepEqualObjectsWithoutValue = (
 };
 
 const deepEqualArraysWithoutValue = (
-  left: unknown[],
-  right: unknown[],
+  left: UnknownArray,
+  right: UnknownArray,
   previousPath: PathPart[] = [],
 ): [boolean, EqualError | null] => {
   if (left.length !== right.length)
@@ -166,14 +168,14 @@ export const deepEqualWithoutValue = (
   }
   if (Array.isArray(left) && Array.isArray(right)) {
     return deepEqualArraysWithoutValue(
-      left as unknown[],
-      right as unknown[],
+      left as UnknownArray,
+      right as UnknownArray,
       previousPath,
     );
   }
   return deepEqualObjectsWithoutValue(
-    left as Record<string, unknown>,
-    right as Record<string, unknown>,
+    left as UnknownRecord,
+    right as UnknownRecord,
     previousPath,
   );
 };

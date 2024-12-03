@@ -10,21 +10,21 @@ describe('line-height-design-token', () => {
   describe('add line height', () => {
     test('css variables', () => {
       lineHeightDesignToken.addLineHeight('1', '0.25rem');
-      expect(lineHeightDesignToken.cssVariables).toStrictEqual({
+      expect(lineHeightDesignToken.cssVariables(false)).toStrictEqual({
         '--line-height-1': '0.25rem',
       });
     });
 
     test('css', () => {
       lineHeightDesignToken.addLineHeight('1', '0.25rem');
-      expect(lineHeightDesignToken.css()).toStrictEqual([
+      expect(lineHeightDesignToken.css(false)).toStrictEqual([
         '--line-height-1: 0.25rem;',
       ]);
     });
 
     test('tailwind config', () => {
       lineHeightDesignToken.addLineHeight('1', '0.25rem');
-      expect(lineHeightDesignToken.tailwindConfig()).toStrictEqual({
+      expect(lineHeightDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           lineHeight: {
             none: '1',
@@ -33,7 +33,7 @@ describe('line-height-design-token', () => {
             normal: '1.5',
             relaxed: '1.625',
             loose: '2',
-            1: 'var(--line-height-1) /* 0.25rem */',
+            1: '/* 4px = 0.25rem */ var(--line-height-1)',
           },
         },
       });
@@ -46,21 +46,21 @@ describe('line-height-design-token', () => {
 
       test('css variables', () => {
         lineHeightDesignToken.addLineHeight('1', '0.25rem');
-        expect(lineHeightDesignToken.cssVariables).toStrictEqual({
+        expect(lineHeightDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-line-height-1': '0.25rem',
         });
       });
 
       test('css', () => {
         lineHeightDesignToken.addLineHeight('1', '0.25rem');
-        expect(lineHeightDesignToken.css()).toStrictEqual([
+        expect(lineHeightDesignToken.css(false)).toStrictEqual([
           '--pw-line-height-1: 0.25rem;',
         ]);
       });
 
       test('tailwind config', () => {
         lineHeightDesignToken.addLineHeight('1', '0.25rem');
-        expect(lineHeightDesignToken.tailwindConfig()).toStrictEqual({
+        expect(lineHeightDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             lineHeight: {
               none: '1',
@@ -69,7 +69,7 @@ describe('line-height-design-token', () => {
               normal: '1.5',
               relaxed: '1.625',
               loose: '2',
-              1: 'var(--pw-line-height-1) /* 0.25rem */',
+              1: '/* 4px = 0.25rem */ var(--pw-line-height-1)',
             },
           },
         });
@@ -81,7 +81,7 @@ describe('line-height-design-token', () => {
     test('css variables', () => {
       lineHeightDesignToken.addLineHeight('1', '0.25rem');
       lineHeightDesignToken.addLineHeight('2', '{line-height.1} * 2');
-      expect(lineHeightDesignToken.cssVariables).toStrictEqual({
+      expect(lineHeightDesignToken.cssVariables(false)).toStrictEqual({
         '--line-height-1': '0.25rem',
         '--line-height-2': '0.5rem',
       });
@@ -90,7 +90,7 @@ describe('line-height-design-token', () => {
     test('css', () => {
       lineHeightDesignToken.addLineHeight('1', '0.25rem');
       lineHeightDesignToken.addLineHeight('2', '{line-height.1} * 2');
-      expect(lineHeightDesignToken.css()).toStrictEqual([
+      expect(lineHeightDesignToken.css(false)).toStrictEqual([
         '--line-height-1: 0.25rem;',
         '--line-height-2: 0.5rem;',
       ]);
@@ -99,7 +99,7 @@ describe('line-height-design-token', () => {
     test('tailwind config', () => {
       lineHeightDesignToken.addLineHeight('1', '0.25rem');
       lineHeightDesignToken.addLineHeight('2', '{line-height.1} * 2');
-      expect(lineHeightDesignToken.tailwindConfig()).toStrictEqual({
+      expect(lineHeightDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           lineHeight: {
             none: '1',
@@ -108,8 +108,8 @@ describe('line-height-design-token', () => {
             normal: '1.5',
             relaxed: '1.625',
             loose: '2',
-            1: 'var(--line-height-1) /* 0.25rem */',
-            2: 'var(--line-height-2) /* 0.5rem */',
+            1: '/* 4px = 0.25rem */ var(--line-height-1)',
+            2: '/* 8px = 0.5rem */ var(--line-height-2)',
           },
         },
       });
@@ -123,7 +123,7 @@ describe('line-height-design-token', () => {
       test('css variables', () => {
         lineHeightDesignToken.addLineHeight('1', '0.25rem');
         lineHeightDesignToken.addLineHeight('2', '{line-height.1} * 2');
-        expect(lineHeightDesignToken.cssVariables).toStrictEqual({
+        expect(lineHeightDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-line-height-1': '0.25rem',
           '--pw-line-height-2': '0.5rem',
         });
@@ -132,7 +132,7 @@ describe('line-height-design-token', () => {
       test('css', () => {
         lineHeightDesignToken.addLineHeight('1', '0.25rem');
         lineHeightDesignToken.addLineHeight('2', '{line-height.1} * 2');
-        expect(lineHeightDesignToken.css()).toStrictEqual([
+        expect(lineHeightDesignToken.css(false)).toStrictEqual([
           '--pw-line-height-1: 0.25rem;',
           '--pw-line-height-2: 0.5rem;',
         ]);
@@ -141,7 +141,7 @@ describe('line-height-design-token', () => {
       test('tailwind config', () => {
         lineHeightDesignToken.addLineHeight('1', '0.25rem');
         lineHeightDesignToken.addLineHeight('2', '{line-height.1} * 2');
-        expect(lineHeightDesignToken.tailwindConfig()).toStrictEqual({
+        expect(lineHeightDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             lineHeight: {
               none: '1',
@@ -150,8 +150,8 @@ describe('line-height-design-token', () => {
               normal: '1.5',
               relaxed: '1.625',
               loose: '2',
-              1: 'var(--pw-line-height-1) /* 0.25rem */',
-              2: 'var(--pw-line-height-2) /* 0.5rem */',
+              1: '/* 4px = 0.25rem */ var(--pw-line-height-1)',
+              2: '/* 8px = 0.5rem */ var(--pw-line-height-2)',
             },
           },
         });

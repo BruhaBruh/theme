@@ -16,7 +16,7 @@ describe('font-family-design-token', () => {
         'Times',
         'serif',
       );
-      expect(fontFamilyDesignToken.cssVariables).toStrictEqual({
+      expect(fontFamilyDesignToken.cssVariables(false)).toStrictEqual({
         '--font-family-serif':
           'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
       });
@@ -30,7 +30,7 @@ describe('font-family-design-token', () => {
         'Times',
         'serif',
       );
-      expect(fontFamilyDesignToken.css()).toStrictEqual([
+      expect(fontFamilyDesignToken.css(false)).toStrictEqual([
         '--font-family-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;',
       ]);
     });
@@ -43,11 +43,11 @@ describe('font-family-design-token', () => {
         'Times',
         'serif',
       );
-      expect(fontFamilyDesignToken.tailwindConfig()).toStrictEqual({
+      expect(fontFamilyDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           fontFamily: {
             serif:
-              'var(--font-family-serif) /* ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */',
+              '/* ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */ var(--font-family-serif)',
           },
         },
       });
@@ -66,7 +66,7 @@ describe('font-family-design-token', () => {
           'Times',
           'serif',
         );
-        expect(fontFamilyDesignToken.cssVariables).toStrictEqual({
+        expect(fontFamilyDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-font-family-serif':
             'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
         });
@@ -80,7 +80,7 @@ describe('font-family-design-token', () => {
           'Times',
           'serif',
         );
-        expect(fontFamilyDesignToken.css()).toStrictEqual([
+        expect(fontFamilyDesignToken.css(false)).toStrictEqual([
           '--pw-font-family-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;',
         ]);
       });
@@ -93,11 +93,11 @@ describe('font-family-design-token', () => {
           'Times',
           'serif',
         );
-        expect(fontFamilyDesignToken.tailwindConfig()).toStrictEqual({
+        expect(fontFamilyDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             fontFamily: {
               serif:
-                'var(--pw-font-family-serif) /* ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */',
+                '/* ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */ var(--pw-font-family-serif)',
             },
           },
         });
@@ -118,7 +118,7 @@ describe('font-family-design-token', () => {
         'heading',
         'Lora, {font-family.serif}',
       );
-      expect(fontFamilyDesignToken.cssVariables).toStrictEqual({
+      expect(fontFamilyDesignToken.cssVariables(false)).toStrictEqual({
         '--font-family-serif':
           'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
         '--font-family-heading': 'Lora, var(--font-family-serif)',
@@ -137,7 +137,7 @@ describe('font-family-design-token', () => {
         'heading',
         'Lora, {font-family.serif}',
       );
-      expect(fontFamilyDesignToken.css()).toStrictEqual([
+      expect(fontFamilyDesignToken.css(false)).toStrictEqual([
         '--font-family-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;',
         '--font-family-heading: Lora, var(--font-family-serif);',
       ]);
@@ -155,13 +155,13 @@ describe('font-family-design-token', () => {
         'heading',
         'Lora, {font-family.serif}',
       );
-      expect(fontFamilyDesignToken.tailwindConfig()).toStrictEqual({
+      expect(fontFamilyDesignToken.tailwindConfig(false)).toStrictEqual({
         theme: {
           fontFamily: {
             serif:
-              'var(--font-family-serif) /* ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */',
+              '/* ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */ var(--font-family-serif)',
             heading:
-              'var(--font-family-heading) /* Lora, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */',
+              '/* Lora, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */ var(--font-family-heading)',
           },
         },
       });
@@ -184,7 +184,7 @@ describe('font-family-design-token', () => {
           'heading',
           'Lora, {font-family.serif}',
         );
-        expect(fontFamilyDesignToken.cssVariables).toStrictEqual({
+        expect(fontFamilyDesignToken.cssVariables(false)).toStrictEqual({
           '--pw-font-family-serif':
             'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
           '--pw-font-family-heading': 'Lora, var(--pw-font-family-serif)',
@@ -203,7 +203,7 @@ describe('font-family-design-token', () => {
           'heading',
           'Lora, {font-family.serif}',
         );
-        expect(fontFamilyDesignToken.css()).toStrictEqual([
+        expect(fontFamilyDesignToken.css(false)).toStrictEqual([
           '--pw-font-family-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;',
           '--pw-font-family-heading: Lora, var(--pw-font-family-serif);',
         ]);
@@ -221,13 +221,13 @@ describe('font-family-design-token', () => {
           'heading',
           'Lora, {font-family.serif}',
         );
-        expect(fontFamilyDesignToken.tailwindConfig()).toStrictEqual({
+        expect(fontFamilyDesignToken.tailwindConfig(false)).toStrictEqual({
           theme: {
             fontFamily: {
               serif:
-                'var(--pw-font-family-serif) /* ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */',
+                '/* ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */ var(--pw-font-family-serif)',
               heading:
-                'var(--pw-font-family-heading) /* Lora, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */',
+                '/* Lora, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */ var(--pw-font-family-heading)',
             },
           },
         });
