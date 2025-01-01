@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/BruhaBruh/theme/main/schema/theme-config.schema.json
+# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/bruhabruh/theme/schema/theme-config.schema.json
 
 dependencies:
   - core

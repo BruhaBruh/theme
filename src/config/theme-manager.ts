@@ -1,5 +1,4 @@
-import { cleanObject } from '@/lib/clean-object';
-import { TailwindConfig, TailwindPluginApi } from '@/types/tailwind';
+import { CSS } from '@/types/css';
 import { Err, Ok, Result } from '@bruhabruh/type-safe';
 import { ThemeConfig } from './schema/theme-config';
 import { ThemesConfig } from './schema/themes-config';
@@ -11,6 +10,7 @@ export class ThemeManager {
   #config: ThemeConfig;
   #globalTokenManager: TokenManager;
   #tokenManager: TokenManager;
+  #selector: string;
   #isDependency = false;
 
   constructor(
@@ -25,6 +25,23 @@ export class ThemeManager {
     this.#globalTokenManager = globalTokenManager;
     this.#tokenManager = new TokenManager(prefix);
     this.#tokenManager.applyGlobalTokenManager(globalTokenManager);
+    this.#selector = Array.from(new Set(this.#config.selectors))
+      .sort((a) => {
+        if (a.startsWith(':')) {
+          return 0;
+        }
+        if (a.startsWith('.')) {
+          return 1;
+        }
+        if (a.startsWith('#')) {
+          return 2;
+        }
+        if (a.startsWith('[data-')) {
+          return 3;
+        }
+        return 4;
+      })
+      .join(', ');
   }
 
   load(
@@ -75,64 +92,11 @@ export class ThemeManager {
     return Ok(true);
   }
 
-  css(absolute: boolean): string[] {
-    const lines: string[] = [];
-
-    const [inSelector, outSelector] = this.#tokenManager.css(absolute);
-
-    const selectors = Array.from(new Set(this.#config.selectors)).sort((a) => {
-      if (a.startsWith(':')) {
-        return 0;
-      }
-      if (a.startsWith('.')) {
-        return 1;
-      }
-      if (a.startsWith('#')) {
-        return 2;
-      }
-      if (a.startsWith('[data-')) {
-        return 3;
-      }
-      return 4;
-    });
-
-    const tokens = inSelector.map((v) => `  ${v}`);
-
-    const outTokens = ['', ...outSelector];
-
-    lines.push(`${selectors.join(', ')} {`);
-    lines.push(...tokens);
-    lines.push(`}`);
-    lines.push(outTokens.join('\r\n'));
-
-    return lines;
+  css(absolute: boolean): CSS {
+    return this.#tokenManager.css(this.#selector, absolute);
   }
 
-  applyTailwind(absolute: boolean, api: TailwindPluginApi): void {
-    const [inSelector] = this.#tokenManager.css(absolute);
-
-    const selectors = Array.from(
-      new Set([`.${this.#name}`, ...this.#config.selectors]),
-    ).sort((a) => (a === ':root' ? -1 : 1));
-
-    const tokens: Record<string, string> = {};
-
-    inSelector.forEach((token) => {
-      const [key, ...value] = token.split(':');
-
-      tokens[key] = value.join(':');
-    });
-
-    api.addBase({
-      [selectors.join(', ')]: tokens,
-    });
-
-    this.#tokenManager.applyTailwind(absolute, api);
-  }
-
-  tailwindConfig(absolute: boolean): TailwindConfig {
-    return cleanObject(
-      this.#tokenManager.tailwindConfig(absolute),
-    ) as unknown as TailwindConfig;
+  tailwindCSS(absolute: boolean): CSS {
+    return this.#tokenManager.tailwindCSS(this.#selector, absolute);
   }
 }

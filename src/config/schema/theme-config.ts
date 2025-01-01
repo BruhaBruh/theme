@@ -30,20 +30,26 @@ export const themeConfigSchema = z
                             min: z
                               .number()
                               .default(50)
-                              .describe('Minimal token modifier.\nDefault 50'),
+                              .describe('Minimal token modifier.\nDefault: 50'),
                             max: z
                               .number()
                               .default(1000)
                               .describe(
-                                'Maximum token modifier.\nDefault 1000',
+                                'Maximum token modifier.\nDefault: 1000',
                               ),
                             step: z
                               .number()
                               .default(50)
-                              .describe('Step for token modifier.\nDefault 50'),
+                              .describe(
+                                'Step for token modifier.\nDefault: 50',
+                              ),
+                            reverse: z
+                              .boolean()
+                              .default(false)
+                              .describe('Reverse colors.\nDefault: false'),
                           })
-                          .nullish()
-                          .describe('Modifier generator settings.\nOptional'),
+                          .describe('Modifier generator settings.\nOptional')
+                          .default({}),
                       })
                       .describe('Color generator settings.\nRequired'),
                   })
@@ -54,98 +60,14 @@ export const themeConfigSchema = z
       )
       .describe('List of Color tokens.\nDefault: []')
       .default([]),
-    background: z
-      .array(
-        z
-          .record(
-            z
-              .string()
-              .describe('Color value or reference like {color.white.100}'),
-          )
-          .describe('Background Color token record name to value.\nRequired'),
-      )
-      .describe('List of Background Color tokens.\nDefault: []')
-      .default([]),
-    text: z
-      .array(
-        z
-          .record(
-            z
-              .string()
-              .describe('Color value or reference like {color.white.100}'),
-          )
-          .describe('Text Color token record name to value.\nRequired'),
-      )
-      .describe('List of Text Color tokens.\nDefault: []')
-      .default([]),
-    border: z
-      .array(
-        z
-          .record(
-            z
-              .string()
-              .describe('Color value or reference like {color.white.100}'),
-          )
-          .describe('Border Color token record name to value.\nRequired'),
-      )
-      .describe('List of Border Color tokens.\nDefault: []')
-      .default([]),
-    ring: z
-      .array(
-        z
-          .record(
-            z
-              .string()
-              .describe('Color value or reference like {color.white.100}'),
-          )
-          .describe('Ring Color token record name to value.\nRequired'),
-      )
-      .describe('List of Ring Color tokens.\nDefault: []')
-      .default([]),
-    fill: z
-      .array(
-        z
-          .record(
-            z
-              .string()
-              .describe('Color value or reference like {color.white.100}'),
-          )
-          .describe('Fill Color token record name to value.\nRequired'),
-      )
-      .describe('List of Fill Color tokens.\nDefault: []')
-      .default([]),
-    outline: z
-      .array(
-        z
-          .record(
-            z
-              .string()
-              .describe('Color value or reference like {color.white.100}'),
-          )
-          .describe('Outline Color token record name to value.\nRequired'),
-      )
-      .describe('List of Outline Color tokens.\nDefault: []')
-      .default([]),
-    stroke: z
-      .array(
-        z
-          .record(
-            z
-              .string()
-              .describe('Color value or reference like {color.white.100}'),
-          )
-          .describe('Stroke Color token record name to value.\nRequired'),
-      )
-      .describe('List of Stroke Color tokens.\nDefault: []')
-      .default([]),
-    borderRadius: z
+    radius: z
       .array(
         z
           .record(
             z
               .string()
               .describe(
-                'Border Radius value or reference like {border-radius.base}.\nSupport calculation like {border-radius.base} + 2px',
+                'Border Radius value or reference like {radius.base}.\nSupport calculation like {radius.base} + 2px',
               ),
           )
           .describe('Border Radius token record name to value.\nRequired')
@@ -208,15 +130,13 @@ export const themeConfigSchema = z
       )
       .describe('List of Spacing tokens.\nDefault: []')
       .default([]),
-    fontFamily: z
+    font: z
       .array(
         z
           .record(
             z
               .string()
-              .describe(
-                'Font Family value or reference like {font-family.base}',
-              ),
+              .describe('Font Family value or reference like {font.base}'),
           )
           .describe('Font Family token record name to value.\nRequired'),
       )
@@ -236,15 +156,13 @@ export const themeConfigSchema = z
       )
       .describe('List of Font Weight tokens.\nDefault: []')
       .default([]),
-    lineHeight: z
+    leading: z
       .array(
         z
           .record(
             z
               .string()
-              .describe(
-                'Line Height value or reference like {line-height.base}',
-              ),
+              .describe('Line Height value or reference like {leading.base}'),
           )
           .describe('Line Height token record name to value.\nRequired')
           .or(
@@ -271,13 +189,13 @@ export const themeConfigSchema = z
       )
       .describe('List of Line Height tokens.\nDefault: []')
       .default([]),
-    fontSize: z
+    text: z
       .array(
         z
           .record(
             z
               .string()
-              .describe('Font Size value or reference like {font-size.base}'),
+              .describe('Font Size value or reference like {text.base}'),
           )
           .describe('Font Size token record name to value.\nRequired')
           .or(
@@ -304,14 +222,14 @@ export const themeConfigSchema = z
       )
       .describe('List of Font Size tokens.\nDefault: []')
       .default([]),
-    letterSpacing: z
+    tracking: z
       .array(
         z
           .record(
             z
               .string()
               .describe(
-                'Letter Spacing value or reference like {letter-spacing.base}',
+                'Letter Spacing value or reference like {tracking.base}',
               ),
           )
           .describe('Letter Spacing token record name to value.\nRequired'),
@@ -324,10 +242,10 @@ export const themeConfigSchema = z
           .record(
             z
               .object({
-                fontFamily: z
+                font: z
                   .string()
                   .describe(
-                    'Font Family value or reference like {font-family.base}.\nOptional',
+                    'Font Family value or reference like {font.base}.\nOptional',
                   )
                   .nullish(),
                 fontWeight: z
@@ -336,22 +254,22 @@ export const themeConfigSchema = z
                     'Font Weight value or reference like {font-weight.base}.\nOptional',
                   )
                   .nullish(),
-                lineHeight: z
+                leading: z
                   .string()
                   .describe(
-                    'Line Height value or reference like {line-height.base}.\nOptional',
+                    'Line Height value or reference like {leading.base}.\nOptional',
                   )
                   .nullish(),
-                fontSize: z
+                text: z
                   .string()
                   .describe(
-                    'Font Size value or reference like {font-size.base}.\nOptional',
+                    'Font Size value or reference like {text.base}.\nOptional',
                   )
                   .nullish(),
-                letterSpacing: z
+                tracking: z
                   .string()
                   .describe(
-                    'Letter Spacing value or reference like {letter-spacing.base}.\nOptional',
+                    'Letter Spacing value or reference like {tracking.base}.\nOptional',
                   )
                   .nullish(),
               })
@@ -360,39 +278,6 @@ export const themeConfigSchema = z
           .describe('Typography token record name to settings.\nRequired'),
       )
       .describe('List of Typography tokens.\nDefault: []')
-      .default([]),
-    zIndex: z
-      .array(
-        z
-          .record(
-            z
-              .string()
-              .describe('Z-Index value or reference like {z-index.base}'),
-          )
-          .describe('Z-Index token record name to value.\nRequired')
-          .or(
-            z
-              .object({
-                _generator: z
-                  .object({
-                    start: z.number().describe('Start number.\nRequired'),
-                    end: z.number().describe('End number.\nRequired'),
-                    namePattern: z
-                      .string()
-                      .describe('Name pattern.\nDefault: "{i}"')
-                      .default(`{i}`),
-                    valuePattern: z
-                      .string()
-                      .describe('Value pattern.\nDefault: "{i}"')
-                      .default(`{i}`),
-                    step: z.number().describe('Step.\nDefault: 1').default(1),
-                  })
-                  .describe('Z-Index token generator.\nRequired'),
-              })
-              .describe('Z-Index token generator.\nRequired'),
-          ),
-      )
-      .describe('List of Z-Index tokens.\nDefault: []')
       .default([]),
   })
   .describe('Theme Config for @bruhabruh/theme');

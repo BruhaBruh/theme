@@ -1,22 +1,26 @@
 import { DesignTokenType } from '@/types/design-token-type';
-import { TailwindConfig } from '@/types/tailwind';
 import { Err, Ok, Result } from '@bruhabruh/type-safe';
 import { Oklch, formatHex, interpolate, oklch } from 'culori';
-import { DesignToken } from '../design-token';
+import { DesignToken, DesignTokenArgs } from '../design-token';
 
 type ColorGenerateOptions = {
-  modifierGenerator?: {
-    min?: number;
-    max?: number;
-    step?: number;
+  modifierGenerator: {
+    min: number;
+    max: number;
+    step: number;
+    reverse: boolean;
   };
 };
 
 export class ColorDesignToken extends DesignToken {
   static type: DesignTokenType = 'color' as const;
 
-  constructor({ prefix = '' }: { prefix?: string } = {}) {
-    super({ type: ColorDesignToken.type, prefix });
+  constructor({ prefix = '' }: Partial<DesignTokenArgs<'prefix'>> = {}) {
+    super({
+      name: ColorDesignToken.name,
+      type: ColorDesignToken.type,
+      prefix,
+    });
     this.addToken('inherit', 'inherit');
     this.addToken('transparent', 'transparent');
     this.addToken('initial', 'initial');
@@ -27,7 +31,6 @@ export class ColorDesignToken extends DesignToken {
   addColor(name: string, color: string): void {
     const cssValue = this.resolveReferences(color);
     this.addToken(name, this.resolveAbsoluteValue(cssValue), {
-      humanReadableValue: this.resolveAbsoluteValue(cssValue),
       css: {
         key: [name],
         value: cssValue,
@@ -38,7 +41,7 @@ export class ColorDesignToken extends DesignToken {
   generateColor(
     name: string,
     baseColor: string,
-    options: ColorGenerateOptions = {},
+    options: ColorGenerateOptions,
   ): Result<true, string> {
     const baseColorOklch = this.oklchFromStringWithReferences(baseColor);
     if (baseColorOklch.isErr()) {
@@ -57,36 +60,6 @@ export class ColorDesignToken extends DesignToken {
     });
 
     return Ok(true);
-  }
-
-  override tailwindConfig(absolute: boolean): TailwindConfig {
-    const colors: Record<string, string | Record<string, string>> = {};
-
-    this.tokens.forEach((token) => {
-      const value = token.toTailwindString({
-        absolute,
-        mapper: (variable) => `rgb(from ${variable} r g b / <alpha-value>)`,
-      });
-
-      if (!token.name.includes('-')) {
-        colors[token.name] = value;
-        return;
-      }
-
-      const split = token.name.split('-');
-      const name = split.slice(0, -1).join('-');
-      const modifier = split.slice(-1).join('-');
-      if (typeof colors[name] === 'string')
-        colors[name] = { DEFAULT: colors[name] };
-      if (!colors[name]) colors[name] = {};
-      colors[name][modifier] = value;
-    });
-
-    return {
-      theme: {
-        colors,
-      },
-    };
   }
 
   override resolveAbsoluteValue(value: string): string {
@@ -123,25 +96,28 @@ export class ColorDesignToken extends DesignToken {
 
   private color(
     base: Oklch,
-    { modifierGenerator = {} }: ColorGenerateOptions,
+    { modifierGenerator }: ColorGenerateOptions,
   ): Result<Record<string, string>, string> {
     const result: Record<string, string> = {};
 
-    const { min = 50, max = 950, step = 50 } = modifierGenerator;
+    const { min, max, step, reverse } = modifierGenerator;
 
     const interpolator = interpolate(['#ffffff', base, '#000000'], 'cubehelix');
 
     for (let modifier = min; modifier <= max; modifier += step) {
-      const normalized = this.normalize(modifier, {
+      const baseNormalized = this.normalize(modifier, {
         minInput: min,
         maxInput: max,
       });
-      if (normalized.isErr()) {
-        return normalized.mapErr(
+      if (baseNormalized.isErr()) {
+        return baseNormalized.mapErr(
           (err) => `Fail normalize modifier ${modifier}: ${err}`,
         );
       }
-      const color = interpolator(normalized.unwrap());
+      const normalized = reverse
+        ? 1 - baseNormalized.unwrap()
+        : baseNormalized.unwrap();
+      const color = interpolator(normalized);
       if (!color) return Err(`Invalid color: ${color}`);
       result[modifier] = formatHex(color);
     }

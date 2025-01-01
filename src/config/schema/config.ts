@@ -20,59 +20,23 @@ const outputSchema = z
       )
       .describe('CSS output options.\nDefault: []')
       .default([]),
-    json: z
+    tailwind: z
       .array(
         z
           .object({
             destination: z
               .string()
-              .describe('TailwindCSS JSON output path of theme.\nOptional')
+              .describe('TailwindCSS output path of theme.\nOptional')
               .nullish(),
             absolute: z
               .boolean()
-              .describe('TailwindCSS JSON output w/ absolute values.\nOptional')
+              .describe('TailwindCSS output w/ absolute values.\nOptional')
               .nullish(),
           })
-          .describe('TailwindCSS JSON output options.\nDefault: {}')
+          .describe('TailwindCSS output options.\nDefault: {}')
           .default({}),
       )
       .describe('TailwindCSS JSON output options.\nDefault: []')
-      .default([]),
-    js: z
-      .array(
-        z
-          .object({
-            destination: z
-              .string()
-              .describe('TailwindCSS JS output path of theme.\nOptional')
-              .nullish(),
-            absolute: z
-              .boolean()
-              .describe('TailwindCSS JS output w/ absolute values.\nOptional')
-              .nullish(),
-          })
-          .describe('TailwindCSS JS output options.\nDefault: {}')
-          .default({}),
-      )
-      .describe('TailwindCSS JS output options.\nDefault: []')
-      .default([]),
-    ts: z
-      .array(
-        z
-          .object({
-            destination: z
-              .string()
-              .describe('TailwindCSS TS output path of theme.\nOptional')
-              .nullish(),
-            absolute: z
-              .boolean()
-              .describe('TailwindCSS TS output w/ absolute values.\\nOptional')
-              .nullish(),
-          })
-          .describe('TailwindCSS TS output options.\nDefault: {}')
-          .default({}),
-      )
-      .describe('TailwindCSS TS output options.\nDefault: []')
       .default([]),
   })
   .describe('Output for combined all themes.\nDefault: {}')

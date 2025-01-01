@@ -1,11 +1,32 @@
 import { Calculator } from '@/lib/calculator';
-import { CSSVariables } from '@/types/css-variables';
+import { CSS, CSSVariables } from '@/types/css';
 import { DesignTokenType } from '@/types/design-token-type';
-import { TailwindConfig, TailwindPluginApi } from '@/types/tailwind';
-import { Err, None, Ok, Option, Result, Some } from '@bruhabruh/type-safe';
+import {
+  Class,
+  Err,
+  None,
+  Ok,
+  Option,
+  Result,
+  Some,
+} from '@bruhabruh/type-safe';
 import { TokenValue } from './token-value';
 
+type InternalDesignTokenArgs = {
+  __arg: never;
+  name: string;
+  type: DesignTokenType;
+  prefix: string;
+  designTokens?: DesignToken[];
+};
+
+export type DesignTokenArgs<
+  PickKeys extends
+    keyof InternalDesignTokenArgs = keyof InternalDesignTokenArgs,
+  OmitKeys extends keyof InternalDesignTokenArgs = '__arg',
+> = Omit<Pick<InternalDesignTokenArgs, PickKeys>, OmitKeys | '__arg'>;
 export class DesignToken {
+  readonly #name: string;
   readonly #type: DesignTokenType;
   readonly #prefix: string;
   readonly #referenceRegExp: RegExp;
@@ -16,19 +37,25 @@ export class DesignToken {
   readonly #valueInRemPattern = /(\d+\.?\d?\d*)rem/g;
   readonly #invalidValuePattern =
     /pt|pc|in|cm|mm|q|[^r]em|ex|ch|w|h|min|max|%|fr|s|ms|deg|rad|grad|turn|vh|vw|vi|vb/g;
+  readonly #designTokens: DesignToken[];
   #designTokenReference: Option<DesignToken> = None;
 
   protected constructor({
+    name,
     type,
     prefix,
-  }: {
-    type: DesignTokenType;
-    prefix: string;
-  }) {
+    designTokens = [],
+  }: DesignTokenArgs) {
+    this.#name = name;
     this.#type = type;
     this.#prefix = prefix;
     this.#referenceRegExp = new RegExp(`\\{${type}\\.([^\\}]+)\\}`, 'g');
     this.#tokens = [];
+    this.#designTokens = designTokens;
+  }
+
+  get name(): string {
+    return this.#name;
   }
 
   get type(): DesignTokenType {
@@ -55,6 +82,14 @@ export class DesignToken {
     this.#designTokenReference = Some(designTokenReference);
   }
 
+  getDesignToken<T extends DesignToken = DesignToken>(
+    token: Class<T>,
+  ): Option<T> {
+    const designToken = this.#designTokens.find((v) => v.name === token.name);
+    if (!designToken) return None;
+    return Some(designToken as T);
+  }
+
   resolveReferences(line: string): string {
     const res = line.replace(this.#referenceRegExp, (match, reference) => {
       const resolved = this.resolveReference(reference);
@@ -74,8 +109,6 @@ export class DesignToken {
     return Some(token.css.mapOr(token.value, (css) => css.keyVariable));
   }
 
-  applyTailwind(_absolute: boolean, _api: TailwindPluginApi): void {}
-
   cssVariables(absolute: boolean): CSSVariables {
     const cssVariables: CSSVariables = {};
 
@@ -94,16 +127,32 @@ export class DesignToken {
     return cssVariables;
   }
 
-  css(absolute: boolean): string[] {
-    const lines: string[] = [];
-    Object.entries(this.cssVariables(absolute)).forEach(([key, value]) => {
-      lines.push(`${key}: ${value};`);
-    });
-    return lines;
+  css(selector: string, absolute: boolean): CSS {
+    return {
+      [selector]: this.cssVariables(absolute),
+    };
   }
 
-  tailwindConfig(_absolute: boolean): TailwindConfig {
-    return {};
+  tailwindCSS(selector: string, absolute: boolean): CSS {
+    const css: CSS = this.css(selector, absolute);
+
+    const addToTheme = (token: TokenValue, value: string) => {
+      css['@theme'] = {
+        ...css['@theme'],
+        [`--${this.#type}-${token.name.replace(/-DEFAULT$/, '').replace(/\./g, '\\.')}`]:
+          value,
+      };
+    };
+
+    this.tokens.forEach((token) => {
+      if (absolute || token.css.isNone()) {
+        addToTheme(token, token.value);
+      } else {
+        addToTheme(token, token.css.unwrap().keyVariable);
+      }
+    });
+
+    return css;
   }
 
   resolveAbsoluteValue(value: string): string {
@@ -117,10 +166,8 @@ export class DesignToken {
     name: string,
     value: string,
     {
-      humanReadableValue,
       css,
     }: {
-      humanReadableValue?: string;
       css?: {
         key: (string | undefined)[];
         value: string | (string | undefined)[];
@@ -144,7 +191,6 @@ export class DesignToken {
         TokenValue.create({
           name,
           value,
-          humanReadableValue,
           css: {
             key: keyVariable,
             value: valueVariable,
@@ -156,7 +202,6 @@ export class DesignToken {
         TokenValue.create({
           name,
           value,
-          humanReadableValue,
         }),
       );
     }

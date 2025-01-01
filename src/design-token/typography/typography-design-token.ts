@@ -1,5 +1,5 @@
+import { CSS, CSSVariables } from '@/types/css';
 import { DesignTokenType } from '@/types/design-token-type';
-import { TailwindPluginApi } from '@/types/tailwind';
 import { DesignToken } from '../design-token';
 import { FontFamilyDesignToken } from './font-family-design-token';
 import { FontSizeDesignToken } from './font-size-design-token';
@@ -31,7 +31,11 @@ export class TypographyDesignToken extends DesignToken {
     fontSizeDesignToken: FontSizeDesignToken,
     letterSpacing: LetterSpacingDesignToken,
   ) {
-    super({ type: TypographyDesignToken.type, prefix: '' });
+    super({
+      name: LineHeightDesignToken.name,
+      type: LineHeightDesignToken.type,
+      prefix: '',
+    });
     this.#fontFamilyDesignToken = fontFamilyDesignToken;
     this.#fontWeightDesignToken = fontWeightDesignToken;
     this.#lineHeightDesignToken = lineHeightDesignToken;
@@ -72,74 +76,55 @@ export class TypographyDesignToken extends DesignToken {
     this.#typographies[name] = newTypography;
   }
 
-  override applyTailwind(
-    absolute: boolean,
-    { addUtilities }: TailwindPluginApi,
-  ): void {
-    Object.entries(this.#typographies).forEach(([name, rawTypography]) => {
-      const css: Record<string, string> = {};
+  override css(selector: string, absolute: boolean): CSS {
+    const css: CSS = {};
 
-      let typography = rawTypography;
-      if (absolute) {
-        typography = this.resolveAbsoluteTypography(rawTypography);
-      }
-
-      if (typography.fontFamily) {
-        css['font-family'] = typography.fontFamily;
-      }
-      if (typography.fontWeight) {
-        css['font-weight'] = typography.fontWeight;
-      }
-      if (typography.lineHeight) {
-        css['line-height'] = typography.lineHeight;
-      }
-      if (typography.fontSize) {
-        css['font-size'] = typography.fontSize;
-      }
-      if (typography.letterSpacing) {
-        css['letter-spacing'] = typography.letterSpacing;
-      }
-
-      addUtilities({
-        [`.typography-${name}`]: css,
-      });
+    Object.entries(this.#typographies).forEach(([name, typography]) => {
+      css[`.typography-${name}:where(${selector}, ${selector} *)`] =
+        this.resolveTypographyCSSVariables(absolute, typography);
     });
+
+    return css;
   }
 
-  override css(absolute: boolean): string[] {
-    const css: string[] = [];
+  override tailwindCSS(_selector: string, absolute: boolean): CSS {
+    const css: CSS = {};
 
-    Object.entries(this.#typographies).forEach(
-      ([name, rawTypography], index, arr) => {
-        css.push(`.typography-${name} {`);
+    Object.entries(this.#typographies).forEach(([name, typography]) => {
+      css[`@utility typography-${name}`] = this.resolveTypographyCSSVariables(
+        absolute,
+        typography,
+      );
+    });
 
-        let typography = rawTypography;
-        if (absolute) {
-          typography = this.resolveAbsoluteTypography(rawTypography);
-        }
+    return css;
+  }
 
-        if (typography.fontFamily) {
-          css.push(`  font-family: ${typography.fontFamily};`);
-        }
-        if (typography.fontWeight) {
-          css.push(`  font-weight: ${typography.fontWeight};`);
-        }
-        if (typography.lineHeight) {
-          css.push(`  line-height: ${typography.lineHeight};`);
-        }
-        if (typography.fontSize) {
-          css.push(`  font-size: ${typography.fontSize};`);
-        }
-        if (typography.letterSpacing) {
-          css.push(`  letter-spacing: ${typography.letterSpacing};`);
-        }
+  private resolveTypographyCSSVariables(
+    absolute: boolean,
+    rawTypography: Typography,
+  ): CSSVariables {
+    const typography = absolute
+      ? this.resolveAbsoluteTypography(rawTypography)
+      : rawTypography;
 
-        css.push(`}`);
-        if (index < arr.length - 1) {
-          css.push('');
-        }
-      },
-    );
+    const css: CSSVariables = {};
+
+    if (typography.fontFamily) {
+      css[`font-family`] = typography.fontFamily;
+    }
+    if (typography.fontWeight) {
+      css[`font-weight`] = typography.fontWeight;
+    }
+    if (typography.lineHeight) {
+      css[`line-height`] = typography.lineHeight;
+    }
+    if (typography.fontSize) {
+      css[`font-size`] = typography.fontSize;
+    }
+    if (typography.letterSpacing) {
+      css[`letter-spacing`] = typography.letterSpacing;
+    }
 
     return css;
   }

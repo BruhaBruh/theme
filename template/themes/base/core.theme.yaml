@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/BruhaBruh/theme/main/schema/theme-config.schema.json
+# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/bruhabruh/theme/schema/theme-config.schema.json
 
 dependencies: []
 selectors:
@@ -12,34 +12,42 @@ color:
           min: 0
           max: 100
           step: 1
-  - blue:
+  - reversed:
       _generator:
-        base: '#2563eb'
+        base: '#3A4454'
         modifier:
           min: 0
           max: 100
           step: 1
-  - green:
-      _generator:
-        base: '#22c55e'
-        modifier:
-          min: 0
-          max: 100
-          step: 1
-  - yellow:
-      _generator:
-        base: '#fde047'
-        modifier:
-          min: 0
-          max: 100
-          step: 1
-  - red:
-      _generator:
-        base: '#dc2626'
-        modifier:
-          min: 0
-          max: 100
-          step: 1
+          reverse: true
+  # - blue:
+  #     _generator:
+  #       base: '#2563eb'
+  #       modifier:
+  #         min: 0
+  #         max: 100
+  #         step: 1
+  # - green:
+  #     _generator:
+  #       base: '#22c55e'
+  #       modifier:
+  #         min: 0
+  #         max: 100
+  #         step: 1
+  # - yellow:
+  #     _generator:
+  #       base: '#fde047'
+  #       modifier:
+  #         min: 0
+  #         max: 100
+  #         step: 1
+  # - red:
+  #     _generator:
+  #       base: '#dc2626'
+  #       modifier:
+  #         min: 0
+  #         max: 100
+  #         step: 1
 
 spacing:
   - base: 0.25rem

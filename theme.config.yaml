@@ -7,36 +7,5 @@ output:
   all:
     css:
       - destination: ./.generated/theme.css
-    json:
-      - destination: ./.generated/theme.json
-
-  themes:
-    core:
-      css:
-        - destination: ./.generated/core/theme.css
-      json:
-        - destination: ./.generated/core/theme.json
-      js:
-        - destination: ./.generated/core/theme.js
-      ts:
-        - destination: ./.generated/core/theme.ts
-
-    light:
-      css:
-        - destination: ./.generated/light/theme.css
-      json:
-        - destination: ./.generated/light/theme.json
-      js:
-        - destination: ./.generated/light/theme.js
-      ts:
-        - destination: ./.generated/light/theme.ts
-
-    dark:
-      css:
-        - destination: ./.generated/dark/theme.css
-      json:
-        - destination: ./.generated/dark/theme.json
-      js:
-        - destination: ./.generated/dark/theme.js
-      ts:
-        - destination: ./.generated/dark/theme.ts
+    tailwind:
+      - destination: ./.generated/theme.tailwind.css

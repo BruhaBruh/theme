@@ -1,14 +1,17 @@
 import { DesignTokenType } from '@/types/design-token-type';
-import { TailwindConfig } from '@/types/tailwind';
 import { Err, Ok, Result } from '@bruhabruh/type-safe';
-import { DesignToken } from '../design-token';
+import { DesignToken, DesignTokenArgs } from '../design-token';
 
 export class FontFamilyDesignToken extends DesignToken {
-  static type: DesignTokenType = 'font-family' as const;
+  static type: DesignTokenType = 'font' as const;
   #cssVariablePattern = /var\([^)]+\)/g;
 
-  constructor({ prefix = '' }: { prefix?: string } = {}) {
-    super({ type: FontFamilyDesignToken.type, prefix });
+  constructor({ prefix = '' }: Partial<DesignTokenArgs<'prefix'>> = {}) {
+    super({
+      name: FontFamilyDesignToken.name,
+      type: FontFamilyDesignToken.type,
+      prefix,
+    });
   }
 
   addFontFamily(
@@ -36,23 +39,9 @@ export class FontFamilyDesignToken extends DesignToken {
     return Ok(true);
   }
 
-  override tailwindConfig(absolute: boolean): TailwindConfig {
-    const fontFamily: Record<string, string> = {};
-
-    this.tokens.forEach((token) => {
-      fontFamily[token.name] = token.toTailwindString({ absolute });
-    });
-
-    return {
-      theme: {
-        fontFamily,
-      },
-    };
-  }
-
   override resolveAbsoluteValue(value: string): string {
     if (!(value.startsWith('var(') && value.endsWith(')'))) return value;
-    const cssVar = value.slice(4, -1);
+    const cssVar = value.slice(4, -1).split(',')[0];
     const token = this.tokens.find((t) =>
       t.css.isSomeAnd((css) => css.key === cssVar),
     );

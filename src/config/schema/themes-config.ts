@@ -14,44 +14,42 @@ export const themesConfigSchema = z.object({
                 .array(
                   z
                     .object({
-                      destination: z.string().nullish(),
-                      absolute: z.boolean().nullish(),
+                      destination: z
+                        .string()
+                        .describe('CSS output path of theme.\nOptional')
+                        .nullish(),
+                      absolute: z
+                        .boolean()
+                        .describe('CSS output w/ absolute values.\nOptional')
+                        .nullish(),
                     })
+                    .describe('CSS output options.\nDefault: {}')
                     .default({}),
                 )
+                .describe('CSS output options.\nDefault: []')
                 .default([]),
-              json: z
+              tailwind: z
                 .array(
                   z
                     .object({
-                      destination: z.string().nullish(),
-                      absolute: z.boolean().nullish(),
+                      destination: z
+                        .string()
+                        .describe('TailwindCSS output path of theme.\nOptional')
+                        .nullish(),
+                      absolute: z
+                        .boolean()
+                        .describe(
+                          'TailwindCSS output w/ absolute values.\nOptional',
+                        )
+                        .nullish(),
                     })
+                    .describe('TailwindCSS output options.\nDefault: {}')
                     .default({}),
                 )
-                .default([]),
-              js: z
-                .array(
-                  z
-                    .object({
-                      destination: z.string().nullish(),
-                      absolute: z.boolean().nullish(),
-                    })
-                    .default({}),
-                )
-                .describe('TailwindCSS JS output options.\nDefault: []')
-                .default([]),
-              ts: z
-                .array(
-                  z
-                    .object({
-                      destination: z.string().nullish(),
-                      absolute: z.boolean().nullish(),
-                    })
-                    .default({}),
-                )
+                .describe('TailwindCSS JSON output options.\nDefault: []')
                 .default([]),
             })
+            .describe('Output for combined all themes.\nDefault: {}')
             .default({}),
         })
         .merge(themeConfigSchema),

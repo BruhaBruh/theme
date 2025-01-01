@@ -3,11 +3,11 @@ import { readConfig } from '@/config/read-config';
 import { Config } from '@/config/schema/config';
 import { ThemesConfig } from '@/config/schema/themes-config';
 import { ThemeManager } from '@/config/theme-manager';
-import { TailwindConfig } from '@/types/tailwind';
+import { cleanMergeObject } from '@/lib/clean-merge-object';
+import { CSS } from '@/types/css';
 import { Entries } from '@bruhabruh/type-safe';
 import chalk from 'chalk';
 import { Command, Option } from 'commander';
-import { merge } from 'ts-deepmerge';
 import { writeToFile } from '../write-to-file';
 
 type Options = {
@@ -106,59 +106,93 @@ const outputTheme = (
   themeManager: ThemeManager,
   output: ThemesConfig['themes'][string]['_output'],
 ) => {
-  logInfo(`Output all themes...`);
+  logInfo(`Output "${themeName}" theme...`);
   if (output.css?.length) {
     logInfo(`CSS output "${themeName}" theme...`);
     const options = output.css.filter((v) => v.destination) as OutputOptions;
 
     options.forEach(({ destination, absolute }) => {
-      const file = themeManager
-        .css(typeof absolute === 'boolean' ? absolute : globalAbsolute)
-        .join('\r\n');
+      const css: CSS = cleanMergeObject(
+        {},
+        themeManager.css(
+          typeof absolute === 'boolean' ? absolute : globalAbsolute,
+        ),
+      );
 
-      writeToFileProcess(destination, file);
+      const selectors = Object.keys(css)
+        .filter((v) => v)
+        .sort((a, b) => a.localeCompare(b));
+
+      const file = selectors
+        .filter((s) => css[s])
+        .map((selector) => {
+          const lines: string[] = [];
+
+          const cssBySelector = css[selector];
+
+          lines.push(`${selector} {`);
+          Object.entries(cssBySelector).forEach(([key, value]) => {
+            lines.push(`  ${key}: ${value};`);
+          });
+          lines.push('}');
+
+          return lines.join('\r\n');
+        })
+        .join('\r\n\r\n');
+
+      writeToFileProcess(destination, `${file}\r\n`);
     });
   }
 
-  if (output.js?.length) {
-    logInfo(`TailwindCSS JS output "${themeName}" theme...`);
-    const options = output.js.filter((v) => v.destination) as OutputOptions;
+  if (output.tailwind?.length) {
+    logInfo(`TailwindCSS output "${themeName}" theme...`);
+    const options = output.tailwind.filter(
+      (v) => v.destination,
+    ) as OutputOptions;
 
     options.forEach(({ destination, absolute }) => {
-      const tailwindConfig = themeManager.tailwindConfig(
-        typeof absolute === 'boolean' ? absolute : globalAbsolute,
+      const css: CSS = cleanMergeObject(
+        {
+          '@theme': {
+            '--color-*': 'initial',
+            '--font-*': 'initial',
+            '--text-*': 'initial',
+            '--font-weight-*': 'initial',
+            '--tracking-*': 'initial',
+            '--leading-*': 'initial',
+            '--spacing-*': 'initial',
+            '--radius-*': 'initial',
+          },
+        },
+        themeManager.tailwindCSS(
+          typeof absolute === 'boolean' ? absolute : globalAbsolute,
+        ),
       );
 
-      const file = `export const theme = ${JSON.stringify(tailwindConfig, null, 2)}\r\n`;
-      writeToFileProcess(destination, file);
-    });
-  }
+      const selectors = Object.keys(css)
+        .filter((v) => v)
+        .sort((a, b) => a.localeCompare(b));
 
-  if (output.ts?.length) {
-    logInfo(`TailwindCSS TS output "${themeName}" theme...`);
-    const options = output.ts.filter((v) => v.destination) as OutputOptions;
+      const file = [
+        '@import "tailwindcss";',
+        ...selectors
+          .filter((s) => css[s])
+          .map((selector) => {
+            const lines: string[] = [];
 
-    options.forEach(({ destination, absolute }) => {
-      const tailwindConfig = themeManager.tailwindConfig(
-        typeof absolute === 'boolean' ? absolute : globalAbsolute,
-      );
+            const cssBySelector = css[selector];
 
-      const file = `export const theme = ${JSON.stringify(tailwindConfig, null, 2)} as const;\r\n`;
-      writeToFileProcess(destination, file);
-    });
-  }
+            lines.push(`${selector} {`);
+            Object.entries(cssBySelector).forEach(([key, value]) => {
+              lines.push(`  ${key}: ${value};`);
+            });
+            lines.push('}');
 
-  if (output.json?.length) {
-    logInfo(`TailwindCSS JSON output "${themeName}" theme...`);
-    const options = output.json.filter((v) => v.destination) as OutputOptions;
+            return lines.join('\r\n');
+          }),
+      ].join('\r\n\r\n');
 
-    options.forEach(({ destination, absolute }) => {
-      const tailwindConfig = themeManager.tailwindConfig(
-        typeof absolute === 'boolean' ? absolute : globalAbsolute,
-      );
-
-      const file = `${JSON.stringify(tailwindConfig, null, 2)}\r\n`;
-      writeToFileProcess(destination, file);
+      writeToFileProcess(destination, `${file}\r\n`);
     });
   }
 };
@@ -169,19 +203,19 @@ const outputThemes = (
   themeManagers: [string, ThemeManager][],
 ) => {
   themes.forEach(([themeName, themeConfig]) => {
-    const themeManger = themeManagers.find((v) => v[0] === themeName);
-    if (!themeManger) {
+    const themeManager = themeManagers.find((v) => v[0] === themeName);
+    if (!themeManager) {
       logError(`Fail find "${themeName}" theme manager`);
       process.exit(0);
     }
     const output = themeConfig._output;
-    if (
-      output.css?.length ||
-      output.js?.length ||
-      output.json?.length ||
-      output.ts?.length
-    ) {
-      outputTheme(globalAbsolute, themeName.toString(), themeManger[1], output);
+    if (output.css?.length || output.tailwind?.length) {
+      outputTheme(
+        globalAbsolute,
+        themeName.toString(),
+        themeManager[1],
+        output,
+      );
     }
   });
 };
@@ -204,74 +238,91 @@ const outputAll = (
     const options = output.css.filter((v) => v.destination) as OutputOptions;
 
     options.forEach(({ destination, absolute }) => {
-      const file = themeManagers
-        .map(
-          (themeManager) =>
-            `${themeManager.css(typeof absolute === 'boolean' ? absolute : globalAbsolute).join('\r\n')}\r\n`,
-        )
-        .join('\r\n');
-
-      writeToFileProcess(destination, file);
-    });
-  }
-
-  if (output.js.length) {
-    logInfo(`TailwindCSS JS output all themes...`);
-    const options = output.js.filter((v) => v.destination) as OutputOptions;
-
-    options.forEach(({ destination, absolute }) => {
-      let tailwindConfig: TailwindConfig = {};
-      tailwindConfig = merge(
-        tailwindConfig,
+      const css: CSS = cleanMergeObject(
+        {},
         ...themeManagers.map((themeManager) =>
-          themeManager.tailwindConfig(
+          themeManager.css(
             typeof absolute === 'boolean' ? absolute : globalAbsolute,
           ),
         ),
       );
 
-      const file = `export const theme = ${JSON.stringify(tailwindConfig, null, 2)}\r\n`;
-      writeToFileProcess(destination, file);
+      const selectors = Object.keys(css)
+        .filter((v) => v)
+        .sort((a, b) => a.localeCompare(b));
+
+      const file = selectors
+        .filter((s) => css[s])
+        .map((selector) => {
+          const lines: string[] = [];
+
+          const cssBySelector = css[selector];
+
+          lines.push(`${selector} {`);
+          Object.entries(cssBySelector).forEach(([key, value]) => {
+            lines.push(`  ${key}: ${value};`);
+          });
+          lines.push('}');
+
+          return lines.join('\r\n');
+        })
+        .join('\r\n\r\n');
+
+      writeToFileProcess(destination, `${file}\r\n`);
     });
   }
 
-  if (output.ts.length) {
-    logInfo(`TailwindCSS TS output all themes...`);
-    const options = output.ts.filter((v) => v.destination) as OutputOptions;
+  if (output.tailwind.length) {
+    logInfo(`TailwindCSS output all themes...`);
+    const options = output.tailwind.filter(
+      (v) => v.destination,
+    ) as OutputOptions;
 
     options.forEach(({ destination, absolute }) => {
-      let tailwindConfig: TailwindConfig = {};
-      tailwindConfig = merge(
-        tailwindConfig,
+      const css: CSS = cleanMergeObject(
+        {
+          '@theme': {
+            '--color-*': 'initial',
+            '--font-*': 'initial',
+            '--text-*': 'initial',
+            '--font-weight-*': 'initial',
+            '--tracking-*': 'initial',
+            '--leading-*': 'initial',
+            '--spacing-*': 'initial',
+            '--radius-*': 'initial',
+          },
+        },
         ...themeManagers.map((themeManager) =>
-          themeManager.tailwindConfig(
+          themeManager.tailwindCSS(
             typeof absolute === 'boolean' ? absolute : globalAbsolute,
           ),
         ),
       );
 
-      const file = `export const theme = ${JSON.stringify(tailwindConfig, null, 2)} as const;\r\n`;
-      writeToFileProcess(destination, file);
-    });
-  }
+      const selectors = Object.keys(css)
+        .filter((v) => v)
+        .sort((a, b) => a.localeCompare(b));
 
-  if (output.json.length) {
-    logInfo(`TailwindCSS JSON output all themes...`);
-    const options = output.json.filter((v) => v.destination) as OutputOptions;
+      const file = [
+        '@import "tailwindcss";',
+        ...selectors
+          .filter((s) => css[s])
+          .map((selector) => {
+            const lines: string[] = [];
 
-    options.forEach(({ destination, absolute }) => {
-      let tailwindConfig: TailwindConfig = {};
-      tailwindConfig = merge(
-        tailwindConfig,
-        ...themeManagers.map((themeManager) =>
-          themeManager.tailwindConfig(
-            typeof absolute === 'boolean' ? absolute : globalAbsolute,
-          ),
-        ),
-      );
+            const cssBySelector = css[selector];
 
-      const file = `${JSON.stringify(tailwindConfig, null, 2)}\r\n`;
-      writeToFileProcess(destination, file);
+            lines.push(`${selector} {`);
+            Object.entries(cssBySelector).forEach(([key, value]) => {
+              lines.push(`  ${key}: ${value};`);
+            });
+            lines.push('}');
+
+            return lines.join('\r\n');
+          }),
+      ].join('\r\n\r\n');
+
+      writeToFileProcess(destination, `${file}\r\n`);
     });
   }
 };
@@ -300,12 +351,7 @@ export const applyGenerateCommand = (cli: Command) => {
       const themeManagers = loadThemesTokensProcess(themesConfig, sortedThemes);
 
       outputThemes(config.absolute, sortedThemes, themeManagers);
-      if (
-        config.output.all.css.length ||
-        config.output.all.js.length ||
-        config.output.all.json.length ||
-        config.output.all.ts.length
-      ) {
+      if (config.output.all.css.length || config.output.all.tailwind.length) {
         outputAll(
           config.absolute,
           config.output.all,

@@ -1,14 +1,17 @@
 import { DesignTokenType } from '@/types/design-token-type';
-import { TailwindConfig } from '@/types/tailwind';
 import { Err, Ok, Result } from '@bruhabruh/type-safe';
-import { DesignToken } from '../design-token';
+import { DesignToken, DesignTokenArgs } from '../design-token';
 
 export class LineHeightDesignToken extends DesignToken {
-  static type: DesignTokenType = 'line-height' as const;
+  static type: DesignTokenType = 'leading' as const;
   #cssVariablePattern = /var\([^)]+\)/g;
 
-  constructor({ prefix = '' }: { prefix?: string } = {}) {
-    super({ type: LineHeightDesignToken.type, prefix });
+  constructor({ prefix = '' }: Partial<DesignTokenArgs<'prefix'>> = {}) {
+    super({
+      name: LineHeightDesignToken.name,
+      type: LineHeightDesignToken.type,
+      prefix,
+    });
     this.addToken('none', '1');
     this.addToken('tight', '1.25');
     this.addToken('snug', '1.375');
@@ -32,7 +35,6 @@ export class LineHeightDesignToken extends DesignToken {
       );
     }
     this.addToken(name, calculatedValue.unwrap(), {
-      humanReadableValue: this.changeRemToPx(calculatedValue.unwrap()).unwrap(),
       css: {
         key: [name],
         value: calculatedValue.unwrap(),
@@ -41,23 +43,9 @@ export class LineHeightDesignToken extends DesignToken {
     return Ok(true);
   }
 
-  override tailwindConfig(absolute: boolean): TailwindConfig {
-    const lineHeight: Record<string, string> = {};
-
-    this.tokens.forEach((token) => {
-      lineHeight[token.name] = token.toTailwindString({ absolute });
-    });
-
-    return {
-      theme: {
-        lineHeight,
-      },
-    };
-  }
-
   override resolveAbsoluteValue(value: string): string {
     if (!(value.startsWith('var(') && value.endsWith(')'))) return value;
-    const cssVar = value.slice(4, -1);
+    const cssVar = value.slice(4, -1).split(',')[0];
     const token = this.tokens.find((t) =>
       t.css.isSomeAnd((css) => css.key === cssVar),
     );

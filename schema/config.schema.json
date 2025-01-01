@@ -46,67 +46,25 @@
                   "description": "CSS output options.\nDefault: []",
                   "default": []
                 },
-                "json": {
+                "tailwind": {
                   "type": "array",
                   "items": {
                     "type": "object",
                     "properties": {
                       "destination": {
                         "type": ["string", "null"],
-                        "description": "TailwindCSS JSON output path of theme.\nOptional"
+                        "description": "TailwindCSS output path of theme.\nOptional"
                       },
                       "absolute": {
                         "type": ["boolean", "null"],
-                        "description": "TailwindCSS JSON output w/ absolute values.\nOptional"
+                        "description": "TailwindCSS output w/ absolute values.\nOptional"
                       }
                     },
                     "additionalProperties": false,
-                    "description": "TailwindCSS JSON output options.\nDefault: {}",
+                    "description": "TailwindCSS output options.\nDefault: {}",
                     "default": {}
                   },
                   "description": "TailwindCSS JSON output options.\nDefault: []",
-                  "default": []
-                },
-                "js": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "destination": {
-                        "type": ["string", "null"],
-                        "description": "TailwindCSS JS output path of theme.\nOptional"
-                      },
-                      "absolute": {
-                        "type": ["boolean", "null"],
-                        "description": "TailwindCSS JS output w/ absolute values.\nOptional"
-                      }
-                    },
-                    "additionalProperties": false,
-                    "description": "TailwindCSS JS output options.\nDefault: {}",
-                    "default": {}
-                  },
-                  "description": "TailwindCSS JS output options.\nDefault: []",
-                  "default": []
-                },
-                "ts": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "destination": {
-                        "type": ["string", "null"],
-                        "description": "TailwindCSS TS output path of theme.\nOptional"
-                      },
-                      "absolute": {
-                        "type": ["boolean", "null"],
-                        "description": "TailwindCSS TS output w/ absolute values.\\nOptional"
-                      }
-                    },
-                    "additionalProperties": false,
-                    "description": "TailwindCSS TS output options.\nDefault: {}",
-                    "default": {}
-                  },
-                  "description": "TailwindCSS TS output options.\nDefault: []",
                   "default": []
                 }
               },

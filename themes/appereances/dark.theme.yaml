@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=../../../theme/schema/theme-config.schema.json
+# yaml-language-server: $schema=../../schema/theme-config.schema.json
 
 dependencies:
   - core

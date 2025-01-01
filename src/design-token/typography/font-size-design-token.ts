@@ -1,14 +1,17 @@
 import { DesignTokenType } from '@/types/design-token-type';
-import { TailwindConfig } from '@/types/tailwind';
 import { Err, Ok, Result } from '@bruhabruh/type-safe';
-import { DesignToken } from '../design-token';
+import { DesignToken, DesignTokenArgs } from '../design-token';
 
 export class FontSizeDesignToken extends DesignToken {
-  static type: DesignTokenType = 'font-size' as const;
+  static type: DesignTokenType = 'text' as const;
   #cssVariablePattern = /var\([^)]+\)/g;
 
-  constructor({ prefix = '' }: { prefix?: string } = {}) {
-    super({ type: FontSizeDesignToken.type, prefix });
+  constructor({ prefix = '' }: Partial<DesignTokenArgs<'prefix'>> = {}) {
+    super({
+      name: FontSizeDesignToken.name,
+      type: FontSizeDesignToken.type,
+      prefix,
+    });
   }
 
   addFontSize(name: string, fontSize: string): Result<true, string> {
@@ -26,7 +29,6 @@ export class FontSizeDesignToken extends DesignToken {
       );
     }
     this.addToken(name, calculatedValue.unwrap(), {
-      humanReadableValue: this.changeRemToPx(calculatedValue.unwrap()).unwrap(),
       css: {
         key: [name],
         value: calculatedValue.unwrap(),
@@ -35,23 +37,9 @@ export class FontSizeDesignToken extends DesignToken {
     return Ok(true);
   }
 
-  override tailwindConfig(absolute: boolean): TailwindConfig {
-    const fontSize: Record<string, string> = {};
-
-    this.tokens.forEach((token) => {
-      fontSize[token.name] = token.toTailwindString({ absolute });
-    });
-
-    return {
-      theme: {
-        fontSize,
-      },
-    };
-  }
-
   override resolveAbsoluteValue(value: string): string {
     if (!(value.startsWith('var(') && value.endsWith(')'))) return value;
-    const cssVar = value.slice(4, -1);
+    const cssVar = value.slice(4, -1).split(',')[0];
     const token = this.tokens.find((t) =>
       t.css.isSomeAnd((css) => css.key === cssVar),
     );

@@ -45,33 +45,32 @@
                           "description": "Base color value.\nRequired"
                         },
                         "modifier": {
-                          "anyOf": [
-                            {
-                              "type": "object",
-                              "properties": {
-                                "min": {
-                                  "type": "number",
-                                  "default": 50,
-                                  "description": "Minimal token modifier.\nDefault 50"
-                                },
-                                "max": {
-                                  "type": "number",
-                                  "default": 1000,
-                                  "description": "Maximum token modifier.\nDefault 1000"
-                                },
-                                "step": {
-                                  "type": "number",
-                                  "default": 50,
-                                  "description": "Step for token modifier.\nDefault 50"
-                                }
-                              },
-                              "additionalProperties": false
+                          "type": "object",
+                          "properties": {
+                            "min": {
+                              "type": "number",
+                              "default": 50,
+                              "description": "Minimal token modifier.\nDefault: 50"
                             },
-                            {
-                              "type": "null"
+                            "max": {
+                              "type": "number",
+                              "default": 1000,
+                              "description": "Maximum token modifier.\nDefault: 1000"
+                            },
+                            "step": {
+                              "type": "number",
+                              "default": 50,
+                              "description": "Step for token modifier.\nDefault: 50"
+                            },
+                            "reverse": {
+                              "type": "boolean",
+                              "default": false,
+                              "description": "Reverse colors.\nDefault: false"
                             }
-                          ],
-                          "description": "Modifier generator settings.\nOptional"
+                          },
+                          "additionalProperties": false,
+                          "description": "Modifier generator settings.\nOptional",
+                          "default": {}
                         }
                       },
                       "required": ["base"],
@@ -91,98 +90,7 @@
           "description": "List of Color tokens.\nDefault: []",
           "default": []
         },
-        "background": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string",
-              "description": "Color value or reference like {color.white.100}"
-            },
-            "description": "Background Color token record name to value.\nRequired"
-          },
-          "description": "List of Background Color tokens.\nDefault: []",
-          "default": []
-        },
-        "text": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string",
-              "description": "Color value or reference like {color.white.100}"
-            },
-            "description": "Text Color token record name to value.\nRequired"
-          },
-          "description": "List of Text Color tokens.\nDefault: []",
-          "default": []
-        },
-        "border": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string",
-              "description": "Color value or reference like {color.white.100}"
-            },
-            "description": "Border Color token record name to value.\nRequired"
-          },
-          "description": "List of Border Color tokens.\nDefault: []",
-          "default": []
-        },
-        "ring": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string",
-              "description": "Color value or reference like {color.white.100}"
-            },
-            "description": "Ring Color token record name to value.\nRequired"
-          },
-          "description": "List of Ring Color tokens.\nDefault: []",
-          "default": []
-        },
-        "fill": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string",
-              "description": "Color value or reference like {color.white.100}"
-            },
-            "description": "Fill Color token record name to value.\nRequired"
-          },
-          "description": "List of Fill Color tokens.\nDefault: []",
-          "default": []
-        },
-        "outline": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string",
-              "description": "Color value or reference like {color.white.100}"
-            },
-            "description": "Outline Color token record name to value.\nRequired"
-          },
-          "description": "List of Outline Color tokens.\nDefault: []",
-          "default": []
-        },
-        "stroke": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string",
-              "description": "Color value or reference like {color.white.100}"
-            },
-            "description": "Stroke Color token record name to value.\nRequired"
-          },
-          "description": "List of Stroke Color tokens.\nDefault: []",
-          "default": []
-        },
-        "borderRadius": {
+        "radius": {
           "type": "array",
           "items": {
             "anyOf": [
@@ -190,7 +98,7 @@
                 "type": "object",
                 "additionalProperties": {
                   "type": "string",
-                  "description": "Border Radius value or reference like {border-radius.base}.\nSupport calculation like {border-radius.base} + 2px"
+                  "description": "Border Radius value or reference like {radius.base}.\nSupport calculation like {radius.base} + 2px"
                 },
                 "description": "Border Radius token record name to value.\nRequired"
               },
@@ -296,13 +204,13 @@
           "description": "List of Spacing tokens.\nDefault: []",
           "default": []
         },
-        "fontFamily": {
+        "font": {
           "type": "array",
           "items": {
             "type": "object",
             "additionalProperties": {
               "type": "string",
-              "description": "Font Family value or reference like {font-family.base}"
+              "description": "Font Family value or reference like {font.base}"
             },
             "description": "Font Family token record name to value.\nRequired"
           },
@@ -322,7 +230,7 @@
           "description": "List of Font Weight tokens.\nDefault: []",
           "default": []
         },
-        "lineHeight": {
+        "leading": {
           "type": "array",
           "items": {
             "anyOf": [
@@ -330,7 +238,7 @@
                 "type": "object",
                 "additionalProperties": {
                   "type": "string",
-                  "description": "Line Height value or reference like {line-height.base}"
+                  "description": "Line Height value or reference like {leading.base}"
                 },
                 "description": "Line Height token record name to value.\nRequired"
               },
@@ -379,7 +287,7 @@
           "description": "List of Line Height tokens.\nDefault: []",
           "default": []
         },
-        "fontSize": {
+        "text": {
           "type": "array",
           "items": {
             "anyOf": [
@@ -387,7 +295,7 @@
                 "type": "object",
                 "additionalProperties": {
                   "type": "string",
-                  "description": "Font Size value or reference like {font-size.base}"
+                  "description": "Font Size value or reference like {text.base}"
                 },
                 "description": "Font Size token record name to value.\nRequired"
               },
@@ -436,13 +344,13 @@
           "description": "List of Font Size tokens.\nDefault: []",
           "default": []
         },
-        "letterSpacing": {
+        "tracking": {
           "type": "array",
           "items": {
             "type": "object",
             "additionalProperties": {
               "type": "string",
-              "description": "Letter Spacing value or reference like {letter-spacing.base}"
+              "description": "Letter Spacing value or reference like {tracking.base}"
             },
             "description": "Letter Spacing token record name to value.\nRequired"
           },
@@ -456,25 +364,25 @@
             "additionalProperties": {
               "type": "object",
               "properties": {
-                "fontFamily": {
+                "font": {
                   "type": ["string", "null"],
-                  "description": "Font Family value or reference like {font-family.base}.\nOptional"
+                  "description": "Font Family value or reference like {font.base}.\nOptional"
                 },
                 "fontWeight": {
                   "type": ["string", "null"],
                   "description": "Font Weight value or reference like {font-weight.base}.\nOptional"
                 },
-                "lineHeight": {
+                "leading": {
                   "type": ["string", "null"],
-                  "description": "Line Height value or reference like {line-height.base}.\nOptional"
+                  "description": "Line Height value or reference like {leading.base}.\nOptional"
                 },
-                "fontSize": {
+                "text": {
                   "type": ["string", "null"],
-                  "description": "Font Size value or reference like {font-size.base}.\nOptional"
+                  "description": "Font Size value or reference like {text.base}.\nOptional"
                 },
-                "letterSpacing": {
+                "tracking": {
                   "type": ["string", "null"],
-                  "description": "Letter Spacing value or reference like {letter-spacing.base}.\nOptional"
+                  "description": "Letter Spacing value or reference like {tracking.base}.\nOptional"
                 }
               },
               "additionalProperties": false,
@@ -483,63 +391,6 @@
             "description": "Typography token record name to settings.\nRequired"
           },
           "description": "List of Typography tokens.\nDefault: []",
-          "default": []
-        },
-        "zIndex": {
-          "type": "array",
-          "items": {
-            "anyOf": [
-              {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "string",
-                  "description": "Z-Index value or reference like {z-index.base}"
-                },
-                "description": "Z-Index token record name to value.\nRequired"
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "_generator": {
-                    "type": "object",
-                    "properties": {
-                      "start": {
-                        "type": "number",
-                        "description": "Start number.\nRequired"
-                      },
-                      "end": {
-                        "type": "number",
-                        "description": "End number.\nRequired"
-                      },
-                      "namePattern": {
-                        "type": "string",
-                        "description": "Name pattern.\nDefault: \"{i}\"",
-                        "default": "{i}"
-                      },
-                      "valuePattern": {
-                        "type": "string",
-                        "description": "Value pattern.\nDefault: \"{i}\"",
-                        "default": "{i}"
-                      },
-                      "step": {
-                        "type": "number",
-                        "description": "Step.\nDefault: 1",
-                        "default": 1
-                      }
-                    },
-                    "required": ["start", "end"],
-                    "additionalProperties": false,
-                    "description": "Z-Index token generator.\nRequired"
-                  }
-                },
-                "required": ["_generator"],
-                "additionalProperties": false,
-                "description": "Z-Index token generator.\nRequired"
-              }
-            ],
-            "description": "Z-Index token record name to value.\nRequired"
-          },
-          "description": "List of Z-Index tokens.\nDefault: []",
           "default": []
         }
       },
