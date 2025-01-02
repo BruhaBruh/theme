@@ -1,4 +1,5 @@
 import { DesignTokenType } from '@/types/design-token-type';
+import { TailwindThemeConfig } from '@/types/tailwind';
 import { Err, Ok, Result } from '@bruhabruh/type-safe';
 import { DesignToken, DesignTokenArgs } from '../design-token';
 
@@ -41,6 +42,24 @@ export class LineHeightDesignToken extends DesignToken {
       },
     });
     return Ok(true);
+  }
+
+  override tailwindConfig(absolute: boolean): TailwindThemeConfig {
+    const lineHeight: Record<string, string> = {};
+
+    this.tokens.forEach((token) => {
+      if (absolute || token.css.isNone()) {
+        lineHeight[token.name] = token.value;
+      } else {
+        token.css.inspect((css) => {
+          lineHeight[token.name] = css.keyVariable;
+        });
+      }
+    });
+
+    return {
+      lineHeight,
+    };
   }
 
   override resolveAbsoluteValue(value: string): string {

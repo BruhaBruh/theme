@@ -1,5 +1,7 @@
 import { CSS } from '@/types/css';
+import { TailwindPluginApi, TailwindThemeConfig } from '@/types/tailwind';
 import { Err, Ok, Result } from '@bruhabruh/type-safe';
+import { CSSOutputOptions } from './schema/config';
 import { ThemeConfig } from './schema/theme-config';
 import { ThemesConfig } from './schema/themes-config';
 import { TokenManager } from './token-manager';
@@ -92,11 +94,15 @@ export class ThemeManager {
     return Ok(true);
   }
 
-  css(absolute: boolean): CSS {
-    return this.#tokenManager.css(this.#selector, absolute);
+  css(absolute: boolean, options: CSSOutputOptions): CSS {
+    return this.#tokenManager.css(this.#selector, absolute, options);
   }
 
-  tailwindCSS(absolute: boolean): CSS {
-    return this.#tokenManager.tailwindCSS(this.#selector, absolute);
+  tailwindConfig(absolute: boolean): TailwindThemeConfig {
+    return this.#tokenManager.tailwindConfig(absolute);
+  }
+
+  applyTailwind(absolute: boolean, api: TailwindPluginApi) {
+    return this.#tokenManager.applyTailwind(absolute, api);
   }
 }

@@ -1,4 +1,5 @@
 import { DesignTokenType } from '@/types/design-token-type';
+import { TailwindThemeConfig } from '@/types/tailwind';
 import { DesignToken, DesignTokenArgs } from '../design-token';
 
 export class FontWeightDesignToken extends DesignToken {
@@ -29,6 +30,24 @@ export class FontWeightDesignToken extends DesignToken {
         value: cssValue,
       },
     });
+  }
+
+  override tailwindConfig(absolute: boolean): TailwindThemeConfig {
+    const fontWeight: Record<string, string> = {};
+
+    this.tokens.forEach((token) => {
+      if (absolute || token.css.isNone()) {
+        fontWeight[token.name] = token.value;
+      } else {
+        token.css.inspect((css) => {
+          fontWeight[token.name] = css.keyVariable;
+        });
+      }
+    });
+
+    return {
+      fontWeight,
+    };
   }
 
   override resolveAbsoluteValue(value: string): string {

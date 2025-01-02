@@ -3,6 +3,7 @@ import {
   MaterialColorGenerator,
 } from '@/config/schema/theme-config';
 import { DesignTokenType } from '@/types/design-token-type';
+import { TailwindThemeConfig } from '@/types/tailwind';
 import { Err, Ok, Result } from '@bruhabruh/type-safe';
 import {
   CustomColor,
@@ -42,6 +43,8 @@ export class ColorDesignToken extends DesignToken {
   generateMaterialColors({
     source,
     customColors,
+    disable,
+    overrides,
   }: MaterialColorGenerator): Result<true, string> {
     const sourceColorOklch = this.oklchFromStringWithReferences(source);
     if (sourceColorOklch.isErr()) {
@@ -77,12 +80,20 @@ export class ColorDesignToken extends DesignToken {
       }
     };
 
-    addColor('neutral', (i) => theme.palettes.neutral.getHct(i));
-    addColor('neutral-variant', (i) => theme.palettes.neutralVariant.getHct(i));
-    addColor('primary', (i) => theme.palettes.primary.getHct(i));
-    addColor('secondary', (i) => theme.palettes.secondary.getHct(i));
-    addColor('tertiary', (i) => theme.palettes.tertiary.getHct(i));
-    addColor('critical', (i) => theme.palettes.error.getHct(i));
+    if (!disable.neutral)
+      addColor(overrides.neutral, (i) => theme.palettes.neutral.getHct(i));
+    if (!disable['neutral-variant'])
+      addColor(overrides['neutral-variant'], (i) =>
+        theme.palettes.neutralVariant.getHct(i),
+      );
+    if (!disable.primary)
+      addColor(overrides.primary, (i) => theme.palettes.primary.getHct(i));
+    if (!disable.secondary)
+      addColor(overrides.secondary, (i) => theme.palettes.secondary.getHct(i));
+    if (!disable.tertiary)
+      addColor(overrides.tertiary, (i) => theme.palettes.tertiary.getHct(i));
+    if (!disable.error)
+      addColor(overrides.error, (i) => theme.palettes.error.getHct(i));
     theme.customColors.forEach((customColor) => {
       addColor(customColor.color.name, (i) => {
         const hct = Hct.fromInt(customColor.value);
@@ -116,6 +127,24 @@ export class ColorDesignToken extends DesignToken {
     });
 
     return Ok(true);
+  }
+
+  override tailwindConfig(absolute: boolean): TailwindThemeConfig {
+    const colors: Record<string, string> = {};
+
+    this.tokens.forEach((token) => {
+      if (absolute || token.css.isNone()) {
+        colors[token.name] = token.value;
+      } else {
+        token.css.inspect((css) => {
+          colors[token.name] = css.keyVariable;
+        });
+      }
+    });
+
+    return {
+      colors,
+    };
   }
 
   override resolveAbsoluteValue(value: string): string {

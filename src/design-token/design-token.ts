@@ -1,6 +1,7 @@
 import { Calculator } from '@/lib/calculator';
 import { CSS, CSSVariables } from '@/types/css';
 import { DesignTokenType } from '@/types/design-token-type';
+import { TailwindPluginApi, TailwindThemeConfig } from '@/types/tailwind';
 import {
   Class,
   Err,
@@ -109,7 +110,26 @@ export class DesignToken {
     return Some(token.css.mapOr(token.value, (css) => css.keyVariable));
   }
 
-  cssVariables(absolute: boolean): CSSVariables {
+  css(selector: string, absolute: boolean): CSS {
+    return {
+      [selector]: this.cssVariables(absolute),
+    };
+  }
+
+  tailwindConfig(_absolute: boolean): TailwindThemeConfig {
+    return {};
+  }
+
+  applyTailwind(_absolute: boolean, _api: TailwindPluginApi) {}
+
+  resolveAbsoluteValue(value: string): string {
+    if (this.#designTokenReference.isNone()) {
+      return value;
+    }
+    return this.#designTokenReference.unwrap().resolveAbsoluteValue(value);
+  }
+
+  protected cssVariables(absolute: boolean): CSSVariables {
     const cssVariables: CSSVariables = {};
 
     this.#tokens.forEach((token) => {
@@ -127,43 +147,8 @@ export class DesignToken {
     return cssVariables;
   }
 
-  css(selector: string, absolute: boolean): CSS {
-    return {
-      [selector]: this.cssVariables(absolute),
-    };
-  }
-
-  tailwindCSS(selector: string, absolute: boolean): CSS {
-    const css: CSS = this.css(selector, absolute);
-
-    const addToTheme = (token: TokenValue, value: string) => {
-      css['@theme'] = {
-        ...css['@theme'],
-        [`--${this.#type}-${token.name.replace(/-DEFAULT$/, '').replace(/\./g, '\\.')}`]:
-          value,
-      };
-    };
-
-    this.tokens.forEach((token) => {
-      if (absolute || token.css.isNone()) {
-        addToTheme(token, token.value);
-      } else {
-        addToTheme(token, token.css.unwrap().keyVariable);
-      }
-    });
-
-    return css;
-  }
-
-  resolveAbsoluteValue(value: string): string {
-    if (this.#designTokenReference.isNone()) {
-      return value;
-    }
-    return this.#designTokenReference.unwrap().resolveAbsoluteValue(value);
-  }
-
   protected addToken(
-    name: string,
+    rawName: string,
     value: string,
     {
       css,
@@ -174,6 +159,7 @@ export class DesignToken {
       };
     } = {},
   ) {
+    const name = rawName.replace(/-default$/i, '');
     const tokenIndexToOverride = this.tokens.findIndex((v) => v.name === name);
     if (tokenIndexToOverride) {
       this.tokens.splice(tokenIndexToOverride, 1);

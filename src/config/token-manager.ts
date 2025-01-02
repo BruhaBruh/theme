@@ -9,9 +9,12 @@ import {
   SpacingDesignToken,
   TypographyDesignToken,
 } from '@/design-token';
+import { cleanMergeObject } from '@/lib/clean-merge-object';
 import { CSS } from '@/types/css';
+import { TailwindPluginApi, TailwindThemeConfig } from '@/types/tailwind';
 import { Ok, Result } from '@bruhabruh/type-safe';
 import { merge } from 'ts-deepmerge';
+import { CSSOutputOptions } from './schema/config';
 import { ThemeConfig } from './schema/theme-config';
 
 export class TokenManager {
@@ -44,7 +47,7 @@ export class TokenManager {
     );
   }
 
-  css(selector: string, absolute: boolean): CSS {
+  css(selector: string, absolute: boolean, options: CSSOutputOptions): CSS {
     const css: CSS = {};
 
     return merge(
@@ -57,25 +60,35 @@ export class TokenManager {
       this.#lineHeightDesignToken.css(selector, absolute),
       this.#fontSizeDesignToken.css(selector, absolute),
       this.#letterSpacingDesignToken.css(selector, absolute),
-      this.#typographyDesignToken.css(selector, absolute),
+      options.disableTypography
+        ? {}
+        : this.#typographyDesignToken.css(selector, absolute),
     );
   }
 
-  tailwindCSS(selector: string, absolute: boolean): CSS {
-    const css: CSS = {};
-
-    return merge(
-      css,
-      this.#colorDesignToken.tailwindCSS(selector, absolute),
-      this.#borderRadiusDesignToken.tailwindCSS(selector, absolute),
-      this.#spacingDesignToken.tailwindCSS(selector, absolute),
-      this.#fontFamilyDesignToken.tailwindCSS(selector, absolute),
-      this.#fontWeightDesignToken.tailwindCSS(selector, absolute),
-      this.#lineHeightDesignToken.tailwindCSS(selector, absolute),
-      this.#fontSizeDesignToken.tailwindCSS(selector, absolute),
-      this.#letterSpacingDesignToken.tailwindCSS(selector, absolute),
-      this.#typographyDesignToken.tailwindCSS(selector, absolute),
+  tailwindConfig(absolute: boolean): TailwindThemeConfig {
+    return cleanMergeObject(
+      this.#colorDesignToken.tailwindConfig(absolute),
+      this.#borderRadiusDesignToken.tailwindConfig(absolute),
+      this.#spacingDesignToken.tailwindConfig(absolute),
+      this.#fontFamilyDesignToken.tailwindConfig(absolute),
+      this.#fontWeightDesignToken.tailwindConfig(absolute),
+      this.#lineHeightDesignToken.tailwindConfig(absolute),
+      this.#fontSizeDesignToken.tailwindConfig(absolute),
+      this.#letterSpacingDesignToken.tailwindConfig(absolute),
     );
+  }
+
+  applyTailwind(absolute: boolean, api: TailwindPluginApi) {
+    this.#colorDesignToken.applyTailwind(absolute, api);
+    this.#borderRadiusDesignToken.applyTailwind(absolute, api);
+    this.#spacingDesignToken.applyTailwind(absolute, api);
+    this.#fontFamilyDesignToken.applyTailwind(absolute, api);
+    this.#fontWeightDesignToken.applyTailwind(absolute, api);
+    this.#lineHeightDesignToken.applyTailwind(absolute, api);
+    this.#fontSizeDesignToken.applyTailwind(absolute, api);
+    this.#letterSpacingDesignToken.applyTailwind(absolute, api);
+    this.#typographyDesignToken.applyTailwind(absolute, api);
   }
 
   load(config: ThemeConfig): Result<true, string> {
@@ -196,61 +209,6 @@ export class TokenManager {
         }
       }
     }
-
-    // for (let i = 0; i < configs.length; i++) {
-    //   const config = configs[i];
-    //   const colorNames = Object.keys(config);
-    //   for (let j = 0; j < colorNames.length; j++) {
-    //     const colorName = colorNames[j];
-    //     const colorConfig = config[colorName];
-
-    //     if (typeof colorConfig === 'string') {
-    //       const color = colorConfig;
-    //       this.#colorDesignToken.addColor(colorName, color);
-    //       continue;
-    //     }
-    //     if (typeof colorConfig === 'object' && '_material' in colorConfig) {
-    //       const materialConfig = colorConfig._material;
-
-    //       if (typeof materialConfig === 'string') continue;
-
-    //       const result = this.#colorDesignToken.generateMaterialColor(
-    //         colorName,
-    //         materialConfig,
-    //       );
-    //       if (result.isErr()) {
-    //         return result.mapErr(
-    //           (err) => `Fail generate material color ${colorName}: ${err}`,
-    //         );
-    //       }
-    //       continue;
-    //     }
-
-    //     if (typeof colorConfig === 'object' && '_generator' in colorConfig) {
-    //       const generatorConfig = colorConfig._generator;
-
-    //       if (typeof generatorConfig === 'string') continue;
-
-    //       const { base, modifier } = generatorConfig;
-
-    //       const result = this.#colorDesignToken.generateColor(
-    //         colorName,
-    //         base,
-    //         modifier,
-    //       );
-    //       if (result.isErr()) {
-    //         return result.mapErr(
-    //           (err) => `Fail generate color ${colorName}: ${err}`,
-    //         );
-    //       }
-    //       continue;
-    //     }
-
-    //     Object.entries(colorConfig).forEach(([modifier, value]) => {
-    //       this.#colorDesignToken.addColor(`${colorName}-${modifier}`, value);
-    //     });
-    //   }
-    // }
 
     return Ok(true);
   }

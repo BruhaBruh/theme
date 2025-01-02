@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const outputSchema = z
+export const outputSchema = z
   .object({
     css: z
       .array(
@@ -8,15 +8,18 @@ const outputSchema = z
           .object({
             destination: z
               .string()
-              .describe('CSS output path of theme.\nOptional')
-              .nullish(),
+              .describe('CSS output path of theme.\nRequired'),
             absolute: z
               .boolean()
-              .describe('CSS output w/ absolute values.\nOptional')
-              .nullish(),
+              .default(false)
+              .describe('CSS output w/ absolute values.\nDefault: false'),
+            options: z
+              .object({
+                disableTypography: z.boolean().default(false),
+              })
+              .default({}),
           })
-          .describe('CSS output options.\nDefault: {}')
-          .default({}),
+          .describe('CSS output options.\nRequired'),
       )
       .describe('CSS output options.\nDefault: []')
       .default([]),
@@ -26,21 +29,23 @@ const outputSchema = z
           .object({
             destination: z
               .string()
-              .describe('TailwindCSS output path of theme.\nOptional')
-              .nullish(),
+              .describe('Tailwind output path of theme.\nRequired'),
             absolute: z
               .boolean()
-              .describe('TailwindCSS output w/ absolute values.\nOptional')
-              .nullish(),
+              .default(false)
+              .describe('Tailwind output w/ absolute values.\nDefault: false'),
           })
-          .describe('TailwindCSS output options.\nDefault: {}')
-          .default({}),
+          .describe('Tailwind output options.\nRequired'),
       )
-      .describe('TailwindCSS JSON output options.\nDefault: []')
+      .describe('Tailwind output options.\nDefault: []')
       .default([]),
   })
   .describe('Output for combined all themes.\nDefault: {}')
   .default({});
+
+export type CSSOutputOptions = z.infer<
+  typeof outputSchema
+>['css'][number]['options'];
 
 export const configSchema = z
   .object({

@@ -1,5 +1,6 @@
 import { CSS, CSSVariables } from '@/types/css';
 import { DesignTokenType } from '@/types/design-token-type';
+import { TailwindPluginApi } from '@/types/tailwind';
 import { DesignToken } from '../design-token';
 import { FontFamilyDesignToken } from './font-family-design-token';
 import { FontSizeDesignToken } from './font-size-design-token';
@@ -89,17 +90,18 @@ export class TypographyDesignToken extends DesignToken {
     return css;
   }
 
-  override tailwindCSS(_selector: string, absolute: boolean): CSS {
-    const css: CSS = {};
-
+  override applyTailwind(
+    absolute: boolean,
+    { addUtilities }: TailwindPluginApi,
+  ): void {
     Object.entries(this.#typographies).forEach(([name, typography]) => {
-      css[`@utility typography-${name}`] = this.resolveTypographyCSSVariables(
-        absolute,
-        typography,
-      );
+      addUtilities({
+        [`.typography-${name}`]: this.resolveTypographyCSSVariables(
+          absolute,
+          typography,
+        ),
+      });
     });
-
-    return css;
   }
 
   private resolveTypographyCSSVariables(

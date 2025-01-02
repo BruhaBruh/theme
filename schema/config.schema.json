@@ -31,17 +31,29 @@
                     "type": "object",
                     "properties": {
                       "destination": {
-                        "type": ["string", "null"],
-                        "description": "CSS output path of theme.\nOptional"
+                        "type": "string",
+                        "description": "CSS output path of theme.\nRequired"
                       },
                       "absolute": {
-                        "type": ["boolean", "null"],
-                        "description": "CSS output w/ absolute values.\nOptional"
+                        "type": "boolean",
+                        "default": false,
+                        "description": "CSS output w/ absolute values.\nDefault: false"
+                      },
+                      "options": {
+                        "type": "object",
+                        "properties": {
+                          "disableTypography": {
+                            "type": "boolean",
+                            "default": false
+                          }
+                        },
+                        "additionalProperties": false,
+                        "default": {}
                       }
                     },
+                    "required": ["destination"],
                     "additionalProperties": false,
-                    "description": "CSS output options.\nDefault: {}",
-                    "default": {}
+                    "description": "CSS output options.\nRequired"
                   },
                   "description": "CSS output options.\nDefault: []",
                   "default": []
@@ -52,19 +64,20 @@
                     "type": "object",
                     "properties": {
                       "destination": {
-                        "type": ["string", "null"],
-                        "description": "TailwindCSS output path of theme.\nOptional"
+                        "type": "string",
+                        "description": "Tailwind output path of theme.\nRequired"
                       },
                       "absolute": {
-                        "type": ["boolean", "null"],
-                        "description": "TailwindCSS output w/ absolute values.\nOptional"
+                        "type": "boolean",
+                        "default": false,
+                        "description": "Tailwind output w/ absolute values.\nDefault: false"
                       }
                     },
+                    "required": ["destination"],
                     "additionalProperties": false,
-                    "description": "TailwindCSS output options.\nDefault: {}",
-                    "default": {}
+                    "description": "Tailwind output options.\nRequired"
                   },
-                  "description": "TailwindCSS JSON output options.\nDefault: []",
+                  "description": "Tailwind output options.\nDefault: []",
                   "default": []
                 }
               },

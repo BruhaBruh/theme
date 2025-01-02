@@ -56,6 +56,69 @@
                       "type": "string",
                       "description": "Source color value.\nRequired"
                     },
+                    "disable": {
+                      "type": "object",
+                      "properties": {
+                        "neutral": {
+                          "type": "boolean",
+                          "default": false
+                        },
+                        "neutral-variant": {
+                          "type": "boolean",
+                          "default": false
+                        },
+                        "primary": {
+                          "type": "boolean",
+                          "default": false
+                        },
+                        "secondary": {
+                          "type": "boolean",
+                          "default": false
+                        },
+                        "tertiary": {
+                          "type": "boolean",
+                          "default": false
+                        },
+                        "error": {
+                          "type": "boolean",
+                          "default": false
+                        }
+                      },
+                      "additionalProperties": false,
+                      "default": {}
+                    },
+                    "overrides": {
+                      "type": "object",
+                      "properties": {
+                        "neutral": {
+                          "type": "string",
+                          "default": "neutral"
+                        },
+                        "neutral-variant": {
+                          "type": "string",
+                          "default": "neutral-variant"
+                        },
+                        "primary": {
+                          "type": "string",
+                          "default": "primary"
+                        },
+                        "secondary": {
+                          "type": "string",
+                          "default": "secondary"
+                        },
+                        "tertiary": {
+                          "type": "string",
+                          "default": "tertiary"
+                        },
+                        "error": {
+                          "type": "string",
+                          "default": "critical"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Material color names overrides",
+                      "default": {}
+                    },
                     "customColors": {
                       "type": "array",
                       "items": {

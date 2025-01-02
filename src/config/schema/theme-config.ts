@@ -12,6 +12,27 @@ const baseColorTokens = z
 const materialColorTokensGenerator = z
   .object({
     source: z.string().describe('Source color value.\nRequired'),
+    disable: z
+      .object({
+        neutral: z.boolean().default(false),
+        'neutral-variant': z.boolean().default(false),
+        primary: z.boolean().default(false),
+        secondary: z.boolean().default(false),
+        tertiary: z.boolean().default(false),
+        error: z.boolean().default(false),
+      })
+      .default({}),
+    overrides: z
+      .object({
+        neutral: z.string().default('neutral'),
+        'neutral-variant': z.string().default('neutral-variant'),
+        primary: z.string().default('primary'),
+        secondary: z.string().default('secondary'),
+        tertiary: z.string().default('tertiary'),
+        error: z.string().default('critical'),
+      })
+      .describe('Material color names overrides')
+      .default({}),
     customColors: z
       .array(
         z.object({

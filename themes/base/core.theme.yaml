@@ -5,69 +5,61 @@ selectors:
   - :root
 
 color:
-  material:
-    source: '#3e54cf'
-    customColors:
-      - name: caution
-        value: '#cfc13e'
-  # base:
-  #   - white: "#ffffff"
-  #     some:
-  #       bright: "#ffffff"
-  # generator:
-  #   - neutral:
-  #       base: '#3A4454'
-  #       modifier:
-  #         min: 0
-  #         max: 100
-  #         step: 10
-  #   - blue:
-  #       base: '#2563eb'
-  #       modifier:
-  #         min: 0
-  #         max: 100
-  #         step: 10
-  #   - green:
-  #       base: '#22c55e'
-  #       modifier:
-  #         min: 0
-  #         max: 100
-  #         step: 1
-  #   - yellow:
-  #       base: '#fde047'
-  #       modifier:
-  #         min: 0
-  #         max: 100
-  #         step: 1
-  #   - red:
-  #       base: '#dc2626'
-  #       modifier:
-  #         min: 0
-  #         max: 100
-  #         step: 1
-# spacing:
-#   - base: 0.25rem
-#   - 0: 0px
-#   - _generator:
-#       start: 0.125
-#       end: 0.875
-#       step: 0.125
-#       valuePattern: '{spacing.base} * {i}'
-#   - _generator:
-#       start: 1
-#       end: 16
-#       step: 0.5
-#       valuePattern: '{spacing.base} * {i}'
-#   - _generator:
-#       start: 20
-#       end: 64
-#       step: 4
-#       valuePattern: '{spacing.base} * {i}'
-#   - 72: '{spacing.base} * 72'
-#   - 80: '{spacing.base} * 80'
-#   - 96: '{spacing.base} * 96'
+  generator:
+    - neutral:
+        base: '#3A4454'
+        modifier:
+          min: 0
+          max: 100
+          step: 1
+    - blue:
+        base: '#2563eb'
+        modifier:
+          min: 0
+          max: 100
+          step: 1
+    - green:
+        base: '#22c55e'
+        modifier:
+          min: 0
+          max: 100
+          step: 1
+    - yellow:
+        base: '#fde047'
+        modifier:
+          min: 0
+          max: 100
+          step: 1
+    - red:
+        base: '#dc2626'
+        modifier:
+          min: 0
+          max: 100
+          step: 1
 
-# font:
-#   - sans: 'Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
-#   - serif: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif'
-#   - mono: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
+spacing:
+  - base: 0.25rem
+  - 0: 0px
+  - _generator:
+      start: 0.125
+      end: 0.875
+      step: 0.125
+      valuePattern: '{spacing.base} * {i}'
+  - _generator:
+      start: 1
+      end: 16
+      step: 0.5
+      valuePattern: '{spacing.base} * {i}'
+  - _generator:
+      start: 20
+      end: 64
+      step: 4
+      valuePattern: '{spacing.base} * {i}'
+  - 72: '{spacing.base} * 72'
+  - 80: '{spacing.base} * 80'
+  - 96: '{spacing.base} * 96'
+
+font:
+  - sans: 'Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+  - serif: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif'
+  - mono: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
