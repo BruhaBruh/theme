@@ -11,30 +11,33 @@ describe('line-height-design-token', () => {
     test('css variables', () => {
       lineHeightDesignToken.addLineHeight('1', '0.25rem');
       expect(lineHeightDesignToken.cssVariables(false)).toStrictEqual({
-        '--line-height-1': '0.25rem',
+        '--leading-1': '0.25rem',
       });
     });
 
     test('css', () => {
       lineHeightDesignToken.addLineHeight('1', '0.25rem');
-      expect(lineHeightDesignToken.css(false)).toStrictEqual([
-        '--line-height-1: 0.25rem;',
-      ]);
+      expect(lineHeightDesignToken.css(':root', false)).toStrictEqual({
+        ':root': {
+          '--leading-1': '0.25rem',
+        },
+      });
     });
 
-    test('tailwind config', () => {
+    test('tailwind css', () => {
       lineHeightDesignToken.addLineHeight('1', '0.25rem');
-      expect(lineHeightDesignToken.tailwindConfig(false)).toStrictEqual({
-        theme: {
-          lineHeight: {
-            none: '1',
-            tight: '1.25',
-            snug: '1.375',
-            normal: '1.5',
-            relaxed: '1.625',
-            loose: '2',
-            1: '/* 4px = 0.25rem */ var(--line-height-1)',
-          },
+      expect(lineHeightDesignToken.tailwindCSS(':root', false)).toStrictEqual({
+        ':root': {
+          '--leading-1': '0.25rem',
+        },
+        '@theme': {
+          '--leading-loose': '2',
+          '--leading-none': '1',
+          '--leading-normal': '1.5',
+          '--leading-relaxed': '1.625',
+          '--leading-snug': '1.375',
+          '--leading-tight': '1.25',
+          '--leading-1': 'var(--leading-1, 0.25rem)',
         },
       });
     });
@@ -47,32 +50,37 @@ describe('line-height-design-token', () => {
       test('css variables', () => {
         lineHeightDesignToken.addLineHeight('1', '0.25rem');
         expect(lineHeightDesignToken.cssVariables(false)).toStrictEqual({
-          '--pw-line-height-1': '0.25rem',
+          '--pw-leading-1': '0.25rem',
         });
       });
 
       test('css', () => {
         lineHeightDesignToken.addLineHeight('1', '0.25rem');
-        expect(lineHeightDesignToken.css(false)).toStrictEqual([
-          '--pw-line-height-1: 0.25rem;',
-        ]);
-      });
-
-      test('tailwind config', () => {
-        lineHeightDesignToken.addLineHeight('1', '0.25rem');
-        expect(lineHeightDesignToken.tailwindConfig(false)).toStrictEqual({
-          theme: {
-            lineHeight: {
-              none: '1',
-              tight: '1.25',
-              snug: '1.375',
-              normal: '1.5',
-              relaxed: '1.625',
-              loose: '2',
-              1: '/* 4px = 0.25rem */ var(--pw-line-height-1)',
-            },
+        expect(lineHeightDesignToken.css(':root', false)).toStrictEqual({
+          ':root': {
+            '--pw-leading-1': '0.25rem',
           },
         });
+      });
+
+      test('tailwind css', () => {
+        lineHeightDesignToken.addLineHeight('1', '0.25rem');
+        expect(lineHeightDesignToken.tailwindCSS(':root', false)).toStrictEqual(
+          {
+            ':root': {
+              '--pw-leading-1': '0.25rem',
+            },
+            '@theme': {
+              '--leading-loose': '2',
+              '--leading-none': '1',
+              '--leading-normal': '1.5',
+              '--leading-relaxed': '1.625',
+              '--leading-snug': '1.375',
+              '--leading-tight': '1.25',
+              '--leading-1': 'var(--pw-leading-1, 0.25rem)',
+            },
+          },
+        );
       });
     });
   });
@@ -80,37 +88,41 @@ describe('line-height-design-token', () => {
   describe('add line height w/ reference', () => {
     test('css variables', () => {
       lineHeightDesignToken.addLineHeight('1', '0.25rem');
-      lineHeightDesignToken.addLineHeight('2', '{line-height.1} * 2');
+      lineHeightDesignToken.addLineHeight('2', '{leading.1} * 2');
       expect(lineHeightDesignToken.cssVariables(false)).toStrictEqual({
-        '--line-height-1': '0.25rem',
-        '--line-height-2': '0.5rem',
+        '--leading-1': '0.25rem',
+        '--leading-2': '0.5rem',
       });
     });
 
     test('css', () => {
       lineHeightDesignToken.addLineHeight('1', '0.25rem');
-      lineHeightDesignToken.addLineHeight('2', '{line-height.1} * 2');
-      expect(lineHeightDesignToken.css(false)).toStrictEqual([
-        '--line-height-1: 0.25rem;',
-        '--line-height-2: 0.5rem;',
-      ]);
+      lineHeightDesignToken.addLineHeight('2', '{leading.1} * 2');
+      expect(lineHeightDesignToken.css(':root', false)).toStrictEqual({
+        ':root': {
+          '--leading-1': '0.25rem',
+          '--leading-2': '0.5rem',
+        },
+      });
     });
 
-    test('tailwind config', () => {
+    test('tailwind css', () => {
       lineHeightDesignToken.addLineHeight('1', '0.25rem');
-      lineHeightDesignToken.addLineHeight('2', '{line-height.1} * 2');
-      expect(lineHeightDesignToken.tailwindConfig(false)).toStrictEqual({
-        theme: {
-          lineHeight: {
-            none: '1',
-            tight: '1.25',
-            snug: '1.375',
-            normal: '1.5',
-            relaxed: '1.625',
-            loose: '2',
-            1: '/* 4px = 0.25rem */ var(--line-height-1)',
-            2: '/* 8px = 0.5rem */ var(--line-height-2)',
-          },
+      lineHeightDesignToken.addLineHeight('2', '{leading.1} * 2');
+      expect(lineHeightDesignToken.tailwindCSS(':root', false)).toStrictEqual({
+        ':root': {
+          '--leading-1': '0.25rem',
+          '--leading-2': '0.5rem',
+        },
+        '@theme': {
+          '--leading-loose': '2',
+          '--leading-none': '1',
+          '--leading-normal': '1.5',
+          '--leading-relaxed': '1.625',
+          '--leading-snug': '1.375',
+          '--leading-tight': '1.25',
+          '--leading-1': 'var(--leading-1, 0.25rem)',
+          '--leading-2': 'var(--leading-2, 0.5rem)',
         },
       });
     });
@@ -122,39 +134,45 @@ describe('line-height-design-token', () => {
 
       test('css variables', () => {
         lineHeightDesignToken.addLineHeight('1', '0.25rem');
-        lineHeightDesignToken.addLineHeight('2', '{line-height.1} * 2');
+        lineHeightDesignToken.addLineHeight('2', '{leading.1} * 2');
         expect(lineHeightDesignToken.cssVariables(false)).toStrictEqual({
-          '--pw-line-height-1': '0.25rem',
-          '--pw-line-height-2': '0.5rem',
+          '--pw-leading-1': '0.25rem',
+          '--pw-leading-2': '0.5rem',
         });
       });
 
       test('css', () => {
         lineHeightDesignToken.addLineHeight('1', '0.25rem');
-        lineHeightDesignToken.addLineHeight('2', '{line-height.1} * 2');
-        expect(lineHeightDesignToken.css(false)).toStrictEqual([
-          '--pw-line-height-1: 0.25rem;',
-          '--pw-line-height-2: 0.5rem;',
-        ]);
-      });
-
-      test('tailwind config', () => {
-        lineHeightDesignToken.addLineHeight('1', '0.25rem');
-        lineHeightDesignToken.addLineHeight('2', '{line-height.1} * 2');
-        expect(lineHeightDesignToken.tailwindConfig(false)).toStrictEqual({
-          theme: {
-            lineHeight: {
-              none: '1',
-              tight: '1.25',
-              snug: '1.375',
-              normal: '1.5',
-              relaxed: '1.625',
-              loose: '2',
-              1: '/* 4px = 0.25rem */ var(--pw-line-height-1)',
-              2: '/* 8px = 0.5rem */ var(--pw-line-height-2)',
-            },
+        lineHeightDesignToken.addLineHeight('2', '{leading.1} * 2');
+        expect(lineHeightDesignToken.css(':root', false)).toStrictEqual({
+          ':root': {
+            '--pw-leading-1': '0.25rem',
+            '--pw-leading-2': '0.5rem',
           },
         });
+      });
+
+      test('tailwind css', () => {
+        lineHeightDesignToken.addLineHeight('1', '0.25rem');
+        lineHeightDesignToken.addLineHeight('2', '{leading.1} * 2');
+        expect(lineHeightDesignToken.tailwindCSS(':root', false)).toStrictEqual(
+          {
+            ':root': {
+              '--pw-leading-1': '0.25rem',
+              '--pw-leading-2': '0.5rem',
+            },
+            '@theme': {
+              '--leading-loose': '2',
+              '--leading-none': '1',
+              '--leading-normal': '1.5',
+              '--leading-relaxed': '1.625',
+              '--leading-snug': '1.375',
+              '--leading-tight': '1.25',
+              '--leading-1': 'var(--pw-leading-1, 0.25rem)',
+              '--leading-2': 'var(--pw-leading-2, 0.5rem)',
+            },
+          },
+        );
       });
     });
   });

@@ -11,9 +11,7 @@ describe('config schema', () => {
       output: {
         all: {
           css: [],
-          js: [],
-          json: [],
-          ts: [],
+          tailwind: [],
         },
         themes: {},
       },

@@ -17,7 +17,7 @@ describe('font-family-design-token', () => {
         'serif',
       );
       expect(fontFamilyDesignToken.cssVariables(false)).toStrictEqual({
-        '--font-family-serif':
+        '--font-serif':
           'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
       });
     });
@@ -30,12 +30,15 @@ describe('font-family-design-token', () => {
         'Times',
         'serif',
       );
-      expect(fontFamilyDesignToken.css(false)).toStrictEqual([
-        '--font-family-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;',
-      ]);
+      expect(fontFamilyDesignToken.css(':root', false)).toStrictEqual({
+        ':root': {
+          '--font-serif':
+            'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
+        },
+      });
     });
 
-    test('tailwind config', () => {
+    test('tailwind css', () => {
       fontFamilyDesignToken.addFontFamily(
         'serif',
         'ui-serif, Georgia, Cambria',
@@ -43,12 +46,14 @@ describe('font-family-design-token', () => {
         'Times',
         'serif',
       );
-      expect(fontFamilyDesignToken.tailwindConfig(false)).toStrictEqual({
-        theme: {
-          fontFamily: {
-            serif:
-              '/* ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */ var(--font-family-serif)',
-          },
+      expect(fontFamilyDesignToken.tailwindCSS(':root', false)).toStrictEqual({
+        ':root': {
+          '--font-serif':
+            'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
+        },
+        '@theme': {
+          '--font-serif':
+            'var(--font-serif, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif)',
         },
       });
     });
@@ -67,7 +72,7 @@ describe('font-family-design-token', () => {
           'serif',
         );
         expect(fontFamilyDesignToken.cssVariables(false)).toStrictEqual({
-          '--pw-font-family-serif':
+          '--pw-font-serif':
             'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
         });
       });
@@ -80,12 +85,15 @@ describe('font-family-design-token', () => {
           'Times',
           'serif',
         );
-        expect(fontFamilyDesignToken.css(false)).toStrictEqual([
-          '--pw-font-family-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;',
-        ]);
+        expect(fontFamilyDesignToken.css(':root', false)).toStrictEqual({
+          ':root': {
+            '--pw-font-serif':
+              'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
+          },
+        });
       });
 
-      test('tailwind config', () => {
+      test('tailwind css', () => {
         fontFamilyDesignToken.addFontFamily(
           'serif',
           'ui-serif, Georgia, Cambria',
@@ -93,14 +101,18 @@ describe('font-family-design-token', () => {
           'Times',
           'serif',
         );
-        expect(fontFamilyDesignToken.tailwindConfig(false)).toStrictEqual({
-          theme: {
-            fontFamily: {
-              serif:
-                '/* ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */ var(--pw-font-family-serif)',
+        expect(fontFamilyDesignToken.tailwindCSS(':root', false)).toStrictEqual(
+          {
+            ':root': {
+              '--pw-font-serif':
+                'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
+            },
+            '@theme': {
+              '--font-serif':
+                'var(--pw-font-serif, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif)',
             },
           },
-        });
+        );
       });
     });
   });
@@ -114,14 +126,12 @@ describe('font-family-design-token', () => {
         'Times',
         'serif',
       );
-      fontFamilyDesignToken.addFontFamily(
-        'heading',
-        'Lora, {font-family.serif}',
-      );
+      fontFamilyDesignToken.addFontFamily('heading', 'Lora, {font.serif}');
       expect(fontFamilyDesignToken.cssVariables(false)).toStrictEqual({
-        '--font-family-serif':
+        '--font-serif':
           'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
-        '--font-family-heading': 'Lora, var(--font-family-serif)',
+        '--font-heading':
+          'Lora, var(--font-serif, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif)',
       });
     });
 
@@ -133,17 +143,18 @@ describe('font-family-design-token', () => {
         'Times',
         'serif',
       );
-      fontFamilyDesignToken.addFontFamily(
-        'heading',
-        'Lora, {font-family.serif}',
-      );
-      expect(fontFamilyDesignToken.css(false)).toStrictEqual([
-        '--font-family-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;',
-        '--font-family-heading: Lora, var(--font-family-serif);',
-      ]);
+      fontFamilyDesignToken.addFontFamily('heading', 'Lora, {font.serif}');
+      expect(fontFamilyDesignToken.css(':root', false)).toStrictEqual({
+        ':root': {
+          '--font-serif':
+            'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
+          '--font-heading':
+            'Lora, var(--font-serif, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif)',
+        },
+      });
     });
 
-    test('tailwind config', () => {
+    test('tailwind css', () => {
       fontFamilyDesignToken.addFontFamily(
         'serif',
         'ui-serif, Georgia, Cambria',
@@ -151,18 +162,19 @@ describe('font-family-design-token', () => {
         'Times',
         'serif',
       );
-      fontFamilyDesignToken.addFontFamily(
-        'heading',
-        'Lora, {font-family.serif}',
-      );
-      expect(fontFamilyDesignToken.tailwindConfig(false)).toStrictEqual({
-        theme: {
-          fontFamily: {
-            serif:
-              '/* ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */ var(--font-family-serif)',
-            heading:
-              '/* Lora, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */ var(--font-family-heading)',
-          },
+      fontFamilyDesignToken.addFontFamily('heading', 'Lora, {font.serif}');
+      expect(fontFamilyDesignToken.tailwindCSS(':root', false)).toStrictEqual({
+        ':root': {
+          '--font-serif':
+            'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
+          '--font-heading':
+            'Lora, var(--font-serif, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif)',
+        },
+        '@theme': {
+          '--font-serif':
+            'var(--font-serif, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif)',
+          '--font-heading':
+            'var(--font-heading, Lora, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif)',
         },
       });
     });
@@ -180,14 +192,12 @@ describe('font-family-design-token', () => {
           'Times',
           'serif',
         );
-        fontFamilyDesignToken.addFontFamily(
-          'heading',
-          'Lora, {font-family.serif}',
-        );
+        fontFamilyDesignToken.addFontFamily('heading', 'Lora, {font.serif}');
         expect(fontFamilyDesignToken.cssVariables(false)).toStrictEqual({
-          '--pw-font-family-serif':
+          '--pw-font-serif':
             'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
-          '--pw-font-family-heading': 'Lora, var(--pw-font-family-serif)',
+          '--pw-font-heading':
+            'Lora, var(--pw-font-serif, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif)',
         });
       });
 
@@ -199,17 +209,18 @@ describe('font-family-design-token', () => {
           'Times',
           'serif',
         );
-        fontFamilyDesignToken.addFontFamily(
-          'heading',
-          'Lora, {font-family.serif}',
-        );
-        expect(fontFamilyDesignToken.css(false)).toStrictEqual([
-          '--pw-font-family-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;',
-          '--pw-font-family-heading: Lora, var(--pw-font-family-serif);',
-        ]);
+        fontFamilyDesignToken.addFontFamily('heading', 'Lora, {font.serif}');
+        expect(fontFamilyDesignToken.css(':root', false)).toStrictEqual({
+          ':root': {
+            '--pw-font-serif':
+              'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
+            '--pw-font-heading':
+              'Lora, var(--pw-font-serif, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif)',
+          },
+        });
       });
 
-      test('tailwind config', () => {
+      test('tailwind css', () => {
         fontFamilyDesignToken.addFontFamily(
           'serif',
           'ui-serif, Georgia, Cambria',
@@ -217,20 +228,23 @@ describe('font-family-design-token', () => {
           'Times',
           'serif',
         );
-        fontFamilyDesignToken.addFontFamily(
-          'heading',
-          'Lora, {font-family.serif}',
-        );
-        expect(fontFamilyDesignToken.tailwindConfig(false)).toStrictEqual({
-          theme: {
-            fontFamily: {
-              serif:
-                '/* ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */ var(--pw-font-family-serif)',
-              heading:
-                '/* Lora, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif */ var(--pw-font-family-heading)',
+        fontFamilyDesignToken.addFontFamily('heading', 'Lora, {font.serif}');
+        expect(fontFamilyDesignToken.tailwindCSS(':root', false)).toStrictEqual(
+          {
+            ':root': {
+              '--pw-font-serif':
+                'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
+              '--pw-font-heading':
+                'Lora, var(--pw-font-serif, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif)',
+            },
+            '@theme': {
+              '--font-serif':
+                'var(--pw-font-serif, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif)',
+              '--font-heading':
+                'var(--pw-font-heading, Lora, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif)',
             },
           },
-        });
+        );
       });
     });
   });

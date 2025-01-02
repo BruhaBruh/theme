@@ -11,30 +11,35 @@ describe('letter-spacing-design-token', () => {
     test('css variables', () => {
       letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
       expect(letterSpacingDesignToken.cssVariables(false)).toStrictEqual({
-        '--letter-spacing-xs': '0.75rem',
+        '--tracking-xs': '0.75rem',
       });
     });
 
     test('css', () => {
       letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
-      expect(letterSpacingDesignToken.css(false)).toStrictEqual([
-        '--letter-spacing-xs: 0.75rem;',
-      ]);
+      expect(letterSpacingDesignToken.css(':root', false)).toStrictEqual({
+        ':root': {
+          '--tracking-xs': '0.75rem',
+        },
+      });
     });
 
-    test('tailwind config', () => {
+    test('tailwind css', () => {
       letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
-      expect(letterSpacingDesignToken.tailwindConfig(false)).toStrictEqual({
-        theme: {
-          letterSpacing: {
-            tighter: '-0.05em',
-            tight: '-0.025em',
-            normal: '0em',
-            wide: '0.025em',
-            wider: '0.05em',
-            widest: '0.1em',
-            xs: '/* 12px = 0.75rem */ var(--letter-spacing-xs)',
-          },
+      expect(
+        letterSpacingDesignToken.tailwindCSS(':root', false),
+      ).toStrictEqual({
+        ':root': {
+          '--tracking-xs': '0.75rem',
+        },
+        '@theme': {
+          '--tracking-normal': '0em',
+          '--tracking-tight': '-0.025em',
+          '--tracking-tighter': '-0.05em',
+          '--tracking-wide': '0.025em',
+          '--tracking-wider': '0.05em',
+          '--tracking-widest': '0.1em',
+          '--tracking-xs': 'var(--tracking-xs, 0.75rem)',
         },
       });
     });
@@ -49,30 +54,35 @@ describe('letter-spacing-design-token', () => {
       test('css variables', () => {
         letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
         expect(letterSpacingDesignToken.cssVariables(false)).toStrictEqual({
-          '--pw-letter-spacing-xs': '0.75rem',
+          '--pw-tracking-xs': '0.75rem',
         });
       });
 
       test('css', () => {
         letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
-        expect(letterSpacingDesignToken.css(false)).toStrictEqual([
-          '--pw-letter-spacing-xs: 0.75rem;',
-        ]);
+        expect(letterSpacingDesignToken.css(':root', false)).toStrictEqual({
+          ':root': {
+            '--pw-tracking-xs': '0.75rem',
+          },
+        });
       });
 
-      test('tailwind config', () => {
+      test('tailwind css', () => {
         letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
-        expect(letterSpacingDesignToken.tailwindConfig(false)).toStrictEqual({
-          theme: {
-            letterSpacing: {
-              tighter: '-0.05em',
-              tight: '-0.025em',
-              normal: '0em',
-              wide: '0.025em',
-              wider: '0.05em',
-              widest: '0.1em',
-              xs: '/* 12px = 0.75rem */ var(--pw-letter-spacing-xs)',
-            },
+        expect(
+          letterSpacingDesignToken.tailwindCSS(':root', false),
+        ).toStrictEqual({
+          ':root': {
+            '--pw-tracking-xs': '0.75rem',
+          },
+          '@theme': {
+            '--tracking-normal': '0em',
+            '--tracking-tight': '-0.025em',
+            '--tracking-tighter': '-0.05em',
+            '--tracking-wide': '0.025em',
+            '--tracking-wider': '0.05em',
+            '--tracking-widest': '0.1em',
+            '--tracking-xs': 'var(--pw-tracking-xs, 0.75rem)',
           },
         });
       });
@@ -82,37 +92,52 @@ describe('letter-spacing-design-token', () => {
   describe('add letter spacing w/ reference', () => {
     test('css variables', () => {
       letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
-      letterSpacingDesignToken.addLetterSpacing('sm', '0.75rem + 0.125rem');
+      letterSpacingDesignToken.addLetterSpacing(
+        'sm',
+        '{tracking.xs} + 0.125rem',
+      );
       expect(letterSpacingDesignToken.cssVariables(false)).toStrictEqual({
-        '--letter-spacing-xs': '0.75rem',
-        '--letter-spacing-sm': '0.875rem',
+        '--tracking-xs': '0.75rem',
+        '--tracking-sm': '0.875rem',
       });
     });
 
     test('css', () => {
       letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
-      letterSpacingDesignToken.addLetterSpacing('sm', '0.75rem + 0.125rem');
-      expect(letterSpacingDesignToken.css(false)).toStrictEqual([
-        '--letter-spacing-xs: 0.75rem;',
-        '--letter-spacing-sm: 0.875rem;',
-      ]);
+      letterSpacingDesignToken.addLetterSpacing(
+        'sm',
+        '{tracking.xs} + 0.125rem',
+      );
+      expect(letterSpacingDesignToken.css(':root', false)).toStrictEqual({
+        ':root': {
+          '--tracking-xs': '0.75rem',
+          '--tracking-sm': '0.875rem',
+        },
+      });
     });
 
-    test('tailwind config', () => {
+    test('tailwind css', () => {
       letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
-      letterSpacingDesignToken.addLetterSpacing('sm', '0.75rem + 0.125rem');
-      expect(letterSpacingDesignToken.tailwindConfig(false)).toStrictEqual({
-        theme: {
-          letterSpacing: {
-            tighter: '-0.05em',
-            tight: '-0.025em',
-            normal: '0em',
-            wide: '0.025em',
-            wider: '0.05em',
-            widest: '0.1em',
-            xs: '/* 12px = 0.75rem */ var(--letter-spacing-xs)',
-            sm: '/* 14px = 0.875rem */ var(--letter-spacing-sm)',
-          },
+      letterSpacingDesignToken.addLetterSpacing(
+        'sm',
+        '{tracking.xs} + 0.125rem',
+      );
+      expect(
+        letterSpacingDesignToken.tailwindCSS(':root', false),
+      ).toStrictEqual({
+        ':root': {
+          '--tracking-xs': '0.75rem',
+          '--tracking-sm': '0.875rem',
+        },
+        '@theme': {
+          '--tracking-normal': '0em',
+          '--tracking-tight': '-0.025em',
+          '--tracking-tighter': '-0.05em',
+          '--tracking-wide': '0.025em',
+          '--tracking-wider': '0.05em',
+          '--tracking-widest': '0.1em',
+          '--tracking-xs': 'var(--tracking-xs, 0.75rem)',
+          '--tracking-sm': 'var(--tracking-sm, 0.875rem)',
         },
       });
     });
@@ -126,37 +151,52 @@ describe('letter-spacing-design-token', () => {
 
       test('css variables', () => {
         letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
-        letterSpacingDesignToken.addLetterSpacing('sm', '0.75rem + 0.125rem');
+        letterSpacingDesignToken.addLetterSpacing(
+          'sm',
+          '{tracking.xs} + 0.125rem',
+        );
         expect(letterSpacingDesignToken.cssVariables(false)).toStrictEqual({
-          '--pw-letter-spacing-xs': '0.75rem',
-          '--pw-letter-spacing-sm': '0.875rem',
+          '--pw-tracking-xs': '0.75rem',
+          '--pw-tracking-sm': '0.875rem',
         });
       });
 
       test('css', () => {
         letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
-        letterSpacingDesignToken.addLetterSpacing('sm', '0.75rem + 0.125rem');
-        expect(letterSpacingDesignToken.css(false)).toStrictEqual([
-          '--pw-letter-spacing-xs: 0.75rem;',
-          '--pw-letter-spacing-sm: 0.875rem;',
-        ]);
+        letterSpacingDesignToken.addLetterSpacing(
+          'sm',
+          '{tracking.xs} + 0.125rem',
+        );
+        expect(letterSpacingDesignToken.css(':root', false)).toStrictEqual({
+          ':root': {
+            '--pw-tracking-xs': '0.75rem',
+            '--pw-tracking-sm': '0.875rem',
+          },
+        });
       });
 
-      test('tailwind config', () => {
+      test('tailwind css', () => {
         letterSpacingDesignToken.addLetterSpacing('xs', '0.75rem');
-        letterSpacingDesignToken.addLetterSpacing('sm', '0.75rem + 0.125rem');
-        expect(letterSpacingDesignToken.tailwindConfig(false)).toStrictEqual({
-          theme: {
-            letterSpacing: {
-              tighter: '-0.05em',
-              tight: '-0.025em',
-              normal: '0em',
-              wide: '0.025em',
-              wider: '0.05em',
-              widest: '0.1em',
-              xs: '/* 12px = 0.75rem */ var(--pw-letter-spacing-xs)',
-              sm: '/* 14px = 0.875rem */ var(--pw-letter-spacing-sm)',
-            },
+        letterSpacingDesignToken.addLetterSpacing(
+          'sm',
+          '{tracking.xs} + 0.125rem',
+        );
+        expect(
+          letterSpacingDesignToken.tailwindCSS(':root', false),
+        ).toStrictEqual({
+          ':root': {
+            '--pw-tracking-xs': '0.75rem',
+            '--pw-tracking-sm': '0.875rem',
+          },
+          '@theme': {
+            '--tracking-normal': '0em',
+            '--tracking-tight': '-0.025em',
+            '--tracking-tighter': '-0.05em',
+            '--tracking-wide': '0.025em',
+            '--tracking-wider': '0.05em',
+            '--tracking-widest': '0.1em',
+            '--tracking-xs': 'var(--pw-tracking-xs, 0.75rem)',
+            '--tracking-sm': 'var(--pw-tracking-sm, 0.875rem)',
           },
         });
       });

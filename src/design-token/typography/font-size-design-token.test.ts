@@ -11,24 +11,27 @@ describe('font-size-design-token', () => {
     test('css variables', () => {
       fontSizeDesignToken.addFontSize('xs', '0.75rem');
       expect(fontSizeDesignToken.cssVariables(false)).toStrictEqual({
-        '--font-size-xs': '0.75rem',
+        '--text-xs': '0.75rem',
       });
     });
 
     test('css', () => {
       fontSizeDesignToken.addFontSize('xs', '0.75rem');
-      expect(fontSizeDesignToken.css(false)).toStrictEqual([
-        '--font-size-xs: 0.75rem;',
-      ]);
+      expect(fontSizeDesignToken.css(':root', false)).toStrictEqual({
+        ':root': {
+          '--text-xs': '0.75rem',
+        },
+      });
     });
 
-    test('tailwind config', () => {
+    test('tailwind css', () => {
       fontSizeDesignToken.addFontSize('xs', '0.75rem');
-      expect(fontSizeDesignToken.tailwindConfig(false)).toStrictEqual({
-        theme: {
-          fontSize: {
-            xs: '/* 12px = 0.75rem */ var(--font-size-xs)',
-          },
+      expect(fontSizeDesignToken.tailwindCSS(':root', false)).toStrictEqual({
+        ':root': {
+          '--text-xs': '0.75rem',
+        },
+        '@theme': {
+          '--text-xs': 'var(--text-xs, 0.75rem)',
         },
       });
     });
@@ -41,24 +44,27 @@ describe('font-size-design-token', () => {
       test('css variables', () => {
         fontSizeDesignToken.addFontSize('xs', '0.75rem');
         expect(fontSizeDesignToken.cssVariables(false)).toStrictEqual({
-          '--pw-font-size-xs': '0.75rem',
+          '--pw-text-xs': '0.75rem',
         });
       });
 
       test('css', () => {
         fontSizeDesignToken.addFontSize('xs', '0.75rem');
-        expect(fontSizeDesignToken.css(false)).toStrictEqual([
-          '--pw-font-size-xs: 0.75rem;',
-        ]);
+        expect(fontSizeDesignToken.css(':root', false)).toStrictEqual({
+          ':root': {
+            '--pw-text-xs': '0.75rem',
+          },
+        });
       });
 
-      test('tailwind config', () => {
+      test('tailwind css', () => {
         fontSizeDesignToken.addFontSize('xs', '0.75rem');
-        expect(fontSizeDesignToken.tailwindConfig(false)).toStrictEqual({
-          theme: {
-            fontSize: {
-              xs: '/* 12px = 0.75rem */ var(--pw-font-size-xs)',
-            },
+        expect(fontSizeDesignToken.tailwindCSS(':root', false)).toStrictEqual({
+          ':root': {
+            '--pw-text-xs': '0.75rem',
+          },
+          '@theme': {
+            '--text-xs': 'var(--pw-text-xs, 0.75rem)',
           },
         });
       });
@@ -70,29 +76,33 @@ describe('font-size-design-token', () => {
       fontSizeDesignToken.addFontSize('xs', '0.75rem');
       fontSizeDesignToken.addFontSize('sm', '0.75rem + 0.125rem');
       expect(fontSizeDesignToken.cssVariables(false)).toStrictEqual({
-        '--font-size-xs': '0.75rem',
-        '--font-size-sm': '0.875rem',
+        '--text-xs': '0.75rem',
+        '--text-sm': '0.875rem',
       });
     });
 
     test('css', () => {
       fontSizeDesignToken.addFontSize('xs', '0.75rem');
       fontSizeDesignToken.addFontSize('sm', '0.75rem + 0.125rem');
-      expect(fontSizeDesignToken.css(false)).toStrictEqual([
-        '--font-size-xs: 0.75rem;',
-        '--font-size-sm: 0.875rem;',
-      ]);
+      expect(fontSizeDesignToken.css(':root', false)).toStrictEqual({
+        ':root': {
+          '--text-xs': '0.75rem',
+          '--text-sm': '0.875rem',
+        },
+      });
     });
 
-    test('tailwind config', () => {
+    test('tailwind css', () => {
       fontSizeDesignToken.addFontSize('xs', '0.75rem');
       fontSizeDesignToken.addFontSize('sm', '0.75rem + 0.125rem');
-      expect(fontSizeDesignToken.tailwindConfig(false)).toStrictEqual({
-        theme: {
-          fontSize: {
-            xs: '/* 12px = 0.75rem */ var(--font-size-xs)',
-            sm: '/* 14px = 0.875rem */ var(--font-size-sm)',
-          },
+      expect(fontSizeDesignToken.tailwindCSS(':root', false)).toStrictEqual({
+        ':root': {
+          '--text-xs': '0.75rem',
+          '--text-sm': '0.875rem',
+        },
+        '@theme': {
+          '--text-xs': 'var(--text-xs, 0.75rem)',
+          '--text-sm': 'var(--text-sm, 0.875rem)',
         },
       });
     });
@@ -106,29 +116,33 @@ describe('font-size-design-token', () => {
         fontSizeDesignToken.addFontSize('xs', '0.75rem');
         fontSizeDesignToken.addFontSize('sm', '0.75rem + 0.125rem');
         expect(fontSizeDesignToken.cssVariables(false)).toStrictEqual({
-          '--pw-font-size-xs': '0.75rem',
-          '--pw-font-size-sm': '0.875rem',
+          '--pw-text-xs': '0.75rem',
+          '--pw-text-sm': '0.875rem',
         });
       });
 
       test('css', () => {
         fontSizeDesignToken.addFontSize('xs', '0.75rem');
         fontSizeDesignToken.addFontSize('sm', '0.75rem + 0.125rem');
-        expect(fontSizeDesignToken.css(false)).toStrictEqual([
-          '--pw-font-size-xs: 0.75rem;',
-          '--pw-font-size-sm: 0.875rem;',
-        ]);
+        expect(fontSizeDesignToken.css(':root', false)).toStrictEqual({
+          ':root': {
+            '--pw-text-xs': '0.75rem',
+            '--pw-text-sm': '0.875rem',
+          },
+        });
       });
 
-      test('tailwind config', () => {
+      test('tailwind css', () => {
         fontSizeDesignToken.addFontSize('xs', '0.75rem');
         fontSizeDesignToken.addFontSize('sm', '0.75rem + 0.125rem');
-        expect(fontSizeDesignToken.tailwindConfig(false)).toStrictEqual({
-          theme: {
-            fontSize: {
-              xs: '/* 12px = 0.75rem */ var(--pw-font-size-xs)',
-              sm: '/* 14px = 0.875rem */ var(--pw-font-size-sm)',
-            },
+        expect(fontSizeDesignToken.tailwindCSS(':root', false)).toStrictEqual({
+          ':root': {
+            '--pw-text-xs': '0.75rem',
+            '--pw-text-sm': '0.875rem',
+          },
+          '@theme': {
+            '--text-xs': 'var(--pw-text-xs, 0.75rem)',
+            '--text-sm': 'var(--pw-text-sm, 0.875rem)',
           },
         });
       });

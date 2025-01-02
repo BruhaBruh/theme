@@ -76,12 +76,14 @@ export class TypographyDesignToken extends DesignToken {
     this.#typographies[name] = newTypography;
   }
 
-  override css(selector: string, absolute: boolean): CSS {
+  override css(_selector: string, absolute: boolean): CSS {
     const css: CSS = {};
 
     Object.entries(this.#typographies).forEach(([name, typography]) => {
-      css[`.typography-${name}:where(${selector}, ${selector} *)`] =
-        this.resolveTypographyCSSVariables(absolute, typography);
+      css[`.typography-${name}`] = this.resolveTypographyCSSVariables(
+        absolute,
+        typography,
+      );
     });
 
     return css;

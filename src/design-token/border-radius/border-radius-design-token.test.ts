@@ -11,28 +11,33 @@ describe('border-radius-design-token', () => {
     test('css variables', () => {
       borderRadiusDesignToken.addBorderRadius('base', '1rem');
       expect(borderRadiusDesignToken.cssVariables(false)).toStrictEqual({
-        '--border-radius-base': '1rem',
+        '--radius-base': '1rem',
       });
     });
 
     test('css', () => {
       borderRadiusDesignToken.addBorderRadius('base', '1rem');
-      expect(borderRadiusDesignToken.css(false)).toStrictEqual([
-        '--border-radius-base: 1rem;',
-      ]);
-    });
-
-    test('tailwind config', () => {
-      borderRadiusDesignToken.addBorderRadius('base', '1rem');
-      expect(borderRadiusDesignToken.tailwindConfig(false)).toStrictEqual({
-        theme: {
-          borderRadius: {
-            base: '/* 16px = 1rem */ var(--border-radius-base)',
-            full: '9999px',
-            none: '0px',
-          },
+      expect(borderRadiusDesignToken.css(':root', false)).toStrictEqual({
+        ':root': {
+          '--radius-base': '1rem',
         },
       });
+    });
+
+    test('tailwind css', () => {
+      borderRadiusDesignToken.addBorderRadius('base', '1rem');
+      expect(borderRadiusDesignToken.tailwindCSS(':root', false)).toStrictEqual(
+        {
+          ':root': {
+            '--radius-base': '1rem',
+          },
+          '@theme': {
+            '--radius-base': 'var(--radius-base, 1rem)',
+            '--radius-full': '9999px',
+            '--radius-none': '0px',
+          },
+        },
+      );
     });
 
     describe('with prefix', () => {
@@ -43,26 +48,31 @@ describe('border-radius-design-token', () => {
       test('css variables', () => {
         borderRadiusDesignToken.addBorderRadius('base', '1rem');
         expect(borderRadiusDesignToken.cssVariables(false)).toStrictEqual({
-          '--pw-border-radius-base': '1rem',
+          '--pw-radius-base': '1rem',
         });
       });
 
       test('css', () => {
         borderRadiusDesignToken.addBorderRadius('base', '1rem');
-        expect(borderRadiusDesignToken.css(false)).toStrictEqual([
-          '--pw-border-radius-base: 1rem;',
-        ]);
+        expect(borderRadiusDesignToken.css(':root', false)).toStrictEqual({
+          ':root': {
+            '--pw-radius-base': '1rem',
+          },
+        });
       });
 
-      test('tailwind config', () => {
+      test('tailwind css', () => {
         borderRadiusDesignToken.addBorderRadius('base', '1rem');
-        expect(borderRadiusDesignToken.tailwindConfig(false)).toStrictEqual({
-          theme: {
-            borderRadius: {
-              base: '/* 16px = 1rem */ var(--pw-border-radius-base)',
-              full: '9999px',
-              none: '0px',
-            },
+        expect(
+          borderRadiusDesignToken.tailwindCSS(':root', false),
+        ).toStrictEqual({
+          ':root': {
+            '--pw-radius-base': '1rem',
+          },
+          '@theme': {
+            '--radius-base': 'var(--pw-radius-base, 1rem)',
+            '--radius-full': '9999px',
+            '--radius-none': '0px',
           },
         });
       });
@@ -72,44 +82,41 @@ describe('border-radius-design-token', () => {
   describe('add border radius w/ reference', () => {
     test('css variables', () => {
       borderRadiusDesignToken.addBorderRadius('base', '1rem');
-      borderRadiusDesignToken.addBorderRadius(
-        'sm',
-        '{border-radius.base} - 4px',
-      );
+      borderRadiusDesignToken.addBorderRadius('sm', '{radius.base} - 4px');
       expect(borderRadiusDesignToken.cssVariables(false)).toStrictEqual({
-        '--border-radius-base': '1rem',
-        '--border-radius-sm': '0.75rem',
+        '--radius-base': '1rem',
+        '--radius-sm': '0.75rem',
       });
     });
 
     test('css', () => {
       borderRadiusDesignToken.addBorderRadius('base', '1rem');
-      borderRadiusDesignToken.addBorderRadius(
-        'sm',
-        '{border-radius.base} - 4px',
-      );
-      expect(borderRadiusDesignToken.css(false)).toStrictEqual([
-        '--border-radius-base: 1rem;',
-        '--border-radius-sm: 0.75rem;',
-      ]);
-    });
-
-    test('tailwind config', () => {
-      borderRadiusDesignToken.addBorderRadius('base', '1rem');
-      borderRadiusDesignToken.addBorderRadius(
-        'sm',
-        '{border-radius.base} - 4px',
-      );
-      expect(borderRadiusDesignToken.tailwindConfig(false)).toStrictEqual({
-        theme: {
-          borderRadius: {
-            base: '/* 16px = 1rem */ var(--border-radius-base)',
-            sm: '/* 12px = 0.75rem */ var(--border-radius-sm)',
-            full: '9999px',
-            none: '0px',
-          },
+      borderRadiusDesignToken.addBorderRadius('sm', '{radius.base} - 4px');
+      expect(borderRadiusDesignToken.css(':root', false)).toStrictEqual({
+        ':root': {
+          '--radius-base': '1rem',
+          '--radius-sm': '0.75rem',
         },
       });
+    });
+
+    test('tailwind css', () => {
+      borderRadiusDesignToken.addBorderRadius('base', '1rem');
+      borderRadiusDesignToken.addBorderRadius('sm', '{radius.base} - 4px');
+      expect(borderRadiusDesignToken.tailwindCSS(':root', false)).toStrictEqual(
+        {
+          ':root': {
+            '--radius-base': '1rem',
+            '--radius-sm': '0.75rem',
+          },
+          '@theme': {
+            '--radius-base': 'var(--radius-base, 1rem)',
+            '--radius-sm': 'var(--radius-sm, 0.75rem)',
+            '--radius-full': '9999px',
+            '--radius-none': '0px',
+          },
+        },
+      );
     });
 
     describe('with prefix', () => {
@@ -119,42 +126,39 @@ describe('border-radius-design-token', () => {
 
       test('css variables', () => {
         borderRadiusDesignToken.addBorderRadius('base', '1rem');
-        borderRadiusDesignToken.addBorderRadius(
-          'sm',
-          '{border-radius.base} - 4px',
-        );
+        borderRadiusDesignToken.addBorderRadius('sm', '{radius.base} - 4px');
         expect(borderRadiusDesignToken.cssVariables(false)).toStrictEqual({
-          '--pw-border-radius-base': '1rem',
-          '--pw-border-radius-sm': '0.75rem',
+          '--pw-radius-base': '1rem',
+          '--pw-radius-sm': '0.75rem',
         });
       });
 
       test('css', () => {
         borderRadiusDesignToken.addBorderRadius('base', '1rem');
-        borderRadiusDesignToken.addBorderRadius(
-          'sm',
-          '{border-radius.base} - 4px',
-        );
-        expect(borderRadiusDesignToken.css(false)).toStrictEqual([
-          '--pw-border-radius-base: 1rem;',
-          '--pw-border-radius-sm: 0.75rem;',
-        ]);
+        borderRadiusDesignToken.addBorderRadius('sm', '{radius.base} - 4px');
+        expect(borderRadiusDesignToken.css(':root', false)).toStrictEqual({
+          ':root': {
+            '--pw-radius-base': '1rem',
+            '--pw-radius-sm': '0.75rem',
+          },
+        });
       });
 
-      test('tailwind config', () => {
+      test('tailwind css', () => {
         borderRadiusDesignToken.addBorderRadius('base', '1rem');
-        borderRadiusDesignToken.addBorderRadius(
-          'sm',
-          '{border-radius.base} - 4px',
-        );
-        expect(borderRadiusDesignToken.tailwindConfig(false)).toStrictEqual({
-          theme: {
-            borderRadius: {
-              base: '/* 16px = 1rem */ var(--pw-border-radius-base)',
-              sm: '/* 12px = 0.75rem */ var(--pw-border-radius-sm)',
-              full: '9999px',
-              none: '0px',
-            },
+        borderRadiusDesignToken.addBorderRadius('sm', '{radius.base} - 4px');
+        expect(
+          borderRadiusDesignToken.tailwindCSS(':root', false),
+        ).toStrictEqual({
+          ':root': {
+            '--pw-radius-base': '1rem',
+            '--pw-radius-sm': '0.75rem',
+          },
+          '@theme': {
+            '--radius-base': 'var(--pw-radius-base, 1rem)',
+            '--radius-sm': 'var(--pw-radius-sm, 0.75rem)',
+            '--radius-full': '9999px',
+            '--radius-none': '0px',
           },
         });
       });

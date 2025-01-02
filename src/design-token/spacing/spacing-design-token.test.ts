@@ -17,18 +17,21 @@ describe('spacing-design-token', () => {
 
     test('css', () => {
       spacingDesignToken.addSpacing('base', '1rem');
-      expect(spacingDesignToken.css(false)).toStrictEqual([
-        '--spacing-base: 1rem;',
-      ]);
+      expect(spacingDesignToken.css(':root', false)).toStrictEqual({
+        ':root': {
+          '--spacing-base': '1rem',
+        },
+      });
     });
 
-    test('tailwind config', () => {
+    test('tailwind css', () => {
       spacingDesignToken.addSpacing('base', '1rem');
-      expect(spacingDesignToken.tailwindConfig(false)).toStrictEqual({
-        theme: {
-          spacing: {
-            base: '/* 16px = 1rem */ var(--spacing-base)',
-          },
+      expect(spacingDesignToken.tailwindCSS(':root', false)).toStrictEqual({
+        ':root': {
+          '--spacing-base': '1rem',
+        },
+        '@theme': {
+          '--spacing-base': 'var(--spacing-base, 1rem)',
         },
       });
     });
@@ -47,18 +50,21 @@ describe('spacing-design-token', () => {
 
       test('css', () => {
         spacingDesignToken.addSpacing('base', '1rem');
-        expect(spacingDesignToken.css(false)).toStrictEqual([
-          '--pw-spacing-base: 1rem;',
-        ]);
+        expect(spacingDesignToken.css(':root', false)).toStrictEqual({
+          ':root': {
+            '--pw-spacing-base': '1rem',
+          },
+        });
       });
 
-      test('tailwind config', () => {
+      test('tailwind css', () => {
         spacingDesignToken.addSpacing('base', '1rem');
-        expect(spacingDesignToken.tailwindConfig(false)).toStrictEqual({
-          theme: {
-            spacing: {
-              base: '/* 16px = 1rem */ var(--pw-spacing-base)',
-            },
+        expect(spacingDesignToken.tailwindCSS(':root', false)).toStrictEqual({
+          ':root': {
+            '--pw-spacing-base': '1rem',
+          },
+          '@theme': {
+            '--spacing-base': 'var(--pw-spacing-base, 1rem)',
           },
         });
       });
@@ -78,21 +84,25 @@ describe('spacing-design-token', () => {
     test('css', () => {
       spacingDesignToken.addSpacing('base', '1rem');
       spacingDesignToken.addSpacing('sm', '{spacing.base} - 4px');
-      expect(spacingDesignToken.css(false)).toStrictEqual([
-        '--spacing-base: 1rem;',
-        '--spacing-sm: 0.75rem;',
-      ]);
+      expect(spacingDesignToken.css(':root', false)).toStrictEqual({
+        ':root': {
+          '--spacing-base': '1rem',
+          '--spacing-sm': '0.75rem',
+        },
+      });
     });
 
-    test('tailwind config', () => {
+    test('tailwind css', () => {
       spacingDesignToken.addSpacing('base', '1rem');
       spacingDesignToken.addSpacing('sm', '{spacing.base} - 4px');
-      expect(spacingDesignToken.tailwindConfig(false)).toStrictEqual({
-        theme: {
-          spacing: {
-            base: '/* 16px = 1rem */ var(--spacing-base)',
-            sm: '/* 12px = 0.75rem */ var(--spacing-sm)',
-          },
+      expect(spacingDesignToken.tailwindCSS(':root', false)).toStrictEqual({
+        ':root': {
+          '--spacing-base': '1rem',
+          '--spacing-sm': '0.75rem',
+        },
+        '@theme': {
+          '--spacing-base': 'var(--spacing-base, 1rem)',
+          '--spacing-sm': 'var(--spacing-sm, 0.75rem)',
         },
       });
     });
@@ -114,24 +124,29 @@ describe('spacing-design-token', () => {
       spacingDesignToken.addSpacing('1', '1rem');
       spacingDesignToken.addSpacing('0.5', '{spacing.1} / 2');
       spacingDesignToken.addSpacing('0.25', '{spacing.0.5} / 2');
-      expect(spacingDesignToken.css(false)).toStrictEqual([
-        '--spacing-1: 1rem;',
-        '--spacing-0\\.5: 0.5rem;',
-        '--spacing-0\\.25: 0.25rem;',
-      ]);
+      expect(spacingDesignToken.css(':root', false)).toStrictEqual({
+        ':root': {
+          '--spacing-1': '1rem',
+          '--spacing-0\\.5': '0.5rem',
+          '--spacing-0\\.25': '0.25rem',
+        },
+      });
     });
 
-    test('tailwind config', () => {
+    test('tailwind css', () => {
       spacingDesignToken.addSpacing('1', '1rem');
       spacingDesignToken.addSpacing('0.5', '{spacing.1} / 2');
       spacingDesignToken.addSpacing('0.25', '{spacing.0.5} / 2');
-      expect(spacingDesignToken.tailwindConfig(false)).toStrictEqual({
-        theme: {
-          spacing: {
-            '1': '/* 16px = 1rem */ var(--spacing-1)',
-            '0.5': '/* 8px = 0.5rem */ var(--spacing-0\\.5)',
-            '0.25': '/* 4px = 0.25rem */ var(--spacing-0\\.25)',
-          },
+      expect(spacingDesignToken.tailwindCSS(':root', false)).toStrictEqual({
+        ':root': {
+          '--spacing-1': '1rem',
+          '--spacing-0\\.5': '0.5rem',
+          '--spacing-0\\.25': '0.25rem',
+        },
+        '@theme': {
+          '--spacing-1': 'var(--spacing-1, 1rem)',
+          '--spacing-0\\.5': 'var(--spacing-0\\.5, 0.5rem)',
+          '--spacing-0\\.25': 'var(--spacing-0\\.25, 0.25rem)',
         },
       });
     });

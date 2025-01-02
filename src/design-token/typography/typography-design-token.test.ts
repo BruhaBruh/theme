@@ -1,4 +1,3 @@
-import { TailwindPluginApi } from '@/types/tailwind';
 import { FontFamilyDesignToken } from './font-family-design-token';
 import { FontSizeDesignToken } from './font-size-design-token';
 import { FontWeightDesignToken } from './font-weight-design-token';
@@ -8,8 +7,6 @@ import { TypographyDesignToken } from './typography-design-token';
 
 describe('typography-design-token', () => {
   let typographyDesignToken: TypographyDesignToken;
-  let pluginApi: TailwindPluginApi;
-  let utilities: Record<string, Record<string, string>> = {};
 
   beforeEach(() => {
     const fontFamilyDesignToken = new FontFamilyDesignToken();
@@ -32,28 +29,10 @@ describe('typography-design-token', () => {
       fontSizeDesignToken,
       letterSpacingDesignToken,
     );
-    utilities = {};
-    pluginApi = {
-      addUtilities: (c) => {
-        Object.assign(utilities, c);
-      },
-      matchUtilities: () => {},
-      addComponents: () => {},
-      matchComponents: () => {},
-      addBase: () => {},
-      addVariant: () => {},
-      matchVariant: () => {},
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      theme: (_, defaultValue) => defaultValue!,
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      config: (_, defaultValue) => defaultValue!,
-      corePlugins: () => true,
-      e: (v) => v,
-    };
   });
 
   describe('add typography', () => {
-    test('apply tailwind', () => {
+    test('css', () => {
       typographyDesignToken.addTypography('only-font-family', {
         fontFamily: 'serif',
       });
@@ -79,8 +58,7 @@ describe('typography-design-token', () => {
         fontSize: '1rem',
         fontWeight: '500',
       });
-      typographyDesignToken.applyTailwind(false, pluginApi);
-      expect(utilities).toStrictEqual({
+      expect(typographyDesignToken.css(':root', false)).toStrictEqual({
         '.typography-only-font-family': {
           'font-family': 'serif',
         },
@@ -109,7 +87,7 @@ describe('typography-design-token', () => {
       });
     });
 
-    test('css', () => {
+    test('tailwind css', () => {
       typographyDesignToken.addTypography('only-font-family', {
         fontFamily: 'serif',
       });
@@ -135,56 +113,50 @@ describe('typography-design-token', () => {
         fontSize: '1rem',
         fontWeight: '500',
       });
-      expect(typographyDesignToken.css(false)).toStrictEqual([
-        '.typography-only-font-family {',
-        '  font-family: serif;',
-        '}',
-        '',
-        '.typography-only-font-weight {',
-        '  font-weight: 600;',
-        '}',
-        '',
-        '.typography-only-line-height {',
-        '  line-height: 1.5;',
-        '}',
-        '',
-        '.typography-only-font-size {',
-        '  font-size: 0.75rem;',
-        '}',
-        '',
-        '.typography-only-letter-spacing {',
-        '  letter-spacing: -0.01em;',
-        '}',
-        '',
-        '.typography-h1 {',
-        '  font-family: sans-serif;',
-        '  font-weight: 700;',
-        '  font-size: 3rem;',
-        '  letter-spacing: 0.125em;',
-        '}',
-        '',
-        '.typography-p {',
-        '  font-weight: 500;',
-        '  font-size: 1rem;',
-        '}',
-      ]);
+      expect(typographyDesignToken.tailwindCSS(':root', false)).toStrictEqual({
+        '@utility typography-only-font-family': {
+          'font-family': 'serif',
+        },
+        '@utility typography-only-font-weight': {
+          'font-weight': '600',
+        },
+        '@utility typography-only-line-height': {
+          'line-height': '1.5',
+        },
+        '@utility typography-only-font-size': {
+          'font-size': '0.75rem',
+        },
+        '@utility typography-only-letter-spacing': {
+          'letter-spacing': '-0.01em',
+        },
+        '@utility typography-h1': {
+          'font-size': '3rem',
+          'letter-spacing': '0.125em',
+          'font-family': 'sans-serif',
+          'font-weight': '700',
+        },
+        '@utility typography-p': {
+          'font-size': '1rem',
+          'font-weight': '500',
+        },
+      });
     });
   });
 
   describe('add typography w/ reference', () => {
-    test('apply tailwind', () => {
+    test('css', () => {
       typographyDesignToken.addTypography('all', {
-        fontSize: '{font-size.xs}',
-        letterSpacing: '{letter-spacing.normal}',
-        fontFamily: '{font-family.serif}',
+        fontSize: '{text.xs}',
+        letterSpacing: '{tracking.normal}',
+        fontFamily: '{font.serif}',
         fontWeight: '{font-weight.medium}',
-        lineHeight: '{line-height.normal}',
+        lineHeight: '{leading.normal}',
       });
-      typographyDesignToken.applyTailwind(false, pluginApi);
-      expect(utilities).toStrictEqual({
+      expect(typographyDesignToken.css(':root', false)).toStrictEqual({
         '.typography-all': {
-          'font-family': 'var(--font-family-serif)',
-          'font-size': 'var(--font-size-xs)',
+          'font-family':
+            'var(--font-serif, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif)',
+          'font-size': 'var(--text-xs, 0.75rem)',
           'font-weight': '500',
           'letter-spacing': '0em',
           'line-height': '1.5',
@@ -192,23 +164,24 @@ describe('typography-design-token', () => {
       });
     });
 
-    test('css', () => {
+    test('tailwind css', () => {
       typographyDesignToken.addTypography('all', {
-        fontSize: '{font-size.xs}',
-        letterSpacing: '{letter-spacing.normal}',
-        fontFamily: '{font-family.serif}',
+        fontSize: '{text.xs}',
+        letterSpacing: '{tracking.normal}',
+        fontFamily: '{font.serif}',
         fontWeight: '{font-weight.medium}',
-        lineHeight: '{line-height.normal}',
+        lineHeight: '{leading.normal}',
       });
-      expect(typographyDesignToken.css(false)).toStrictEqual([
-        '.typography-all {',
-        '  font-family: var(--font-family-serif);',
-        '  font-weight: 500;',
-        '  line-height: 1.5;',
-        '  font-size: var(--font-size-xs);',
-        '  letter-spacing: 0em;',
-        '}',
-      ]);
+      expect(typographyDesignToken.tailwindCSS(':root', false)).toStrictEqual({
+        '@utility typography-all': {
+          'font-family':
+            'var(--font-serif, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif)',
+          'font-size': 'var(--text-xs, 0.75rem)',
+          'font-weight': '500',
+          'letter-spacing': '0em',
+          'line-height': '1.5',
+        },
+      });
     });
   });
 });
