@@ -146,36 +146,111 @@ export class TokenManager {
       globalTokenManager.#typographyDesignToken;
   }
 
-  private loadColorTokens(configs: ThemeConfig['color']): Result<true, string> {
-    for (let i = 0; i < configs.length; i++) {
-      const config = configs[i];
-      const colorNames = Object.keys(config);
+  private loadColorTokens(config: ThemeConfig['color']): Result<true, string> {
+    for (let i = 0; i < config.base.length; i++) {
+      const baseConfig = config.base[i];
+      const colorNames = Object.keys(baseConfig);
+
       for (let j = 0; j < colorNames.length; j++) {
         const colorName = colorNames[j];
-        const values = config[colorName];
-
-        const generator = values._generator;
-        if (generator && typeof generator !== 'string') {
-          const { base, modifier } = generator;
-
-          const result = this.#colorDesignToken.generateColor(colorName, base, {
-            modifierGenerator: modifier,
-          });
-          if (result.isErr()) {
-            return result.mapErr(
-              (err) => `Fail generate color ${colorName}: ${err}`,
-            );
-          }
+        const colorOrModifiers = baseConfig[colorName];
+        if (typeof colorOrModifiers === 'string') {
+          this.#colorDesignToken.addColor(colorName, colorOrModifiers);
+          continue;
         }
+        const modifiers = Object.keys(colorOrModifiers);
 
-        const withoutGenerator: Record<string, string> = Object.fromEntries(
-          Object.entries(values).filter(([key]) => key !== '_generator'),
-        );
-        Object.entries(withoutGenerator).forEach(([modifier, value]) => {
-          this.#colorDesignToken.addColor(`${colorName}-${modifier}`, value);
-        });
+        for (let k = 0; k < modifiers.length; k++) {
+          const modifier = modifiers[k];
+          const color = colorOrModifiers[modifier];
+          this.#colorDesignToken.addColor(`${colorName}-${modifier}`, color);
+        }
       }
     }
+
+    if (config.material) {
+      const materialConfig = config.material;
+      const result =
+        this.#colorDesignToken.generateMaterialColors(materialConfig);
+      if (result.isErr()) {
+        return result.mapErr((err) => `Fail generate material colors: ${err}`);
+      }
+    }
+
+    for (let i = 0; i < config.generator.length; i++) {
+      const generatorConfig = config.generator[i];
+      const colorNames = Object.keys(generatorConfig);
+
+      for (let j = 0; j < colorNames.length; j++) {
+        const colorName = colorNames[j];
+        const { base, modifier } = generatorConfig[colorName];
+        const result = this.#colorDesignToken.generateColor(
+          colorName,
+          base,
+          modifier,
+        );
+        if (result.isErr()) {
+          return result.mapErr(
+            (err) => `Fail generate color ${colorName}: ${err}`,
+          );
+        }
+      }
+    }
+
+    // for (let i = 0; i < configs.length; i++) {
+    //   const config = configs[i];
+    //   const colorNames = Object.keys(config);
+    //   for (let j = 0; j < colorNames.length; j++) {
+    //     const colorName = colorNames[j];
+    //     const colorConfig = config[colorName];
+
+    //     if (typeof colorConfig === 'string') {
+    //       const color = colorConfig;
+    //       this.#colorDesignToken.addColor(colorName, color);
+    //       continue;
+    //     }
+    //     if (typeof colorConfig === 'object' && '_material' in colorConfig) {
+    //       const materialConfig = colorConfig._material;
+
+    //       if (typeof materialConfig === 'string') continue;
+
+    //       const result = this.#colorDesignToken.generateMaterialColor(
+    //         colorName,
+    //         materialConfig,
+    //       );
+    //       if (result.isErr()) {
+    //         return result.mapErr(
+    //           (err) => `Fail generate material color ${colorName}: ${err}`,
+    //         );
+    //       }
+    //       continue;
+    //     }
+
+    //     if (typeof colorConfig === 'object' && '_generator' in colorConfig) {
+    //       const generatorConfig = colorConfig._generator;
+
+    //       if (typeof generatorConfig === 'string') continue;
+
+    //       const { base, modifier } = generatorConfig;
+
+    //       const result = this.#colorDesignToken.generateColor(
+    //         colorName,
+    //         base,
+    //         modifier,
+    //       );
+    //       if (result.isErr()) {
+    //         return result.mapErr(
+    //           (err) => `Fail generate color ${colorName}: ${err}`,
+    //         );
+    //       }
+    //       continue;
+    //     }
+
+    //     Object.entries(colorConfig).forEach(([modifier, value]) => {
+    //       this.#colorDesignToken.addColor(`${colorName}-${modifier}`, value);
+    //     });
+    //   }
+    // }
 
     return Ok(true);
   }

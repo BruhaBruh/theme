@@ -1,5 +1,90 @@
 import { z } from 'zod';
 
+const baseColorTokens = z
+  .record(
+    z
+      .string()
+      .or(z.record(z.string().describe('Color value')))
+      .describe('Color value or Color modifiers record'),
+  )
+  .describe('Color record. Name to value');
+
+const materialColorTokensGenerator = z
+  .object({
+    source: z.string().describe('Source color value.\nRequired'),
+    customColors: z
+      .array(
+        z.object({
+          name: z.string().describe('Color name'),
+          value: z.string().describe('Color value'),
+          blend: z
+            .boolean()
+            .default(false)
+            .describe('Color blend.\nDefault: false'),
+        }),
+      )
+      .default([])
+      .describe('Custom colors settings.\nDefault: []'),
+  })
+  .nullable()
+  .describe('Material color generator options.\nDefault: null')
+  .default(null);
+
+export type MaterialColorGenerator = NonNullable<
+  z.infer<typeof materialColorTokensGenerator>
+>;
+
+const colorTokensGenerator = z
+  .record(
+    z
+      .object({
+        base: z.string().describe('Base color value.\nRequired'),
+        modifier: z
+          .object({
+            min: z
+              .number()
+              .default(50)
+              .describe('Minimal token modifier.\nDefault: 50'),
+            max: z
+              .number()
+              .default(1000)
+              .describe('Maximum token modifier.\nDefault: 1000'),
+            step: z
+              .number()
+              .default(50)
+              .describe('Step for token modifier.\nDefault: 50'),
+            reverse: z
+              .boolean()
+              .default(false)
+              .describe('Reverse colors.\nDefault: false'),
+          })
+          .describe('Modifier generator settings.\nOptional')
+          .default({}),
+      })
+      .describe('Color generator settings.\nRequired'),
+  )
+  .default({})
+  .describe('Color generators by name.\nDefault: {}');
+
+export type ColorGenerator = z.infer<
+  typeof colorTokensGenerator
+>[string]['modifier'];
+
+const colorTokens = z
+  .object({
+    base: z
+      .array(baseColorTokens)
+      .describe('List of color records')
+      .default([]),
+    material: materialColorTokensGenerator,
+    generator: z
+      .array(colorTokensGenerator)
+      .describe('List of color tokens generators')
+      .default([]),
+  })
+  .describe('Color tokens.\nDefault: {}')
+  .default({});
+
 export const themeConfigSchema = z
   .object({
     dependencies: z
@@ -10,56 +95,7 @@ export const themeConfigSchema = z
       .array(z.string())
       .describe('List of CSS selectors.\nDefault: []')
       .default([]),
-    color: z
-      .array(
-        z
-          .record(
-            z
-              .record(z.string().describe('Color value'))
-              .describe('Color token record name to value.\nRequired')
-              .or(
-                z
-                  .object({
-                    _generator: z
-                      .object({
-                        base: z
-                          .string()
-                          .describe('Base color value.\nRequired'),
-                        modifier: z
-                          .object({
-                            min: z
-                              .number()
-                              .default(50)
-                              .describe('Minimal token modifier.\nDefault: 50'),
-                            max: z
-                              .number()
-                              .default(1000)
-                              .describe(
-                                'Maximum token modifier.\nDefault: 1000',
-                              ),
-                            step: z
-                              .number()
-                              .default(50)
-                              .describe(
-                                'Step for token modifier.\nDefault: 50',
-                              ),
-                            reverse: z
-                              .boolean()
-                              .default(false)
-                              .describe('Reverse colors.\nDefault: false'),
-                          })
-                          .describe('Modifier generator settings.\nOptional')
-                          .default({}),
-                      })
-                      .describe('Color generator settings.\nRequired'),
-                  })
-                  .describe('Color token generator.\nRequired'),
-              ),
-          )
-          .describe('Color tokens.\nRequired'),
-      )
-      .describe('List of Color tokens.\nDefault: []')
-      .default([]),
+    color: colorTokens,
     radius: z
       .array(
         z

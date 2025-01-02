@@ -176,20 +176,16 @@ describe('color-design-token', () => {
   describe('generate color', () => {
     test('css variables', () => {
       colorDesignToken.generateColor('neutral', '#292B33', {
-        modifierGenerator: {
-          min: 0,
-          max: 5,
-          step: 1,
-          reverse: true,
-        },
+        min: 0,
+        max: 5,
+        step: 1,
+        reverse: true,
       });
       colorDesignToken.generateColor('neutral-alt', '#292B33', {
-        modifierGenerator: {
-          min: 0,
-          max: 5,
-          step: 1,
-          reverse: false,
-        },
+        min: 0,
+        max: 5,
+        step: 1,
+        reverse: false,
       });
       expect(colorDesignToken.cssVariables(false)).toStrictEqual({
         '--color-neutral-0': '#000000',
@@ -209,20 +205,16 @@ describe('color-design-token', () => {
 
     test('css', () => {
       colorDesignToken.generateColor('neutral', '#292B33', {
-        modifierGenerator: {
-          min: 0,
-          max: 5,
-          step: 1,
-          reverse: true,
-        },
+        min: 0,
+        max: 5,
+        step: 1,
+        reverse: true,
       });
       colorDesignToken.generateColor('neutral-alt', '#292B33', {
-        modifierGenerator: {
-          min: 0,
-          max: 5,
-          step: 1,
-          reverse: false,
-        },
+        min: 0,
+        max: 5,
+        step: 1,
+        reverse: false,
       });
       expect(colorDesignToken.css(':root', false)).toStrictEqual({
         ':root': {
@@ -244,20 +236,16 @@ describe('color-design-token', () => {
 
     test('tailwind css', () => {
       colorDesignToken.generateColor('neutral', '#292B33', {
-        modifierGenerator: {
-          min: 0,
-          max: 5,
-          step: 1,
-          reverse: true,
-        },
+        min: 0,
+        max: 5,
+        step: 1,
+        reverse: true,
       });
       colorDesignToken.generateColor('neutral-alt', '#292B33', {
-        modifierGenerator: {
-          min: 0,
-          max: 5,
-          step: 1,
-          reverse: false,
-        },
+        min: 0,
+        max: 5,
+        step: 1,
+        reverse: false,
       });
       expect(colorDesignToken.tailwindCSS(':root', false)).toStrictEqual({
         ':root': {

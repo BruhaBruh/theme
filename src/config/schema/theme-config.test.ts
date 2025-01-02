@@ -8,7 +8,11 @@ describe('theme-config schema', () => {
       dependencies: [],
       selectors: [],
       radius: [],
-      color: [],
+      color: {
+        base: [],
+        generator: [],
+        material: null,
+      },
       font: [],
       text: [],
       fontWeight: [],

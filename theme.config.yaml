@@ -7,5 +7,5 @@ output:
   all:
     css:
       - destination: ./.generated/theme.css
-    tailwind:
-      - destination: ./.generated/theme.tailwind.css
+    # tailwind:
+    #   - destination: ./.generated/theme.tailwind.css

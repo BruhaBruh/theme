@@ -21,74 +21,131 @@
           "default": []
         },
         "color": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string",
+                        "description": "Color value"
+                      }
+                    }
+                  ],
+                  "description": "Color value or Color modifiers record"
+                },
+                "description": "Color record. Name to value"
+              },
+              "description": "List of color records",
+              "default": []
+            },
+            "material": {
               "anyOf": [
                 {
                   "type": "object",
-                  "additionalProperties": {
-                    "type": "string",
-                    "description": "Color value"
-                  },
-                  "description": "Color token record name to value.\nRequired"
-                },
-                {
-                  "type": "object",
                   "properties": {
-                    "_generator": {
-                      "type": "object",
-                      "properties": {
-                        "base": {
-                          "type": "string",
-                          "description": "Base color value.\nRequired"
-                        },
-                        "modifier": {
-                          "type": "object",
-                          "properties": {
-                            "min": {
-                              "type": "number",
-                              "default": 50,
-                              "description": "Minimal token modifier.\nDefault: 50"
-                            },
-                            "max": {
-                              "type": "number",
-                              "default": 1000,
-                              "description": "Maximum token modifier.\nDefault: 1000"
-                            },
-                            "step": {
-                              "type": "number",
-                              "default": 50,
-                              "description": "Step for token modifier.\nDefault: 50"
-                            },
-                            "reverse": {
-                              "type": "boolean",
-                              "default": false,
-                              "description": "Reverse colors.\nDefault: false"
-                            }
+                    "source": {
+                      "type": "string",
+                      "description": "Source color value.\nRequired"
+                    },
+                    "customColors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "description": "Color name"
                           },
-                          "additionalProperties": false,
-                          "description": "Modifier generator settings.\nOptional",
-                          "default": {}
-                        }
+                          "value": {
+                            "type": "string",
+                            "description": "Color value"
+                          },
+                          "blend": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Color blend.\nDefault: false"
+                          }
+                        },
+                        "required": ["name", "value"],
+                        "additionalProperties": false
                       },
-                      "required": ["base"],
-                      "additionalProperties": false,
-                      "description": "Color generator settings.\nRequired"
+                      "default": [],
+                      "description": "Custom colors settings.\nDefault: []"
                     }
                   },
-                  "required": ["_generator"],
-                  "additionalProperties": false,
-                  "description": "Color token generator.\nRequired"
+                  "required": ["source"],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
                 }
               ],
-              "description": "Color token record name to value.\nRequired"
+              "description": "Material color generator options.\nDefault: null",
+              "default": null
             },
-            "description": "Color tokens.\nRequired"
+            "generator": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": {
+                    "base": {
+                      "type": "string",
+                      "description": "Base color value.\nRequired"
+                    },
+                    "modifier": {
+                      "type": "object",
+                      "properties": {
+                        "min": {
+                          "type": "number",
+                          "default": 50,
+                          "description": "Minimal token modifier.\nDefault: 50"
+                        },
+                        "max": {
+                          "type": "number",
+                          "default": 1000,
+                          "description": "Maximum token modifier.\nDefault: 1000"
+                        },
+                        "step": {
+                          "type": "number",
+                          "default": 50,
+                          "description": "Step for token modifier.\nDefault: 50"
+                        },
+                        "reverse": {
+                          "type": "boolean",
+                          "default": false,
+                          "description": "Reverse colors.\nDefault: false"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "description": "Modifier generator settings.\nOptional",
+                      "default": {}
+                    }
+                  },
+                  "required": ["base"],
+                  "additionalProperties": false,
+                  "description": "Color generator settings.\nRequired"
+                },
+                "default": {},
+                "description": "Color generators by name.\nDefault: {}"
+              },
+              "description": "List of color tokens generators",
+              "default": []
+            }
           },
-          "description": "List of Color tokens.\nDefault: []",
-          "default": []
+          "additionalProperties": false,
+          "description": "Color tokens.\nDefault: {}",
+          "default": {}
         },
         "radius": {
           "type": "array",
