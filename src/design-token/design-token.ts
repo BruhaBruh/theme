@@ -216,7 +216,7 @@ export class DesignToken {
       .filter((part) => part.length > 0)
       .map((v) => v.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase());
 
-    const variable = `--${transformedParts.join('-')}`.replace(/\./g, '\\.');
+    const variable = `--${transformedParts.join('-')}`.replace(/\./g, '-');
     if (type === 'key') return variable;
     return `var(${variable})`;
   }
