@@ -133,6 +133,12 @@ export class ColorDesignToken extends DesignToken {
     return Ok(true);
   }
 
+  override themeCss(absolute: boolean): CSSTree {
+    return Object.entries(this.cssVariables(absolute)).map(
+      ([key, value]) => `${key.replace(/-default$/i, '')}: ${value};`,
+    );
+  }
+
   override otherCss(selector: string, absolute: boolean): CSSTree {
     if (selector.trim() === '') return [];
     return [

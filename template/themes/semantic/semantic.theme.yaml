@@ -1,7 +1,8 @@
 # yaml-language-server: $schema=../../schema/theme-config.schema.json
 
 dependencies:
-  - core
+  - light
+  - dark
 selectors: []
 
 radius:
