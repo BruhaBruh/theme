@@ -1,4 +1,4 @@
-import { UnknownRecord } from '@bruhabruh/type-safe';
+import type { UnknownRecord } from '@bruhabruh/type-safe';
 import { merge } from 'ts-deepmerge';
 import { cleanObject } from './clean-object';
 

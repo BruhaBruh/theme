@@ -1,7 +1,8 @@
-import { DesignTokenType } from '@/types/design-token-type';
-import { TailwindThemeConfig } from '@/types/tailwind';
-import { Err, Ok, Result } from '@bruhabruh/type-safe';
-import { DesignToken, DesignTokenArgs } from '../design-token';
+import type { DesignTokenType } from '@/types/design-token-type';
+import type { Result } from '@bruhabruh/type-safe';
+import { Err, Ok } from '@bruhabruh/type-safe';
+import type { DesignTokenArgs } from '../design-token';
+import { DesignToken } from '../design-token';
 
 export class LetterSpacingDesignToken extends DesignToken {
   static type: DesignTokenType = 'tracking' as const;
@@ -42,24 +43,6 @@ export class LetterSpacingDesignToken extends DesignToken {
       },
     });
     return Ok(true);
-  }
-
-  override tailwindConfig(absolute: boolean): TailwindThemeConfig {
-    const letterSpacing: Record<string, string> = {};
-
-    this.tokens.forEach((token) => {
-      if (absolute || token.css.isNone()) {
-        letterSpacing[token.name] = token.value;
-      } else {
-        token.css.inspect((css) => {
-          letterSpacing[token.name] = css.keyVariable;
-        });
-      }
-    });
-
-    return {
-      letterSpacing,
-    };
   }
 
   override resolveAbsoluteValue(value: string): string {

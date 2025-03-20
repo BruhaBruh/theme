@@ -1,15 +1,15 @@
-import { Err, Ok, Result } from '@bruhabruh/type-safe';
+import type { Result } from '@bruhabruh/type-safe';
+import { Err, Ok } from '@bruhabruh/type-safe';
 import { globSync } from 'glob';
 import { readThemeConfig } from './read-theme-config';
-import { Config } from './schema/config';
-import { ThemesConfig } from './schema/themes-config';
+import type { Config } from './schema/config';
+import type { ThemeConfig } from './schema/theme-config';
 
-export const loadThemes = (config: Config): Result<ThemesConfig, string> => {
+export const loadThemes = (
+  config: Config,
+): Result<Record<string, ThemeConfig>, string> => {
   const files = globSync(config.content);
-  const themesConfig: ThemesConfig = {
-    prefix: config.prefix,
-    themes: {},
-  };
+  const themesConfig: Record<string, ThemeConfig> = {};
 
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
@@ -25,12 +25,7 @@ export const loadThemes = (config: Config): Result<ThemesConfig, string> => {
     const themeName = file.split(/[\\/]/).pop()?.split('.')[0];
 
     if (!themeName) return Err(`Fail get theme name of ${file}`);
-    themesConfig.themes[themeName] = {
-      _output: {
-        ...config.output.themes[themeName],
-      },
-      ...themeConfig,
-    };
+    themesConfig[themeName] = themeConfig;
   }
 
   return Ok(themesConfig);

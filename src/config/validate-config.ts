@@ -1,11 +1,7 @@
-import {
-  Err,
-  Ok,
-  Result,
-  ZodFlattenError,
-  zodFlattenError,
-} from '@bruhabruh/type-safe';
-import { Config, configSchema } from './schema/config';
+import type { Result, ZodFlattenError } from '@bruhabruh/type-safe';
+import { Err, Ok, zodFlattenError } from '@bruhabruh/type-safe';
+import type { Config } from './schema/config';
+import { configSchema } from './schema/config';
 
 export const validateConfig = (
   data: unknown,

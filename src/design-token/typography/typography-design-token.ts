@@ -1,11 +1,10 @@
-import { CSS, CSSVariables } from '@/types/css';
-import { DesignTokenType } from '@/types/design-token-type';
-import { TailwindPluginApi } from '@/types/tailwind';
+import type { CSSTree, CSSVariables } from '@/types/css';
+import type { DesignTokenType } from '@/types/design-token-type';
 import { DesignToken } from '../design-token';
-import { FontFamilyDesignToken } from './font-family-design-token';
-import { FontSizeDesignToken } from './font-size-design-token';
-import { FontWeightDesignToken } from './font-weight-design-token';
-import { LetterSpacingDesignToken } from './letter-spacing-design-token';
+import type { FontFamilyDesignToken } from './font-family-design-token';
+import type { FontSizeDesignToken } from './font-size-design-token';
+import type { FontWeightDesignToken } from './font-weight-design-token';
+import type { LetterSpacingDesignToken } from './letter-spacing-design-token';
 import { LineHeightDesignToken } from './line-height-design-token';
 
 type Typography = {
@@ -77,31 +76,19 @@ export class TypographyDesignToken extends DesignToken {
     this.#typographies[name] = newTypography;
   }
 
-  override css(_selector: string, absolute: boolean): CSS {
-    const css: CSS = {};
-
-    Object.entries(this.#typographies).forEach(([name, typography]) => {
-      css[`.typography-${name}`] = this.resolveTypographyCSSVariables(
-        absolute,
-        typography,
-      );
-    });
-
-    return css;
-  }
-
-  override applyTailwind(
-    absolute: boolean,
-    { addUtilities }: TailwindPluginApi,
-  ): void {
-    Object.entries(this.#typographies).forEach(([name, typography]) => {
-      addUtilities({
-        [`.typography-${name}`]: this.resolveTypographyCSSVariables(
-          absolute,
-          typography,
-        ),
-      });
-    });
+  override otherCss(_selector: string, absolute: boolean): CSSTree {
+    if (Object.entries(this.#typographies).length === 0) return [];
+    return [
+      '@layer components {',
+      Object.entries(this.#typographies).map(([name, typography]) => [
+        `  .typography-${name} {`,
+        Object.entries(
+          this.resolveTypographyCSSVariables(absolute, typography),
+        ).map(([key, value]) => `    ${key}: ${value};`),
+        '  }',
+      ]),
+      '}',
+    ];
   }
 
   private resolveTypographyCSSVariables(

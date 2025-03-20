@@ -1,13 +1,9 @@
-import {
-  Err,
-  Ok,
-  Result,
-  ZodFlattenError,
-  zodFlattenError,
-} from '@bruhabruh/type-safe';
+import type { Result, ZodFlattenError } from '@bruhabruh/type-safe';
+import { Err, Ok, zodFlattenError } from '@bruhabruh/type-safe';
 import fs from 'node:fs';
 import YAML from 'yaml';
-import { ThemeConfig, themeConfigSchema } from './schema/theme-config';
+import type { ThemeConfig } from './schema/theme-config';
+import { themeConfigSchema } from './schema/theme-config';
 
 export const readThemeConfig = (
   path: string,

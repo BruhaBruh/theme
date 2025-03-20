@@ -3,11 +3,4 @@
 prefix: ''
 content: ./themes/**/*.theme.yaml
 absolute: false
-output:
-  all:
-    css:
-      - destination: ./.generated/theme.css
-        options:
-          disableTypography: true
-    tailwind:
-      - destination: ./.generated/theme.tailwind.json
+output: ./.generated/theme.css

@@ -1,42 +1,6 @@
-# yaml-language-server: $schema=https://cdn.jsdelivr.net/gh/bruhabruh/theme/schema/config.schema.json
+# yaml-language-server: $schema=./schema/config.schema.json
 
 prefix: ''
 content: ./themes/**/*.theme.yaml
 absolute: false
-output:
-  all:
-    css:
-      - destination: ./.generated/theme.css
-    tailwind:
-      - destination: ./.generated/theme.tailwind.css
-
-  themes:
-    core:
-      css:
-        - destination: ./.generated/core.css
-      tailwind:
-        - destination: ./.generated/core.tailwind.css
-
-    dark:
-      css:
-        - destination: ./.generated/dark.css
-      tailwind:
-        - destination: ./.generated/dark.tailwind.css
-
-    light:
-      css:
-        - destination: ./.generated/light.css
-      tailwind:
-        - destination: ./.generated/light.tailwind.css
-
-    semantic:
-      css:
-        - destination: ./.generated/semantic.css
-      tailwind:
-        - destination: ./.generated/semantic.tailwind.css
-
-    typography:
-      css:
-        - destination: ./.generated/typography.css
-      tailwind:
-        - destination: ./.generated/typography.tailwind.css
+output: ./.generated/theme.css

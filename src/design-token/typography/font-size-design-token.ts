@@ -1,7 +1,8 @@
-import { DesignTokenType } from '@/types/design-token-type';
-import { TailwindThemeConfig } from '@/types/tailwind';
-import { Err, Ok, Result } from '@bruhabruh/type-safe';
-import { DesignToken, DesignTokenArgs } from '../design-token';
+import type { DesignTokenType } from '@/types/design-token-type';
+import type { Result } from '@bruhabruh/type-safe';
+import { Err, Ok } from '@bruhabruh/type-safe';
+import type { DesignTokenArgs } from '../design-token';
+import { DesignToken } from '../design-token';
 
 export class FontSizeDesignToken extends DesignToken {
   static type: DesignTokenType = 'text' as const;
@@ -36,24 +37,6 @@ export class FontSizeDesignToken extends DesignToken {
       },
     });
     return Ok(true);
-  }
-
-  override tailwindConfig(absolute: boolean): TailwindThemeConfig {
-    const fontSize: Record<string, string> = {};
-
-    this.tokens.forEach((token) => {
-      if (absolute || token.css.isNone()) {
-        fontSize[token.name] = token.value;
-      } else {
-        token.css.inspect((css) => {
-          fontSize[token.name] = css.keyVariable;
-        });
-      }
-    });
-
-    return {
-      fontSize,
-    };
   }
 
   override resolveAbsoluteValue(value: string): string {

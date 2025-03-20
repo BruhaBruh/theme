@@ -1,8 +1,7 @@
 # yaml-language-server: $schema=../../schema/theme-config.schema.json
 
 dependencies: []
-selectors:
-  - :root
+selectors: []
 
 color:
   generator:

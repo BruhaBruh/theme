@@ -1,7 +1,8 @@
 import { configExecutor } from '@/config/config-executor';
 import { readConfig } from '@/config/read-config';
 import { clearScreen, logError, logInfo } from '@/lib/logging';
-import { Command, Option } from 'commander';
+import type { Command } from 'commander';
+import { Option } from 'commander';
 
 type Options = {
   config: string;

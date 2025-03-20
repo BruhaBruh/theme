@@ -1,9 +1,7 @@
-import { CSS } from '@/types/css';
-import { TailwindPluginApi, TailwindThemeConfig } from '@/types/tailwind';
-import { Err, Ok, Result } from '@bruhabruh/type-safe';
-import { CSSOutputOptions } from './schema/config';
-import { ThemeConfig } from './schema/theme-config';
-import { ThemesConfig } from './schema/themes-config';
+import type { CSSTree } from '@/types/css';
+import type { Result } from '@bruhabruh/type-safe';
+import { Err, Ok } from '@bruhabruh/type-safe';
+import type { ThemeConfig } from './schema/theme-config';
 import { TokenManager } from './token-manager';
 
 export class ThemeManager {
@@ -47,7 +45,7 @@ export class ThemeManager {
   }
 
   load(
-    themes: ThemesConfig['themes'],
+    themes: Record<string, ThemeConfig>,
     dependedBy: string[] = [],
   ): Result<true, string> {
     if (dependedBy.includes(this.#name)) {
@@ -94,15 +92,24 @@ export class ThemeManager {
     return Ok(true);
   }
 
-  css(absolute: boolean, options: CSSOutputOptions): CSS {
-    return this.#tokenManager.css(this.#selector, absolute, options);
-  }
+  css(absolute: boolean): CSSTree {
+    const themeCss = this.#tokenManager.themeCss(absolute);
+    const otherCss = this.#tokenManager.otherCss(this.#selector, absolute);
+    const mustOutputThemeCss = themeCss.length > 0;
+    const mustOutputOtherCss = otherCss.length > 0;
 
-  tailwindConfig(absolute: boolean): TailwindThemeConfig {
-    return this.#tokenManager.tailwindConfig(absolute);
-  }
-
-  applyTailwind(absolute: boolean, api: TailwindPluginApi) {
-    return this.#tokenManager.applyTailwind(absolute, api);
+    return [
+      `/* #region ${this.#name} theme */`,
+      mustOutputThemeCss
+        ? [
+            '@theme {',
+            themeCss.map((v) => `  ${v}`).join('\r\n'),
+            '}',
+            mustOutputOtherCss ? '' : null,
+          ].filter((v) => v !== null)
+        : null,
+      mustOutputOtherCss ? otherCss : null,
+      `/* #endregion ${this.#name} theme */`,
+    ].filter((v) => v !== null);
   }
 }
