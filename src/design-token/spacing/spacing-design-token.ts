@@ -30,6 +30,21 @@ export class SpacingDesignToken extends DesignToken {
         (err) => `Fail calculate border radius: ${err}`,
       );
     }
+    const wordName = name
+      .replace(/\.5$/i, 'h')
+      .replace(/\.25$/i, 'q')
+      .replace(/\.125$/i, 'e')
+      .replace(/\.375$/i, 'qe')
+      .replace(/\.625$/i, 'he')
+      .replace(/\.75$/i, 'hq')
+      .replace(/\.875$/i, 'hqe');
+    if (wordName !== name)
+      this.addToken(name, calculatedValue.unwrap(), {
+        css: {
+          key: [wordName],
+          value: calculatedValue.unwrap(),
+        },
+      });
     this.addToken(name, calculatedValue.unwrap(), {
       css: {
         key: [name],
