@@ -1,19 +1,23 @@
-import {
+import type {
   ColorGenerator,
   MaterialColorGenerator,
 } from '@/config/schema/theme-config';
-import { DesignTokenType } from '@/types/design-token-type';
-import { TailwindThemeConfig } from '@/types/tailwind';
-import { Err, Ok, Result } from '@bruhabruh/type-safe';
+import type { CSSTree } from '@/types/css';
+import type { DesignTokenType } from '@/types/design-token-type';
+import type { Result } from '@bruhabruh/type-safe';
+import { Err, Ok } from '@bruhabruh/type-safe';
+import type { CustomColor } from '@material/material-color-utilities';
 import {
-  CustomColor,
   Hct,
   argbFromHex,
   hexFromArgb,
   themeFromSourceColor,
 } from '@material/material-color-utilities';
-import { Oklch, formatHex, interpolate, oklch } from 'culori';
-import { DesignToken, DesignTokenArgs } from '../design-token';
+import type { Oklch } from 'culori';
+import { formatHex, interpolate, oklch } from 'culori';
+import type { DesignTokenArgs } from '../design-token';
+import { DesignToken } from '../design-token';
+
 export class ColorDesignToken extends DesignToken {
   static type: DesignTokenType = 'color' as const;
 
@@ -129,22 +133,21 @@ export class ColorDesignToken extends DesignToken {
     return Ok(true);
   }
 
-  override tailwindConfig(absolute: boolean): TailwindThemeConfig {
-    const colors: Record<string, string> = {};
+  override themeCss(absolute: boolean): CSSTree {
+    return Object.entries(this.cssVariables(absolute)).map(
+      ([key, value]) => `${key.replace(/-default$/i, '')}: ${value};`,
+    );
+  }
 
-    this.tokens.forEach((token) => {
-      if (absolute || token.css.isNone()) {
-        colors[token.name] = token.value;
-      } else {
-        token.css.inspect((css) => {
-          colors[token.name] = css.keyVariable;
-        });
-      }
-    });
-
-    return {
-      colors,
-    };
+  override otherCss(selector: string, absolute: boolean): CSSTree {
+    if (selector.trim() === '') return [];
+    return [
+      `${selector} {`,
+      Object.entries(this.cssVariables(absolute)).map(
+        ([key, value]) => `  ${key}: ${value};`,
+      ),
+      '}',
+    ];
   }
 
   override resolveAbsoluteValue(value: string): string {

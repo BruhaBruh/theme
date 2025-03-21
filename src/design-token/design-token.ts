@@ -1,16 +1,8 @@
 import { Calculator } from '@/lib/calculator';
-import { CSS, CSSVariables } from '@/types/css';
-import { DesignTokenType } from '@/types/design-token-type';
-import { TailwindPluginApi, TailwindThemeConfig } from '@/types/tailwind';
-import {
-  Class,
-  Err,
-  None,
-  Ok,
-  Option,
-  Result,
-  Some,
-} from '@bruhabruh/type-safe';
+import type { CSSTree, CSSVariables } from '@/types/css';
+import type { DesignTokenType } from '@/types/design-token-type';
+import type { Class, Option, Result } from '@bruhabruh/type-safe';
+import { Err, None, Ok, Some } from '@bruhabruh/type-safe';
 import { TokenValue } from './token-value';
 
 type InternalDesignTokenArgs = {
@@ -110,23 +102,21 @@ export class DesignToken {
     return Some(token.css.mapOr(token.value, (css) => css.keyVariable));
   }
 
-  css(selector: string, absolute: boolean): CSS {
-    return {
-      [selector]: this.cssVariables(absolute),
-    };
-  }
-
-  tailwindConfig(_absolute: boolean): TailwindThemeConfig {
-    return {};
-  }
-
-  applyTailwind(_absolute: boolean, _api: TailwindPluginApi) {}
-
   resolveAbsoluteValue(value: string): string {
     if (this.#designTokenReference.isNone()) {
       return value;
     }
     return this.#designTokenReference.unwrap().resolveAbsoluteValue(value);
+  }
+
+  themeCss(absolute: boolean): CSSTree {
+    return Object.entries(this.cssVariables(absolute)).map(
+      ([key, value]) => `${key}: ${value};`,
+    );
+  }
+
+  otherCss(_selector: string, _absolute: boolean): CSSTree {
+    return [];
   }
 
   protected cssVariables(absolute: boolean): CSSVariables {
@@ -216,7 +206,7 @@ export class DesignToken {
       .filter((part) => part.length > 0)
       .map((v) => v.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase());
 
-    const variable = `--${transformedParts.join('-')}`.replace(/\./g, '-');
+    const variable = `--${transformedParts.join('-')}`.replace(/\./g, '\\.');
     if (type === 'key') return variable;
     return `var(${variable})`;
   }

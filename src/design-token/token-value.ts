@@ -1,4 +1,5 @@
-import { None, Option, Some } from '@bruhabruh/type-safe';
+import type { Option } from '@bruhabruh/type-safe';
+import { None, Some } from '@bruhabruh/type-safe';
 
 type CSS = {
   key: string;

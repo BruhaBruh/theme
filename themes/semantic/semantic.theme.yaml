@@ -3,8 +3,7 @@
 dependencies:
   - light
   - dark
-selectors:
-  - :root
+selectors: []
 
 radius:
   - base: 1rem

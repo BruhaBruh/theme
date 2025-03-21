@@ -20,84 +20,11 @@
           "default": false
         },
         "output": {
-          "type": "object",
-          "properties": {
-            "all": {
-              "type": "object",
-              "properties": {
-                "css": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "destination": {
-                        "type": "string",
-                        "description": "CSS output path of theme.\nRequired"
-                      },
-                      "absolute": {
-                        "type": "boolean",
-                        "default": false,
-                        "description": "CSS output w/ absolute values.\nDefault: false"
-                      },
-                      "options": {
-                        "type": "object",
-                        "properties": {
-                          "disableTypography": {
-                            "type": "boolean",
-                            "default": false
-                          }
-                        },
-                        "additionalProperties": false,
-                        "default": {}
-                      }
-                    },
-                    "required": ["destination"],
-                    "additionalProperties": false,
-                    "description": "CSS output options.\nRequired"
-                  },
-                  "description": "CSS output options.\nDefault: []",
-                  "default": []
-                },
-                "tailwind": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "destination": {
-                        "type": "string",
-                        "description": "Tailwind output path of theme.\nRequired"
-                      },
-                      "absolute": {
-                        "type": "boolean",
-                        "default": false,
-                        "description": "Tailwind output w/ absolute values.\nDefault: false"
-                      }
-                    },
-                    "required": ["destination"],
-                    "additionalProperties": false,
-                    "description": "Tailwind output options.\nRequired"
-                  },
-                  "description": "Tailwind output options.\nDefault: []",
-                  "default": []
-                }
-              },
-              "additionalProperties": false,
-              "description": "Output for combined all themes.\nDefault: {}",
-              "default": {}
-            },
-            "themes": {
-              "type": "object",
-              "additionalProperties": {
-                "$ref": "#/definitions/config/properties/output/properties/all"
-              },
-              "default": {}
-            }
-          },
-          "additionalProperties": false,
-          "description": "Output configuration.\nDefault: { all: {}, themes: {} }",
-          "default": {}
+          "type": "string",
+          "description": "Output path destination of scheme.\nRequired"
         }
       },
+      "required": ["output"],
       "additionalProperties": false,
       "description": "Main Config for @bruhabruh/theme"
     }

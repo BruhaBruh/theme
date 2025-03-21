@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
-import { UnknownArray, UnknownRecord } from '@bruhabruh/type-safe';
+import type { UnknownArray, UnknownRecord } from '@bruhabruh/type-safe';
 
 type PathPart = {
   type: 'key' | 'index';

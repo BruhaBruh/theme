@@ -1,4 +1,5 @@
-import { Err, Ok, Result } from '@bruhabruh/type-safe';
+import type { Result } from '@bruhabruh/type-safe';
+import { Err, Ok } from '@bruhabruh/type-safe';
 import Mexp from 'math-expression-evaluator';
 
 export class Calculator {

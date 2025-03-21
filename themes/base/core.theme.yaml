@@ -1,41 +1,22 @@
 # yaml-language-server: $schema=../../schema/theme-config.schema.json
 
 dependencies: []
-selectors:
-  - :root
+selectors: []
 
 color:
-  generator:
-    - neutral:
-        base: '#3A4454'
-        modifier:
-          min: 0
-          max: 100
-          step: 1
-    - blue:
-        base: '#2563eb'
-        modifier:
-          min: 0
-          max: 100
-          step: 1
-    - green:
-        base: '#22c55e'
-        modifier:
-          min: 0
-          max: 100
-          step: 1
-    - yellow:
-        base: '#fde047'
-        modifier:
-          min: 0
-          max: 100
-          step: 1
-    - red:
-        base: '#dc2626'
-        modifier:
-          min: 0
-          max: 100
-          step: 1
+  material:
+    source: '#6475AC'
+    disable:
+      tertiary: true
+    overrides:
+      error: red
+    customColors:
+      - name: blue
+        value: '#6475AC'
+      - name: yellow
+        value: '#867728'
+      - name: green
+        value: '#4E8356'
 
 spacing:
   - base: 0.25rem

@@ -9,13 +9,10 @@ import {
   SpacingDesignToken,
   TypographyDesignToken,
 } from '@/design-token';
-import { cleanMergeObject } from '@/lib/clean-merge-object';
-import { CSS } from '@/types/css';
-import { TailwindPluginApi, TailwindThemeConfig } from '@/types/tailwind';
-import { Ok, Result } from '@bruhabruh/type-safe';
-import { merge } from 'ts-deepmerge';
-import { CSSOutputOptions } from './schema/config';
-import { ThemeConfig } from './schema/theme-config';
+import type { CSSTree } from '@/types/css';
+import type { Result } from '@bruhabruh/type-safe';
+import { Ok } from '@bruhabruh/type-safe';
+import type { ThemeConfig } from './schema/theme-config';
 
 export class TokenManager {
   #colorDesignToken: ColorDesignToken;
@@ -47,48 +44,35 @@ export class TokenManager {
     );
   }
 
-  css(selector: string, absolute: boolean, options: CSSOutputOptions): CSS {
-    const css: CSS = {};
-
-    return merge(
-      css,
-      this.#colorDesignToken.css(selector, absolute),
-      this.#borderRadiusDesignToken.css(selector, absolute),
-      this.#spacingDesignToken.css(selector, absolute),
-      this.#fontFamilyDesignToken.css(selector, absolute),
-      this.#fontWeightDesignToken.css(selector, absolute),
-      this.#lineHeightDesignToken.css(selector, absolute),
-      this.#fontSizeDesignToken.css(selector, absolute),
-      this.#letterSpacingDesignToken.css(selector, absolute),
-      options.disableTypography
-        ? {}
-        : this.#typographyDesignToken.css(selector, absolute),
-    );
+  themeCss(absolute: boolean): CSSTree {
+    return [
+      ...this.#colorDesignToken.themeCss(absolute),
+      ...this.#borderRadiusDesignToken.themeCss(absolute),
+      ...this.#spacingDesignToken.themeCss(absolute),
+      ...this.#fontFamilyDesignToken.themeCss(absolute),
+      ...this.#fontWeightDesignToken.themeCss(absolute),
+      ...this.#lineHeightDesignToken.themeCss(absolute),
+      ...this.#fontSizeDesignToken.themeCss(absolute),
+      ...this.#letterSpacingDesignToken.themeCss(absolute),
+      ...this.#typographyDesignToken.themeCss(absolute),
+    ];
   }
 
-  tailwindConfig(absolute: boolean): TailwindThemeConfig {
-    return cleanMergeObject(
-      this.#colorDesignToken.tailwindConfig(absolute),
-      this.#borderRadiusDesignToken.tailwindConfig(absolute),
-      this.#spacingDesignToken.tailwindConfig(absolute),
-      this.#fontFamilyDesignToken.tailwindConfig(absolute),
-      this.#fontWeightDesignToken.tailwindConfig(absolute),
-      this.#lineHeightDesignToken.tailwindConfig(absolute),
-      this.#fontSizeDesignToken.tailwindConfig(absolute),
-      this.#letterSpacingDesignToken.tailwindConfig(absolute),
-    );
-  }
-
-  applyTailwind(absolute: boolean, api: TailwindPluginApi) {
-    this.#colorDesignToken.applyTailwind(absolute, api);
-    this.#borderRadiusDesignToken.applyTailwind(absolute, api);
-    this.#spacingDesignToken.applyTailwind(absolute, api);
-    this.#fontFamilyDesignToken.applyTailwind(absolute, api);
-    this.#fontWeightDesignToken.applyTailwind(absolute, api);
-    this.#lineHeightDesignToken.applyTailwind(absolute, api);
-    this.#fontSizeDesignToken.applyTailwind(absolute, api);
-    this.#letterSpacingDesignToken.applyTailwind(absolute, api);
-    this.#typographyDesignToken.applyTailwind(absolute, api);
+  otherCss(selector: string, absolute: boolean): CSSTree {
+    return [
+      ...this.#colorDesignToken.otherCss(selector, absolute),
+      ...this.#borderRadiusDesignToken.otherCss(selector, absolute),
+      ...this.#spacingDesignToken.otherCss(selector, absolute),
+      ...this.#fontFamilyDesignToken.otherCss(selector, absolute),
+      ...this.#fontWeightDesignToken.otherCss(selector, absolute),
+      ...this.#lineHeightDesignToken.otherCss(selector, absolute),
+      ...this.#fontSizeDesignToken.otherCss(selector, absolute),
+      ...this.#letterSpacingDesignToken.otherCss(selector, absolute),
+      ...this.#typographyDesignToken.otherCss(selector, absolute),
+    ].filter((v) => {
+      if (typeof v === 'string') return v;
+      return v.length > 0;
+    });
   }
 
   load(config: ThemeConfig): Result<true, string> {
