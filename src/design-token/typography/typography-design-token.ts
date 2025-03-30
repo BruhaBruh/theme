@@ -78,17 +78,16 @@ export class TypographyDesignToken extends DesignToken {
 
   override otherCss(_selector: string, absolute: boolean): CSSTree {
     if (Object.entries(this.#typographies).length === 0) return [];
-    return [
-      '@layer components {',
-      Object.entries(this.#typographies).map(([name, typography]) => [
-        `  .typography-${name} {`,
-        Object.entries(
-          this.resolveTypographyCSSVariables(absolute, typography),
-        ).map(([key, value]) => `    ${key}: ${value};`),
-        '  }',
-      ]),
+    return Object.entries(this.#typographies).map(([name, typography]) => [
+      `@utility typography-${name} {`,
+      Object.entries(
+        this.resolveTypographyCSSVariables(absolute, typography),
+      ).map(
+        ([key, value]) =>
+          `  ${key}: ${value.replace(/^var\(([^,]+),([^)]+)\)$/i, 'var($1)')};`,
+      ),
       '}',
-    ];
+    ]);
   }
 
   private resolveTypographyCSSVariables(
