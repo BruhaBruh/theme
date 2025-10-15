@@ -70,7 +70,9 @@ export class TokenManager {
       ...this.#letterSpacingDesignToken.otherCss(selector, absolute),
       ...this.#typographyDesignToken.otherCss(selector, absolute),
     ].filter((v) => {
-      if (typeof v === 'string') {return v;}
+      if (typeof v === 'string') {
+        return v;
+      }
       return v.length > 0;
     });
   }
@@ -144,23 +146,25 @@ export class TokenManager {
   }
 
   private loadColorTokens(config: ThemeConfig['color']): Result<true, string> {
-    for (let i = 0; i < config.base.length; i++) {
-      const baseConfig = config.base[i];
-      const colorNames = Object.keys(baseConfig);
+    if (config.base) {
+      for (let i = 0; i < config.base.length; i++) {
+        const baseConfig = config.base[i];
+        const colorNames = Object.keys(baseConfig);
 
-      for (let j = 0; j < colorNames.length; j++) {
-        const colorName = colorNames[j];
-        const colorOrModifiers = baseConfig[colorName];
-        if (typeof colorOrModifiers === 'string') {
-          this.#colorDesignToken.addColor(colorName, colorOrModifiers);
-          continue;
-        }
-        const modifiers = Object.keys(colorOrModifiers);
+        for (let j = 0; j < colorNames.length; j++) {
+          const colorName = colorNames[j];
+          const colorOrModifiers = baseConfig[colorName];
+          if (typeof colorOrModifiers === 'string') {
+            this.#colorDesignToken.addColor(colorName, colorOrModifiers);
+            continue;
+          }
+          const modifiers = Object.keys(colorOrModifiers);
 
-        for (let k = 0; k < modifiers.length; k++) {
-          const modifier = modifiers[k];
-          const color = colorOrModifiers[modifier];
-          this.#colorDesignToken.addColor(`${colorName}-${modifier}`, color);
+          for (let k = 0; k < modifiers.length; k++) {
+            const modifier = modifiers[k];
+            const color = colorOrModifiers[modifier];
+            this.#colorDesignToken.addColor(`${colorName}-${modifier}`, color);
+          }
         }
       }
     }
@@ -174,22 +178,24 @@ export class TokenManager {
       }
     }
 
-    for (let i = 0; i < config.generator.length; i++) {
-      const generatorConfig = config.generator[i];
-      const colorNames = Object.keys(generatorConfig);
+    if (config.generator) {
+      for (let i = 0; i < config.generator.length; i++) {
+        const generatorConfig = config.generator[i];
+        const colorNames = Object.keys(generatorConfig);
 
-      for (let j = 0; j < colorNames.length; j++) {
-        const colorName = colorNames[j];
-        const { base, modifier } = generatorConfig[colorName];
-        const result = this.#colorDesignToken.generateColor(
-          colorName,
-          base,
-          modifier,
-        );
-        if (result.isErr()) {
-          return result.mapErr(
-            (err) => `Fail generate color ${colorName}: ${err}`,
+        for (let j = 0; j < colorNames.length; j++) {
+          const colorName = colorNames[j];
+          const { source, modifier } = generatorConfig[colorName];
+          const result = this.#colorDesignToken.generateColor(
+            colorName,
+            source,
+            modifier,
           );
+          if (result.isErr()) {
+            return result.mapErr(
+              (err) => `Fail generate color ${colorName}: ${err}`,
+            );
+          }
         }
       }
     }
@@ -202,36 +208,34 @@ export class TokenManager {
   ): Result<true, string> {
     for (let i = 0; i < configs.length; i++) {
       const config = configs[i];
-      const generator = config._generator;
-      if (generator) {
-        if (typeof generator !== 'string') {
-          const { start, end, namePattern, valuePattern, step } = generator;
-          for (let j = start; j <= end; j += step) {
-            const name = namePattern.replace(/\{i}/g, j.toString());
-            const value = valuePattern.replace(/\{i}/g, j.toString());
+      const keys = Object.keys(config);
+      for (let j = 0; j < keys.length; j++) {
+        const key = keys[j];
+        const value = config[key];
+        if (typeof value === 'string') {
+          const result = this.#borderRadiusDesignToken.addBorderRadius(
+            key,
+            value,
+          );
+          if (result.isErr()) {
+            return result.mapErr(
+              (err) => `Fail add border radius "${key}": ${err}`,
+            );
+          }
+        } else {
+          const { start, end, namePattern, valuePattern, step } = value;
+          for (let k = start; k <= end; k += step) {
+            const name = namePattern.replace(/\{i}/g, k.toString());
+            const v = valuePattern.replace(/\{i}/g, k.toString());
             const result = this.#borderRadiusDesignToken.addBorderRadius(
               name,
-              value,
+              v,
             );
             if (result.isErr()) {
               return result.mapErr(
                 (err) => `Fail add border radius "${name}": ${err}`,
               );
             }
-          }
-        }
-      } else {
-        const entries = Object.entries(config);
-        for (let j = 0; j < entries.length; j++) {
-          const [name, value] = entries[j];
-          const result = this.#borderRadiusDesignToken.addBorderRadius(
-            name,
-            value,
-          );
-          if (result.isErr()) {
-            return result.mapErr(
-              (err) => `Fail add border radius "${name}": ${err}`,
-            );
           }
         }
       }
@@ -245,28 +249,26 @@ export class TokenManager {
   ): Result<true, string> {
     for (let i = 0; i < configs.length; i++) {
       const config = configs[i];
-      const generator = config._generator;
-      if (generator) {
-        if (typeof generator !== 'string') {
-          const { start, end, namePattern, valuePattern, step } = generator;
-          for (let j = start; j <= end; j += step) {
-            const name = namePattern.replace(/\{i}/g, j.toString());
-            const value = valuePattern.replace(/\{i}/g, j.toString());
-            const result = this.#spacingDesignToken.addSpacing(name, value);
+      const keys = Object.keys(config);
+      for (let j = 0; j < keys.length; j++) {
+        const key = keys[j];
+        const value = config[key];
+        if (typeof value === 'string') {
+          const result = this.#spacingDesignToken.addSpacing(key, value);
+          if (result.isErr()) {
+            return result.mapErr((err) => `Fail add spacing "${key}": ${err}`);
+          }
+        } else {
+          const { start, end, namePattern, valuePattern, step } = value;
+          for (let k = start; k <= end; k += step) {
+            const name = namePattern.replace(/\{i}/g, k.toString());
+            const v = valuePattern.replace(/\{i}/g, k.toString());
+            const result = this.#spacingDesignToken.addSpacing(name, v);
             if (result.isErr()) {
               return result.mapErr(
                 (err) => `Fail add spacing "${name}": ${err}`,
               );
             }
-          }
-        }
-      } else {
-        const entries = Object.entries(config);
-        for (let j = 0; j < entries.length; j++) {
-          const [name, value] = entries[j];
-          const result = this.#spacingDesignToken.addSpacing(name, value);
-          if (result.isErr()) {
-            return result.mapErr((err) => `Fail add spacing "${name}": ${err}`);
           }
         }
       }
@@ -307,33 +309,28 @@ export class TokenManager {
   ): Result<true, string> {
     for (let i = 0; i < configs.length; i++) {
       const config = configs[i];
-      const generator = config._generator;
-      if (generator) {
-        if (typeof generator !== 'string') {
-          const { start, end, namePattern, valuePattern, step } = generator;
-          for (let j = start; j <= end; j += step) {
-            const name = namePattern.replace(/\{i}/g, j.toString());
-            const value = valuePattern.replace(/\{i}/g, j.toString());
-            const result = this.#lineHeightDesignToken.addLineHeight(
-              name,
-              value,
+      const keys = Object.keys(config);
+      for (let j = 0; j < keys.length; j++) {
+        const key = keys[j];
+        const value = config[key];
+        if (typeof value === 'string') {
+          const result = this.#lineHeightDesignToken.addLineHeight(key, value);
+          if (result.isErr()) {
+            return result.mapErr(
+              (err) => `Fail add line height "${key}": ${err}`,
             );
+          }
+        } else {
+          const { start, end, namePattern, valuePattern, step } = value;
+          for (let k = start; k <= end; k += step) {
+            const name = namePattern.replace(/\{i}/g, k.toString());
+            const v = valuePattern.replace(/\{i}/g, k.toString());
+            const result = this.#lineHeightDesignToken.addLineHeight(name, v);
             if (result.isErr()) {
               return result.mapErr(
                 (err) => `Fail add line height "${name}": ${err}`,
               );
             }
-          }
-        }
-      } else {
-        const entries = Object.entries(config);
-        for (let j = 0; j < entries.length; j++) {
-          const [name, value] = entries[j];
-          const result = this.#lineHeightDesignToken.addLineHeight(name, value);
-          if (result.isErr()) {
-            return result.mapErr(
-              (err) => `Fail add line height "${name}": ${err}`,
-            );
           }
         }
       }
@@ -347,30 +344,28 @@ export class TokenManager {
   ): Result<true, string> {
     for (let i = 0; i < configs.length; i++) {
       const config = configs[i];
-      const generator = config._generator;
-      if (generator) {
-        if (typeof generator !== 'string') {
-          const { start, end, namePattern, valuePattern, step } = generator;
-          for (let j = start; j <= end; j += step) {
-            const name = namePattern.replace(/\{i}/g, j.toString());
-            const value = valuePattern.replace(/\{i}/g, j.toString());
-            const result = this.#fontSizeDesignToken.addFontSize(name, value);
+      const keys = Object.keys(config);
+      for (let j = 0; j < keys.length; j++) {
+        const key = keys[j];
+        const value = config[key];
+        if (typeof value === 'string') {
+          const result = this.#fontSizeDesignToken.addFontSize(key, value);
+          if (result.isErr()) {
+            return result.mapErr(
+              (err) => `Fail add font size "${key}": ${err}`,
+            );
+          }
+        } else {
+          const { start, end, namePattern, valuePattern, step } = value;
+          for (let k = start; k <= end; k += step) {
+            const name = namePattern.replace(/\{i}/g, k.toString());
+            const v = valuePattern.replace(/\{i}/g, k.toString());
+            const result = this.#fontSizeDesignToken.addFontSize(name, v);
             if (result.isErr()) {
               return result.mapErr(
                 (err) => `Fail add font size "${name}": ${err}`,
               );
             }
-          }
-        }
-      } else {
-        const entries = Object.entries(config);
-        for (let j = 0; j < entries.length; j++) {
-          const [name, value] = entries[j];
-          const result = this.#fontSizeDesignToken.addFontSize(name, value);
-          if (result.isErr()) {
-            return result.mapErr(
-              (err) => `Fail add font size "${name}": ${err}`,
-            );
           }
         }
       }

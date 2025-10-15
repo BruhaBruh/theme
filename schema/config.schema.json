@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Main Config for @bruhabruh/theme",
   "type": "object",
   "properties": {
@@ -23,6 +23,5 @@
       "type": "string"
     }
   },
-  "required": ["prefix", "content", "absolute", "output"],
-  "additionalProperties": false
+  "required": ["output"]
 }
