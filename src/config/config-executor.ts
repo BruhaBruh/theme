@@ -88,7 +88,7 @@ class ConfigExecutor {
     const getTextFromCSSTree = (tree: CSSTree): string => {
       return tree
         .map((line) => {
-          if (typeof line === 'string') return line;
+          if (typeof line === 'string') {return line;}
           return getTextFromCSSTree(line);
         })
         .join('\r\n');

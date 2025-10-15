@@ -39,12 +39,12 @@ export class SpacingDesignToken extends DesignToken {
       .replace(/\.75$/i, 'hq')
       .replace(/\.875$/i, 'hqe');
     if (wordName !== name)
-      this.addToken(name, calculatedValue.unwrap(), {
+      {this.addToken(name, calculatedValue.unwrap(), {
         css: {
           key: [wordName],
           value: calculatedValue.unwrap(),
         },
-      });
+      });}
     this.addToken(name, calculatedValue.unwrap(), {
       css: {
         key: [name],
@@ -55,12 +55,12 @@ export class SpacingDesignToken extends DesignToken {
   }
 
   override resolveAbsoluteValue(value: string): string {
-    if (!(value.startsWith('var(') && value.endsWith(')'))) return value;
+    if (!(value.startsWith('var(') && value.endsWith(')'))) {return value;}
     const cssVar = value.slice(4, -1).split(',')[0];
     const token = this.tokens.find((t) =>
       t.css.isSomeAnd((css) => css.key === cssVar),
     );
-    if (!token) return super.resolveAbsoluteValue(value);
+    if (!token) {return super.resolveAbsoluteValue(value);}
     return token.value;
   }
 

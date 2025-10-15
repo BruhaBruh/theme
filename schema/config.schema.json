@@ -1,33 +1,28 @@
 {
-  "$ref": "#/definitions/config",
-  "definitions": {
-    "config": {
-      "type": "object",
-      "properties": {
-        "prefix": {
-          "type": "string",
-          "description": "Prefix in css variables.\nDefault: \"\"",
-          "default": ""
-        },
-        "content": {
-          "type": "string",
-          "description": "Path to theme configs.\nDefault: \"./themes/*.theme.yaml\"",
-          "default": "./themes/*.theme.yaml"
-        },
-        "absolute": {
-          "type": "boolean",
-          "description": "Output w/ absolute values.\nDefault: false",
-          "default": false
-        },
-        "output": {
-          "type": "string",
-          "description": "Output path destination of scheme.\nRequired"
-        }
-      },
-      "required": ["output"],
-      "additionalProperties": false,
-      "description": "Main Config for @bruhabruh/theme"
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Main Config for @bruhabruh/theme",
+  "type": "object",
+  "properties": {
+    "prefix": {
+      "default": "",
+      "description": "Prefix in css variables.\nDefault: \"\"",
+      "type": "string"
+    },
+    "content": {
+      "default": "./themes/*.theme.yaml",
+      "description": "Path to theme configs.\nDefault: \"./themes/*.theme.yaml\"",
+      "type": "string"
+    },
+    "absolute": {
+      "default": false,
+      "description": "Output w/ absolute values.\nDefault: false",
+      "type": "boolean"
+    },
+    "output": {
+      "description": "Output path destination of scheme.\nRequired",
+      "type": "string"
     }
   },
-  "$schema": "http://json-schema.org/draft-07/schema#"
+  "required": ["prefix", "content", "absolute", "output"],
+  "additionalProperties": false
 }

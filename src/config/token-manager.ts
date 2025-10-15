@@ -70,7 +70,7 @@ export class TokenManager {
       ...this.#letterSpacingDesignToken.otherCss(selector, absolute),
       ...this.#typographyDesignToken.otherCss(selector, absolute),
     ].filter((v) => {
-      if (typeof v === 'string') return v;
+      if (typeof v === 'string') {return v;}
       return v.length > 0;
     });
   }

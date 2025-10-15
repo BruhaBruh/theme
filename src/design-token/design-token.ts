@@ -79,7 +79,7 @@ export class DesignToken {
     token: Class<T>,
   ): Option<T> {
     const designToken = this.#designTokens.find((v) => v.name === token.name);
-    if (!designToken) return None;
+    if (!designToken) {return None;}
     return Some(designToken as T);
   }
 
@@ -98,7 +98,7 @@ export class DesignToken {
     const token = this.tokens.find(
       (t) => t.name.replace(/\./g, '-') === reference,
     );
-    if (!token) return None;
+    if (!token) {return None;}
     return Some(token.css.mapOr(token.value, (css) => css.keyVariable));
   }
 
@@ -207,14 +207,14 @@ export class DesignToken {
       .map((v) => v.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase());
 
     const variable = `--${transformedParts.join('-')}`.replace(/\./g, '\\.');
-    if (type === 'key') return variable;
+    if (type === 'key') {return variable;}
     return `var(${variable})`;
   }
 
   protected calculate(value: string): Result<string, string> {
     const v = value.replace(/,/g, '.');
-    if (this.#invalidValuePattern.test(v)) return Ok(v);
-    if (this.#valueAsOnlyOneNumberPattern.test(v)) return Ok(v);
+    if (this.#invalidValuePattern.test(v)) {return Ok(v);}
+    if (this.#valueAsOnlyOneNumberPattern.test(v)) {return Ok(v);}
 
     const changeResult = this.changePxToRem(v);
     if (changeResult.isErr()) {

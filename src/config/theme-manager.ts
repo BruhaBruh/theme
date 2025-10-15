@@ -56,7 +56,7 @@ export class ThemeManager {
 
     for (let i = 0; i < this.#config.dependencies.length; i++) {
       const name = this.#config.dependencies[i];
-      if (!themes[name]) return Err(`Dependency theme "${name}" is not found`);
+      if (!themes[name]) {return Err(`Dependency theme "${name}" is not found`);}
       const dependencyThemeManager = new ThemeManager(
         name,
         this.#prefix,

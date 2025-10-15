@@ -2,9 +2,10 @@ import { z } from 'zod';
 
 const baseColorTokens = z
   .record(
+    z.string(),
     z
       .string()
-      .or(z.record(z.string().describe('Color value')))
+      .or(z.record(z.string(), z.string().describe('Color value')))
       .describe('Color value or Color modifiers record'),
   )
   .describe('Color record. Name to value');
@@ -21,7 +22,14 @@ const materialColorTokensGenerator = z
         tertiary: z.boolean().default(false),
         error: z.boolean().default(false),
       })
-      .default({}),
+      .default({
+        neutral: false,
+        'neutral-variant': false,
+        primary: false,
+        secondary: false,
+        tertiary: false,
+        error: false,
+      }),
     overrides: z
       .object({
         neutral: z.string().default('neutral'),
@@ -32,7 +40,14 @@ const materialColorTokensGenerator = z
         error: z.string().default('critical'),
       })
       .describe('Material color names overrides')
-      .default({}),
+      .default({
+        neutral: 'neutral',
+        'neutral-variant': 'neutral-variant',
+        primary: 'primary',
+        secondary: 'secondary',
+        tertiary: 'tertiary',
+        error: 'critical',
+      }),
     customColors: z
       .array(
         z.object({
@@ -57,6 +72,7 @@ export type MaterialColorGenerator = NonNullable<
 
 const colorTokensGenerator = z
   .record(
+    z.string(),
     z
       .object({
         base: z.string().describe('Base color value.\nRequired'),
@@ -80,7 +96,7 @@ const colorTokensGenerator = z
               .describe('Reverse colors.\nDefault: false'),
           })
           .describe('Modifier generator settings.\nOptional')
-          .default({}),
+          .default({ min: 50, max: 1000, step: 50, reverse: false }),
       })
       .describe('Color generator settings.\nRequired'),
   )
@@ -104,7 +120,30 @@ const colorTokens = z
       .default([]),
   })
   .describe('Color tokens.\nDefault: {}')
-  .default({});
+  .default({
+    base: [],
+    material: {
+      source: '#ffffff',
+      disable: {
+        neutral: false,
+        'neutral-variant': false,
+        primary: false,
+        secondary: false,
+        tertiary: false,
+        error: false,
+      },
+      overrides: {
+        neutral: 'neutral',
+        'neutral-variant': 'neutral-variant',
+        primary: 'primary',
+        secondary: 'secondary',
+        tertiary: 'tertiary',
+        error: 'critical',
+      },
+      customColors: [],
+    },
+    generator: [],
+  });
 
 export const themeConfigSchema = z
   .object({
@@ -121,6 +160,7 @@ export const themeConfigSchema = z
       .array(
         z
           .record(
+            z.string(),
             z
               .string()
               .describe(
@@ -156,6 +196,7 @@ export const themeConfigSchema = z
       .array(
         z
           .record(
+            z.string(),
             z
               .string()
               .describe(
@@ -191,6 +232,7 @@ export const themeConfigSchema = z
       .array(
         z
           .record(
+            z.string(),
             z
               .string()
               .describe('Font Family value or reference like {font.base}'),
@@ -203,6 +245,7 @@ export const themeConfigSchema = z
       .array(
         z
           .record(
+            z.string(),
             z
               .string()
               .describe(
@@ -217,6 +260,7 @@ export const themeConfigSchema = z
       .array(
         z
           .record(
+            z.string(),
             z
               .string()
               .describe('Line Height value or reference like {leading.base}'),
@@ -250,6 +294,7 @@ export const themeConfigSchema = z
       .array(
         z
           .record(
+            z.string(),
             z
               .string()
               .describe('Font Size value or reference like {text.base}'),
@@ -283,6 +328,7 @@ export const themeConfigSchema = z
       .array(
         z
           .record(
+            z.string(),
             z
               .string()
               .describe(
@@ -297,6 +343,7 @@ export const themeConfigSchema = z
       .array(
         z
           .record(
+            z.string(),
             z
               .object({
                 font: z

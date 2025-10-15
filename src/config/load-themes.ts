@@ -24,7 +24,7 @@ export const loadThemes = (
     const themeConfig = themeConfigResult.unwrap();
     const themeName = file.split(/[\\/]/).pop()?.split('.')[0];
 
-    if (!themeName) return Err(`Fail get theme name of ${file}`);
+    if (!themeName) {return Err(`Fail get theme name of ${file}`);}
     themesConfig[themeName] = themeConfig;
   }
 

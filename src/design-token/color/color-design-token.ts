@@ -85,19 +85,19 @@ export class ColorDesignToken extends DesignToken {
     };
 
     if (!disable.neutral)
-      addColor(overrides.neutral, (i) => theme.palettes.neutral.getHct(i));
+      {addColor(overrides.neutral, (i) => theme.palettes.neutral.getHct(i));}
     if (!disable['neutral-variant'])
-      addColor(overrides['neutral-variant'], (i) =>
+      {addColor(overrides['neutral-variant'], (i) =>
         theme.palettes.neutralVariant.getHct(i),
-      );
+      );}
     if (!disable.primary)
-      addColor(overrides.primary, (i) => theme.palettes.primary.getHct(i));
+      {addColor(overrides.primary, (i) => theme.palettes.primary.getHct(i));}
     if (!disable.secondary)
-      addColor(overrides.secondary, (i) => theme.palettes.secondary.getHct(i));
+      {addColor(overrides.secondary, (i) => theme.palettes.secondary.getHct(i));}
     if (!disable.tertiary)
-      addColor(overrides.tertiary, (i) => theme.palettes.tertiary.getHct(i));
+      {addColor(overrides.tertiary, (i) => theme.palettes.tertiary.getHct(i));}
     if (!disable.error)
-      addColor(overrides.error, (i) => theme.palettes.error.getHct(i));
+      {addColor(overrides.error, (i) => theme.palettes.error.getHct(i));}
     theme.customColors.forEach((customColor) => {
       addColor(customColor.color.name, (i) => {
         const hct = Hct.fromInt(customColor.value);
@@ -140,7 +140,7 @@ export class ColorDesignToken extends DesignToken {
   }
 
   override otherCss(selector: string, absolute: boolean): CSSTree {
-    if (selector.trim() === '') return [];
+    if (selector.trim() === '') {return [];}
     return [
       `${selector} {`,
       Object.entries(this.cssVariables(absolute)).map(
@@ -151,12 +151,12 @@ export class ColorDesignToken extends DesignToken {
   }
 
   override resolveAbsoluteValue(value: string): string {
-    if (!(value.startsWith('var(') && value.endsWith(')'))) return value;
+    if (!(value.startsWith('var(') && value.endsWith(')'))) {return value;}
     const cssVar = value.slice(4, -1);
     const token = this.tokens.find((t) =>
       t.css.isSomeAnd((css) => css.key === cssVar),
     );
-    if (!token) return super.resolveAbsoluteValue(value);
+    if (!token) {return super.resolveAbsoluteValue(value);}
     return token.value;
   }
 
@@ -175,7 +175,7 @@ export class ColorDesignToken extends DesignToken {
     const value = this.resolveAbsoluteValue(reference);
     try {
       const color = oklch(value);
-      if (!color) throw new Error();
+      if (!color) {throw new Error();}
       return Ok(color);
     } catch {
       return Err(`Fail convert ${reference} with ${value} to rgb object`);
@@ -205,7 +205,7 @@ export class ColorDesignToken extends DesignToken {
         : baseNormalized.unwrap();
 
       const color = interpolator(normalized);
-      if (!color) return Err(`Invalid color: ${color}`);
+      if (!color) {return Err(`Invalid color: ${color}`);}
       result[modifier] = formatHex(color);
     }
 

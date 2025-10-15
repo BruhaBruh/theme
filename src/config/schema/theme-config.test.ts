@@ -5,14 +5,33 @@ describe('theme-config schema', () => {
     const result = themeConfigSchema.safeParse({});
     expect(result.success).toBeTruthy();
     expect(result.data).toStrictEqual({
-      dependencies: [],
-      selectors: [],
-      radius: [],
       color: {
         base: [],
         generator: [],
-        material: null,
+        material: {
+          customColors: [],
+          disable: {
+            error: false,
+            neutral: false,
+            'neutral-variant': false,
+            primary: false,
+            secondary: false,
+            tertiary: false,
+          },
+          overrides: {
+            error: 'critical',
+            neutral: 'neutral',
+            'neutral-variant': 'neutral-variant',
+            primary: 'primary',
+            secondary: 'secondary',
+            tertiary: 'tertiary',
+          },
+          source: '#ffffff',
+        },
       },
+      dependencies: [],
+      selectors: [],
+      radius: [],
       font: [],
       text: [],
       fontWeight: [],

@@ -41,7 +41,7 @@ const deepEqualObjectsWithoutValue = (
       const rightValue = right[key];
       const path: PathPart[] = [...previousPath, { type: 'key', value: key }];
       if (typeof leftValue === 'undefined' && typeof rightValue === 'undefined')
-        continue;
+        {continue;}
       if (
         (leftValue === undefined && rightValue !== undefined) ||
         (leftValue !== undefined && rightValue === undefined)
@@ -55,11 +55,11 @@ const deepEqualObjectsWithoutValue = (
         ];
       }
       if (typeof leftValue === 'number' && typeof rightValue === 'number')
-        continue;
+        {continue;}
       if (typeof leftValue === 'string' && typeof rightValue === 'string')
-        continue;
+        {continue;}
       if (typeof leftValue === 'boolean' && typeof rightValue === 'boolean')
-        continue;
+        {continue;}
       if (typeof leftValue !== 'object' && typeof rightValue !== 'object') {
         return [
           false,
@@ -74,16 +74,16 @@ const deepEqualObjectsWithoutValue = (
         rightValue as UnknownRecord,
         path,
       );
-      if (!isSame) return [isSame, message];
+      if (!isSame) {return [isSame, message];}
     }
 
     return [true, null];
   };
 
   const leftResult = compare(Object.keys(left));
-  if (!leftResult[0]) return leftResult;
+  if (!leftResult[0]) {return leftResult;}
   const rightResult = compare(Object.keys(right));
-  if (!rightResult[0]) return rightResult;
+  if (!rightResult[0]) {return rightResult;}
 
   return [true, null];
 };
@@ -94,20 +94,20 @@ const deepEqualArraysWithoutValue = (
   previousPath: PathPart[] = [],
 ): [boolean, EqualError | null] => {
   if (left.length !== right.length)
-    return [
+    {return [
       false,
       {
         type: 'length-not-equal',
         path: pathToString(previousPath),
       },
-    ];
+    ];}
 
   for (let i = 0; i < left.length; i++) {
     const leftValue = left[i];
     const rightValue = right[i];
     const path: PathPart[] = [...previousPath, { type: 'index', value: i }];
     if (typeof leftValue === 'undefined' && typeof rightValue === 'undefined')
-      continue;
+      {continue;}
     if (
       (leftValue === undefined && rightValue !== undefined) ||
       (leftValue !== undefined && rightValue === undefined)
@@ -121,11 +121,11 @@ const deepEqualArraysWithoutValue = (
       ];
     }
     if (typeof leftValue === 'number' && typeof rightValue === 'number')
-      continue;
+      {continue;}
     if (typeof leftValue === 'string' && typeof rightValue === 'string')
-      continue;
+      {continue;}
     if (typeof leftValue === 'boolean' && typeof rightValue === 'boolean')
-      continue;
+      {continue;}
     if (typeof leftValue !== 'object' && typeof rightValue !== 'object') {
       return [
         false,
@@ -140,7 +140,7 @@ const deepEqualArraysWithoutValue = (
       rightValue,
       path,
     );
-    if (!isSame) return [isSame, message];
+    if (!isSame) {return [isSame, message];}
   }
 
   return [true, null];

@@ -42,12 +42,12 @@ export class FontFamilyDesignToken extends DesignToken {
   }
 
   override resolveAbsoluteValue(value: string): string {
-    if (!(value.startsWith('var(') && value.endsWith(')'))) return value;
+    if (!(value.startsWith('var(') && value.endsWith(')'))) {return value;}
     const cssVar = value.slice(4, -1).split(',')[0];
     const token = this.tokens.find((t) =>
       t.css.isSomeAnd((css) => css.key === cssVar),
     );
-    if (!token) return super.resolveAbsoluteValue(value);
+    if (!token) {return super.resolveAbsoluteValue(value);}
     return token.value;
   }
 

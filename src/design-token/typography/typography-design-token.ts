@@ -77,7 +77,7 @@ export class TypographyDesignToken extends DesignToken {
   }
 
   override otherCss(_selector: string, absolute: boolean): CSSTree {
-    if (Object.entries(this.#typographies).length === 0) return [];
+    if (Object.entries(this.#typographies).length === 0) {return [];}
     return Object.entries(this.#typographies).map(([name, typography]) => [
       `@utility typography-${name} {`,
       Object.entries(
