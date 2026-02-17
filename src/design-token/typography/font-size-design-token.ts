@@ -43,7 +43,10 @@ export class FontSizeDesignToken extends DesignToken {
 		if (!(value.startsWith("var(") && value.endsWith(")"))) { return value; }
 		const cssVar = value.slice(4, -1).split(",")[0];
 		const token = this.tokens.find(t =>
-			t.css.map(css => css.key === cssVar).isSome(),
+			t.css.match({
+				Some: css => css.key === cssVar,
+				None: () => false,
+			}),
 		);
 		if (!token) { return super.resolveAbsoluteValue(value); }
 		return token.value;

@@ -111,7 +111,8 @@ export class DesignToken {
 		if (this.#designTokenReference.isNone()) {
 			return value;
 		}
-		return this.#designTokenReference.unwrap().resolveAbsoluteValue(value);
+		const v = this.#designTokenReference.unwrap().resolveAbsoluteValue(value);
+		return v;
 	}
 
 	themeCss(absolute: boolean): CSSTree {

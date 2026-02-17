@@ -10,7 +10,7 @@ function write(message: string[], stream: NodeJS.WritableStream = process.stdout
 
 export function clearScreen(): void {
 	if (process.stdout.isTTY) {
-		process.stdout.write("\x1Bc");
+		// process.stdout.write("\x1Bc");
 	}
 }
 

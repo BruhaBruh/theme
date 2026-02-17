@@ -31,13 +31,13 @@ export class SpacingDesignToken extends DesignToken {
 			) as unknown as Result<true, string>;
 		}
 		const wordName = name
-			.replace(/\.5$/, "h")
-			.replace(/\.25$/, "q")
-			.replace(/\.125$/, "e")
-			.replace(/\.375$/, "qe")
-			.replace(/\.625$/, "he")
-			.replace(/\.75$/, "hq")
-			.replace(/\.875$/, "hqe");
+			.replace(/\.5$/i, "h")
+			.replace(/\.25$/i, "q")
+			.replace(/\.125$/i, "e")
+			.replace(/\.375$/i, "qe")
+			.replace(/\.625$/i, "he")
+			.replace(/\.75$/i, "hq")
+			.replace(/\.875$/i, "hqe");
 		if (wordName !== name) {
 			this.addToken(name, calculatedValue.unwrap(), {
 				css: {
@@ -59,7 +59,10 @@ export class SpacingDesignToken extends DesignToken {
 		if (!(value.startsWith("var(") && value.endsWith(")"))) { return value; }
 		const cssVar = value.slice(4, -1).split(",")[0];
 		const token = this.tokens.find(t =>
-			t.css.map(css => css.key === cssVar).isSome(),
+			t.css.match({
+				Some: css => css.key === cssVar,
+				None: () => false,
+			}),
 		);
 		if (!token) { return super.resolveAbsoluteValue(value); }
 		return token.value;

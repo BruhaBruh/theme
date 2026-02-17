@@ -1,7 +1,7 @@
 {
 	"name": "@bruhabruh/theme",
 	"type": "module",
-	"version": "4.1.0",
+	"version": "4.1.1",
 	"description": "BruhaBruh Theme with CLI",
 	"author": "BruhaBruh",
 	"license": "MIT",
