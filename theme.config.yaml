@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=./schema/config.schema.json
 
-prefix: ''
+prefix: ""
 content: ./themes/**/*.theme.yaml
 absolute: false
 output: ./.generated/theme.css

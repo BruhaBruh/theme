@@ -1,1 +1,1 @@
-export * from './border-radius-design-token';
+export * from "./border-radius-design-token";

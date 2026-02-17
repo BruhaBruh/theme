@@ -1,564 +1,913 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "default": {},
-  "type": "object",
-  "properties": {
-    "dependencies": {
-      "description": "List of themes dependencies",
-      "default": [],
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "selectors": {
-      "description": "List of CSS selectors",
-      "default": [],
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "color": {
-      "description": "Color tokens",
-      "default": {
-        "base": [],
-        "material": null,
-        "generator": []
-      },
-      "type": "object",
-      "properties": {
-        "base": {
-          "default": [],
-          "description": "List of color records",
-          "type": "array",
-          "items": {
-            "description": "Color record. Name to value",
-            "type": "object",
-            "propertyNames": {
-              "description": "Color name",
-              "allOf": [
-                {
-                  "$ref": "#/definitions/__schema0"
-                }
-              ]
-            },
-            "additionalProperties": {
-              "anyOf": [
-                {
-                  "description": "Color value",
-                  "type": "string"
-                },
-                {
-                  "type": "object",
-                  "propertyNames": {
-                    "description": "Color variant",
-                    "allOf": [
-                      {
-                        "$ref": "#/definitions/__schema0"
-                      }
-                    ]
-                  },
-                  "additionalProperties": {
-                    "description": "Color value",
-                    "type": "string"
-                  }
-                }
-              ]
-            }
-          }
-        },
-        "material": {
-          "default": null,
-          "anyOf": [
-            {
-              "type": "object",
-              "properties": {
-                "source": {
-                  "description": "Source color value",
-                  "type": "string"
-                },
-                "disable": {
-                  "description": "Disable generate specific color",
-                  "default": {},
-                  "type": "object",
-                  "properties": {
-                    "neutral": {
-                      "default": false,
-                      "type": "boolean"
-                    },
-                    "neutral-variant": {
-                      "default": false,
-                      "type": "boolean"
-                    },
-                    "primary": {
-                      "default": false,
-                      "type": "boolean"
-                    },
-                    "secondary": {
-                      "default": false,
-                      "type": "boolean"
-                    },
-                    "tertiary": {
-                      "default": false,
-                      "type": "boolean"
-                    },
-                    "error": {
-                      "default": false,
-                      "type": "boolean"
-                    }
-                  }
-                },
-                "overrides": {
-                  "description": "Material color name overrides",
-                  "default": {},
-                  "type": "object",
-                  "properties": {
-                    "neutral": {
-                      "default": "neutral",
-                      "type": "string"
-                    },
-                    "neutral-variant": {
-                      "default": "neutral-variant",
-                      "type": "string"
-                    },
-                    "primary": {
-                      "default": "primary",
-                      "type": "string"
-                    },
-                    "secondary": {
-                      "default": "secondary",
-                      "type": "string"
-                    },
-                    "tertiary": {
-                      "default": "tertiary",
-                      "type": "string"
-                    },
-                    "error": {
-                      "default": "critical",
-                      "type": "string"
-                    }
-                  }
-                },
-                "customColors": {
-                  "description": "Custom material colors",
-                  "default": [],
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "description": "Color name",
-                        "type": "string"
-                      },
-                      "value": {
-                        "description": "Color value",
-                        "type": "string"
-                      },
-                      "blend": {
-                        "description": "Color blend",
-                        "default": false,
-                        "type": "boolean"
-                      }
-                    },
-                    "required": ["name", "value"]
-                  }
-                }
-              },
-              "required": ["source"]
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "generator": {
-          "default": [],
-          "description": "List of color tokens generators",
-          "type": "array",
-          "items": {
-            "description": "Custom color generator by name",
-            "default": {},
-            "type": "object",
-            "propertyNames": {
-              "description": "Color name",
-              "allOf": [
-                {
-                  "$ref": "#/definitions/__schema0"
-                }
-              ]
-            },
-            "additionalProperties": {
-              "type": "object",
-              "properties": {
-                "source": {
-                  "description": "Source color value",
-                  "type": "string"
-                },
-                "modifier": {
-                  "description": "Generator modifiers",
-                  "default": {},
-                  "type": "object",
-                  "properties": {
-                    "min": {
-                      "description": "Minimal token",
-                      "default": 50,
-                      "type": "number"
-                    },
-                    "max": {
-                      "description": "Maximum token",
-                      "default": 1000,
-                      "type": "number"
-                    },
-                    "step": {
-                      "description": "Step for token",
-                      "default": 50,
-                      "type": "number"
-                    },
-                    "reverse": {
-                      "description": "Reverse colors",
-                      "default": false,
-                      "type": "boolean"
-                    }
-                  }
-                }
-              },
-              "required": ["source"]
-            }
-          }
-        }
-      }
-    },
-    "radius": {
-      "description": "Border Radius tokens",
-      "default": [],
-      "type": "array",
-      "items": {
-        "type": "object",
-        "propertyNames": {
-          "description": "Border radius name",
-          "allOf": [
-            {
-              "$ref": "#/definitions/__schema0"
-            }
-          ]
-        },
-        "additionalProperties": {
-          "anyOf": [
-            {
-              "description": "Border Radius value or reference like {radius.base}.\nSupport calculation like {radius.base} + 2px",
-              "type": "string"
-            },
-            {
-              "description": "Border Radius token generator",
-              "type": "object",
-              "properties": {
-                "start": {
-                  "description": "Start token",
-                  "type": "number"
-                },
-                "end": {
-                  "description": "End token",
-                  "type": "number"
-                },
-                "step": {
-                  "description": "Step token",
-                  "default": 1,
-                  "type": "number"
-                },
-                "namePattern": {
-                  "description": "Name pattern",
-                  "default": "{i}",
-                  "type": "string"
-                },
-                "valuePattern": {
-                  "description": "Value pattern",
-                  "default": "{i}px",
-                  "type": "string"
-                }
-              },
-              "required": ["start", "end"]
-            }
-          ]
-        }
-      }
-    },
-    "spacing": {
-      "description": "Spacing tokens",
-      "default": [],
-      "type": "array",
-      "items": {
-        "type": "object",
-        "propertyNames": {
-          "description": "Spacing name",
-          "allOf": [
-            {
-              "$ref": "#/definitions/__schema0"
-            }
-          ]
-        },
-        "additionalProperties": {
-          "anyOf": [
-            {
-              "description": "Spacing value or reference like {spacing.base}.\nSupport calculation like {spacing.base} + 2px",
-              "type": "string"
-            },
-            {
-              "description": "Spacing token generator",
-              "type": "object",
-              "properties": {
-                "start": {
-                  "description": "Start token",
-                  "type": "number"
-                },
-                "end": {
-                  "description": "End token",
-                  "type": "number"
-                },
-                "step": {
-                  "description": "Step token",
-                  "default": 1,
-                  "type": "number"
-                },
-                "namePattern": {
-                  "description": "Name pattern",
-                  "default": "{i}",
-                  "type": "string"
-                },
-                "valuePattern": {
-                  "description": "Value pattern",
-                  "default": "{i}px",
-                  "type": "string"
-                }
-              },
-              "required": ["start", "end"]
-            }
-          ]
-        }
-      }
-    },
-    "font": {
-      "description": "Font Family tokens",
-      "default": [],
-      "type": "array",
-      "items": {
-        "type": "object",
-        "propertyNames": {
-          "description": "Font Family name",
-          "allOf": [
-            {
-              "$ref": "#/definitions/__schema0"
-            }
-          ]
-        },
-        "additionalProperties": {
-          "description": "Font Family value or reference like {font.base}",
-          "type": "string"
-        }
-      }
-    },
-    "fontWeight": {
-      "description": "Font Weight tokens",
-      "default": [],
-      "type": "array",
-      "items": {
-        "type": "object",
-        "propertyNames": {
-          "description": "Font Weight name",
-          "allOf": [
-            {
-              "$ref": "#/definitions/__schema0"
-            }
-          ]
-        },
-        "additionalProperties": {
-          "description": "Font Weight value or reference like {font-weight.base}",
-          "type": "string"
-        }
-      }
-    },
-    "leading": {
-      "description": "Line Heights",
-      "default": [],
-      "type": "array",
-      "items": {
-        "type": "object",
-        "propertyNames": {
-          "description": "Line Height name",
-          "allOf": [
-            {
-              "$ref": "#/definitions/__schema0"
-            }
-          ]
-        },
-        "additionalProperties": {
-          "anyOf": [
-            {
-              "description": "Line Height value or reference like {leading.base}.\nSupport calculation like {leading.base} + 2px",
-              "type": "string"
-            },
-            {
-              "description": "Line Height generator",
-              "type": "object",
-              "properties": {
-                "start": {
-                  "description": "Start token",
-                  "type": "number"
-                },
-                "end": {
-                  "description": "End token",
-                  "type": "number"
-                },
-                "step": {
-                  "description": "Step token",
-                  "default": 1,
-                  "type": "number"
-                },
-                "namePattern": {
-                  "description": "Name pattern",
-                  "default": "{i}",
-                  "type": "string"
-                },
-                "valuePattern": {
-                  "description": "Value pattern",
-                  "default": "{i}px",
-                  "type": "string"
-                }
-              },
-              "required": ["start", "end"]
-            }
-          ]
-        }
-      }
-    },
-    "text": {
-      "description": "Spacing tokens",
-      "default": [],
-      "type": "array",
-      "items": {
-        "type": "object",
-        "propertyNames": {
-          "description": "Font Size name",
-          "allOf": [
-            {
-              "$ref": "#/definitions/__schema0"
-            }
-          ]
-        },
-        "additionalProperties": {
-          "anyOf": [
-            {
-              "description": "Font Size value or reference like {text.base}.\nSupport calculation like {text.base} + 2px",
-              "type": "string"
-            },
-            {
-              "description": "Font Size token generator",
-              "type": "object",
-              "properties": {
-                "start": {
-                  "description": "Start token",
-                  "type": "number"
-                },
-                "end": {
-                  "description": "End token",
-                  "type": "number"
-                },
-                "step": {
-                  "description": "Step token",
-                  "default": 1,
-                  "type": "number"
-                },
-                "namePattern": {
-                  "description": "Name pattern",
-                  "default": "{i}",
-                  "type": "string"
-                },
-                "valuePattern": {
-                  "description": "Value pattern",
-                  "default": "{i}px",
-                  "type": "string"
-                }
-              },
-              "required": ["start", "end"]
-            }
-          ]
-        }
-      }
-    },
-    "tracking": {
-      "description": "Letter Spacing tokens",
-      "default": [],
-      "type": "array",
-      "items": {
-        "type": "object",
-        "propertyNames": {
-          "description": "Letter Spacing name",
-          "allOf": [
-            {
-              "$ref": "#/definitions/__schema0"
-            }
-          ]
-        },
-        "additionalProperties": {
-          "description": "Letter Spacing value or reference like {tracking.base}.\nSupport calculation like {tracking.base} + 2px",
-          "type": "string"
-        }
-      }
-    },
-    "typography": {
-      "description": "Typography tokens",
-      "default": [],
-      "type": "array",
-      "items": {
-        "type": "object",
-        "propertyNames": {
-          "description": "Typography name",
-          "allOf": [
-            {
-              "$ref": "#/definitions/__schema0"
-            }
-          ]
-        },
-        "additionalProperties": {
-          "description": "Typography settings",
-          "type": "object",
-          "properties": {
-            "font": {
-              "description": "Font Family value or reference like {font.base}",
-              "type": "string"
-            },
-            "fontWeight": {
-              "description": "Font Weight value or reference like {font-weight.base}",
-              "type": "string"
-            },
-            "leading": {
-              "description": "Line Height value or reference like {leading.base}",
-              "type": "string"
-            },
-            "text": {
-              "description": "Font Size value or reference like {text.base}",
-              "type": "string"
-            },
-            "tracking": {
-              "description": "Letter Spacing value or reference like {tracking.base}",
-              "type": "string"
-            }
-          },
-          "required": ["font", "fontWeight", "leading", "text", "tracking"]
-        }
-      }
-    }
-  },
-  "definitions": {
-    "__schema0": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "number"
-        }
-      ]
-    }
-  }
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"default": {},
+	"type": "object",
+	"properties": {
+		"dependencies": {
+			"default": [],
+			"description": "List of themes dependencies",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema0"
+				}
+			]
+		},
+		"selectors": {
+			"default": [],
+			"description": "List of CSS selectors",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema1"
+				}
+			]
+		},
+		"color": {
+			"default": {
+				"base": [],
+				"material": null,
+				"generator": []
+			},
+			"description": "Color tokens",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema2"
+				}
+			]
+		},
+		"radius": {
+			"default": [],
+			"description": "Border Radius tokens",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema20"
+				}
+			]
+		},
+		"spacing": {
+			"default": [],
+			"description": "Spacing tokens",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema29"
+				}
+			]
+		},
+		"font": {
+			"default": [],
+			"description": "Font Family tokens",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema38"
+				}
+			]
+		},
+		"fontWeight": {
+			"default": [],
+			"description": "Font Weight tokens",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema39"
+				}
+			]
+		},
+		"leading": {
+			"default": [],
+			"description": "Line Heights",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema40"
+				}
+			]
+		},
+		"text": {
+			"default": [],
+			"description": "Spacing tokens",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema49"
+				}
+			]
+		},
+		"tracking": {
+			"default": [],
+			"description": "Letter Spacing tokens",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema58"
+				}
+			]
+		},
+		"typography": {
+			"default": [],
+			"description": "Typography tokens",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema59"
+				}
+			]
+		}
+	},
+	"definitions": {
+		"__schema0": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"__schema1": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"__schema2": {
+			"type": "object",
+			"properties": {
+				"base": {
+					"default": [],
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/__schema3"
+					},
+					"description": "List of color records"
+				},
+				"material": {
+					"default": null,
+					"anyOf": [
+						{
+							"type": "object",
+							"properties": {
+								"source": {
+									"type": "string",
+									"description": "Source color value"
+								},
+								"disable": {
+									"default": {},
+									"description": "Disable generate specific color",
+									"allOf": [
+										{
+											"$ref": "#/definitions/__schema9"
+										}
+									]
+								},
+								"overrides": {
+									"default": {},
+									"description": "Material color name overrides",
+									"allOf": [
+										{
+											"$ref": "#/definitions/__schema10"
+										}
+									]
+								},
+								"customColors": {
+									"default": [],
+									"description": "Custom material colors",
+									"allOf": [
+										{
+											"$ref": "#/definitions/__schema11"
+										}
+									]
+								}
+							},
+							"required": [
+								"source"
+							]
+						},
+						{
+							"type": "null"
+						}
+					]
+				},
+				"generator": {
+					"default": [],
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/__schema13"
+					},
+					"description": "List of color tokens generators"
+				}
+			}
+		},
+		"__schema3": {
+			"type": "object",
+			"propertyNames": {
+				"$ref": "#/definitions/__schema4"
+			},
+			"additionalProperties": {
+				"$ref": "#/definitions/__schema8"
+			},
+			"description": "Color record. Name to value"
+		},
+		"__schema4": {
+			"description": "Color name",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema7"
+				}
+			]
+		},
+		"__schema5": {
+			"type": "string"
+		},
+		"__schema6": {
+			"type": "number"
+		},
+		"__schema7": {
+			"anyOf": [
+				{
+					"$ref": "#/definitions/__schema5"
+				},
+				{
+					"$ref": "#/definitions/__schema6"
+				}
+			]
+		},
+		"__schema8": {
+			"anyOf": [
+				{
+					"type": "string",
+					"description": "Color value"
+				},
+				{
+					"type": "object",
+					"propertyNames": {
+						"description": "Color variant",
+						"allOf": [
+							{
+								"$ref": "#/definitions/__schema7"
+							}
+						]
+					},
+					"additionalProperties": {
+						"type": "string",
+						"description": "Color value"
+					}
+				}
+			]
+		},
+		"__schema9": {
+			"type": "object",
+			"properties": {
+				"neutral": {
+					"default": false,
+					"type": "boolean"
+				},
+				"neutral-variant": {
+					"default": false,
+					"type": "boolean"
+				},
+				"primary": {
+					"default": false,
+					"type": "boolean"
+				},
+				"secondary": {
+					"default": false,
+					"type": "boolean"
+				},
+				"tertiary": {
+					"default": false,
+					"type": "boolean"
+				},
+				"error": {
+					"default": false,
+					"type": "boolean"
+				}
+			}
+		},
+		"__schema10": {
+			"type": "object",
+			"properties": {
+				"neutral": {
+					"default": "neutral",
+					"type": "string"
+				},
+				"neutral-variant": {
+					"default": "neutral-variant",
+					"type": "string"
+				},
+				"primary": {
+					"default": "primary",
+					"type": "string"
+				},
+				"secondary": {
+					"default": "secondary",
+					"type": "string"
+				},
+				"tertiary": {
+					"default": "tertiary",
+					"type": "string"
+				},
+				"error": {
+					"default": "critical",
+					"type": "string"
+				}
+			}
+		},
+		"__schema11": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "Color name"
+					},
+					"value": {
+						"type": "string",
+						"description": "Color value"
+					},
+					"blend": {
+						"default": false,
+						"description": "Color blend",
+						"allOf": [
+							{
+								"$ref": "#/definitions/__schema12"
+							}
+						]
+					}
+				},
+				"required": [
+					"name",
+					"value"
+				]
+			}
+		},
+		"__schema12": {
+			"type": "boolean"
+		},
+		"__schema13": {
+			"default": {},
+			"description": "Custom color generator by name",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema14"
+				}
+			]
+		},
+		"__schema14": {
+			"type": "object",
+			"propertyNames": {
+				"description": "Color name",
+				"allOf": [
+					{
+						"$ref": "#/definitions/__schema7"
+					}
+				]
+			},
+			"additionalProperties": {
+				"type": "object",
+				"properties": {
+					"source": {
+						"type": "string",
+						"description": "Source color value"
+					},
+					"modifier": {
+						"default": {},
+						"description": "Generator modifiers",
+						"allOf": [
+							{
+								"$ref": "#/definitions/__schema15"
+							}
+						]
+					}
+				},
+				"required": [
+					"source"
+				]
+			}
+		},
+		"__schema15": {
+			"type": "object",
+			"properties": {
+				"min": {
+					"default": 50,
+					"description": "Minimal token",
+					"allOf": [
+						{
+							"$ref": "#/definitions/__schema16"
+						}
+					]
+				},
+				"max": {
+					"default": 1000,
+					"description": "Maximum token",
+					"allOf": [
+						{
+							"$ref": "#/definitions/__schema17"
+						}
+					]
+				},
+				"step": {
+					"default": 50,
+					"description": "Step for token",
+					"allOf": [
+						{
+							"$ref": "#/definitions/__schema18"
+						}
+					]
+				},
+				"reverse": {
+					"default": false,
+					"description": "Reverse colors",
+					"allOf": [
+						{
+							"$ref": "#/definitions/__schema19"
+						}
+					]
+				}
+			}
+		},
+		"__schema16": {
+			"type": "number"
+		},
+		"__schema17": {
+			"type": "number"
+		},
+		"__schema18": {
+			"type": "number"
+		},
+		"__schema19": {
+			"type": "boolean"
+		},
+		"__schema20": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"propertyNames": {
+					"description": "Border radius name",
+					"allOf": [
+						{
+							"$ref": "#/definitions/__schema7"
+						}
+					]
+				},
+				"additionalProperties": {
+					"anyOf": [
+						{
+							"type": "string",
+							"description": "Border Radius value or reference like {radius.base}.\nSupport calculation like {radius.base} + 2px"
+						},
+						{
+							"type": "object",
+							"properties": {
+								"start": {
+									"$ref": "#/definitions/__schema21"
+								},
+								"end": {
+									"$ref": "#/definitions/__schema22"
+								},
+								"step": {
+									"$ref": "#/definitions/__schema23"
+								},
+								"namePattern": {
+									"$ref": "#/definitions/__schema25"
+								},
+								"valuePattern": {
+									"$ref": "#/definitions/__schema27"
+								}
+							},
+							"required": [
+								"start",
+								"end"
+							],
+							"description": "Border Radius token generator"
+						}
+					]
+				}
+			}
+		},
+		"__schema21": {
+			"type": "number",
+			"description": "Start token"
+		},
+		"__schema22": {
+			"type": "number",
+			"description": "End token"
+		},
+		"__schema23": {
+			"default": 1,
+			"description": "Step token",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema24"
+				}
+			]
+		},
+		"__schema24": {
+			"type": "number"
+		},
+		"__schema25": {
+			"default": "{i}",
+			"description": "Name pattern",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema26"
+				}
+			]
+		},
+		"__schema26": {
+			"type": "string"
+		},
+		"__schema27": {
+			"default": "{i}px",
+			"description": "Value pattern",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema28"
+				}
+			]
+		},
+		"__schema28": {
+			"type": "string"
+		},
+		"__schema29": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"propertyNames": {
+					"description": "Spacing name",
+					"allOf": [
+						{
+							"$ref": "#/definitions/__schema7"
+						}
+					]
+				},
+				"additionalProperties": {
+					"anyOf": [
+						{
+							"type": "string",
+							"description": "Spacing value or reference like {spacing.base}.\nSupport calculation like {spacing.base} + 2px"
+						},
+						{
+							"type": "object",
+							"properties": {
+								"start": {
+									"$ref": "#/definitions/__schema30"
+								},
+								"end": {
+									"$ref": "#/definitions/__schema31"
+								},
+								"step": {
+									"$ref": "#/definitions/__schema32"
+								},
+								"namePattern": {
+									"$ref": "#/definitions/__schema34"
+								},
+								"valuePattern": {
+									"$ref": "#/definitions/__schema36"
+								}
+							},
+							"required": [
+								"start",
+								"end"
+							],
+							"description": "Spacing token generator"
+						}
+					]
+				}
+			}
+		},
+		"__schema30": {
+			"type": "number",
+			"description": "Start token"
+		},
+		"__schema31": {
+			"type": "number",
+			"description": "End token"
+		},
+		"__schema32": {
+			"default": 1,
+			"description": "Step token",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema33"
+				}
+			]
+		},
+		"__schema33": {
+			"type": "number"
+		},
+		"__schema34": {
+			"default": "{i}",
+			"description": "Name pattern",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema35"
+				}
+			]
+		},
+		"__schema35": {
+			"type": "string"
+		},
+		"__schema36": {
+			"default": "{i}px",
+			"description": "Value pattern",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema37"
+				}
+			]
+		},
+		"__schema37": {
+			"type": "string"
+		},
+		"__schema38": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"propertyNames": {
+					"description": "Font Family name",
+					"allOf": [
+						{
+							"$ref": "#/definitions/__schema7"
+						}
+					]
+				},
+				"additionalProperties": {
+					"type": "string",
+					"description": "Font Family value or reference like {font.base}"
+				}
+			}
+		},
+		"__schema39": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"propertyNames": {
+					"description": "Font Weight name",
+					"allOf": [
+						{
+							"$ref": "#/definitions/__schema7"
+						}
+					]
+				},
+				"additionalProperties": {
+					"type": "string",
+					"description": "Font Weight value or reference like {font-weight.base}"
+				}
+			}
+		},
+		"__schema40": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"propertyNames": {
+					"description": "Line Height name",
+					"allOf": [
+						{
+							"$ref": "#/definitions/__schema7"
+						}
+					]
+				},
+				"additionalProperties": {
+					"anyOf": [
+						{
+							"type": "string",
+							"description": "Line Height value or reference like {leading.base}.\nSupport calculation like {leading.base} + 2px"
+						},
+						{
+							"type": "object",
+							"properties": {
+								"start": {
+									"$ref": "#/definitions/__schema41"
+								},
+								"end": {
+									"$ref": "#/definitions/__schema42"
+								},
+								"step": {
+									"$ref": "#/definitions/__schema43"
+								},
+								"namePattern": {
+									"$ref": "#/definitions/__schema45"
+								},
+								"valuePattern": {
+									"$ref": "#/definitions/__schema47"
+								}
+							},
+							"required": [
+								"start",
+								"end"
+							],
+							"description": "Line Height generator"
+						}
+					]
+				}
+			}
+		},
+		"__schema41": {
+			"type": "number",
+			"description": "Start token"
+		},
+		"__schema42": {
+			"type": "number",
+			"description": "End token"
+		},
+		"__schema43": {
+			"default": 1,
+			"description": "Step token",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema44"
+				}
+			]
+		},
+		"__schema44": {
+			"type": "number"
+		},
+		"__schema45": {
+			"default": "{i}",
+			"description": "Name pattern",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema46"
+				}
+			]
+		},
+		"__schema46": {
+			"type": "string"
+		},
+		"__schema47": {
+			"default": "{i}px",
+			"description": "Value pattern",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema48"
+				}
+			]
+		},
+		"__schema48": {
+			"type": "string"
+		},
+		"__schema49": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"propertyNames": {
+					"description": "Font Size name",
+					"allOf": [
+						{
+							"$ref": "#/definitions/__schema7"
+						}
+					]
+				},
+				"additionalProperties": {
+					"anyOf": [
+						{
+							"type": "string",
+							"description": "Font Size value or reference like {text.base}.\nSupport calculation like {text.base} + 2px"
+						},
+						{
+							"type": "object",
+							"properties": {
+								"start": {
+									"$ref": "#/definitions/__schema50"
+								},
+								"end": {
+									"$ref": "#/definitions/__schema51"
+								},
+								"step": {
+									"$ref": "#/definitions/__schema52"
+								},
+								"namePattern": {
+									"$ref": "#/definitions/__schema54"
+								},
+								"valuePattern": {
+									"$ref": "#/definitions/__schema56"
+								}
+							},
+							"required": [
+								"start",
+								"end"
+							],
+							"description": "Font Size token generator"
+						}
+					]
+				}
+			}
+		},
+		"__schema50": {
+			"type": "number",
+			"description": "Start token"
+		},
+		"__schema51": {
+			"type": "number",
+			"description": "End token"
+		},
+		"__schema52": {
+			"default": 1,
+			"description": "Step token",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema53"
+				}
+			]
+		},
+		"__schema53": {
+			"type": "number"
+		},
+		"__schema54": {
+			"default": "{i}",
+			"description": "Name pattern",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema55"
+				}
+			]
+		},
+		"__schema55": {
+			"type": "string"
+		},
+		"__schema56": {
+			"default": "{i}px",
+			"description": "Value pattern",
+			"allOf": [
+				{
+					"$ref": "#/definitions/__schema57"
+				}
+			]
+		},
+		"__schema57": {
+			"type": "string"
+		},
+		"__schema58": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"propertyNames": {
+					"description": "Letter Spacing name",
+					"allOf": [
+						{
+							"$ref": "#/definitions/__schema7"
+						}
+					]
+				},
+				"additionalProperties": {
+					"type": "string",
+					"description": "Letter Spacing value or reference like {tracking.base}.\nSupport calculation like {tracking.base} + 2px"
+				}
+			}
+		},
+		"__schema59": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"propertyNames": {
+					"description": "Typography name",
+					"allOf": [
+						{
+							"$ref": "#/definitions/__schema7"
+						}
+					]
+				},
+				"additionalProperties": {
+					"type": "object",
+					"properties": {
+						"font": {
+							"$ref": "#/definitions/__schema60"
+						},
+						"fontWeight": {
+							"$ref": "#/definitions/__schema61"
+						},
+						"leading": {
+							"$ref": "#/definitions/__schema62"
+						},
+						"text": {
+							"$ref": "#/definitions/__schema63"
+						},
+						"tracking": {
+							"$ref": "#/definitions/__schema64"
+						}
+					},
+					"required": [
+						"font",
+						"fontWeight",
+						"leading",
+						"text",
+						"tracking"
+					],
+					"description": "Typography settings"
+				}
+			}
+		},
+		"__schema60": {
+			"type": "string",
+			"description": "Font Family value or reference like {font.base}"
+		},
+		"__schema61": {
+			"type": "string",
+			"description": "Font Weight value or reference like {font-weight.base}"
+		},
+		"__schema62": {
+			"type": "string",
+			"description": "Line Height value or reference like {leading.base}"
+		},
+		"__schema63": {
+			"type": "string",
+			"description": "Font Size value or reference like {text.base}"
+		},
+		"__schema64": {
+			"type": "string",
+			"description": "Letter Spacing value or reference like {tracking.base}"
+		}
+	}
 }

@@ -1,19 +1,19 @@
-type ColorDesignType = 'color';
+type ColorDesignType = "color";
 
-type BorderRadiusDesignType = 'radius';
+type BorderRadiusDesignType = "radius";
 
-type SpacingDesignType = 'spacing';
+type SpacingDesignType = "spacing";
 
-type TypographyDesignType =
-  | 'font'
-  | 'font-weight'
-  | 'leading'
-  | 'text'
-  | 'tracking'
-  | 'typography';
+type TypographyDesignType
+	= | "font"
+		| "font-weight"
+		| "leading"
+		| "text"
+		| "tracking"
+		| "typography";
 
-export type DesignTokenType =
-  | ColorDesignType
-  | BorderRadiusDesignType
-  | SpacingDesignType
-  | TypographyDesignType;
+export type DesignTokenType
+	= | ColorDesignType
+		| BorderRadiusDesignType
+		| SpacingDesignType
+		| TypographyDesignType;

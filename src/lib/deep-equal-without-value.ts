@@ -1,181 +1,161 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
+import type { UnknownArray, UnknownRecord } from "@bruhabruh/type-safe";
 
-import type { UnknownArray, UnknownRecord } from '@bruhabruh/type-safe';
+interface PathPart {
+	type: "key" | "index";
+	value: string | number;
+}
 
-type PathPart = {
-  type: 'key' | 'index';
-  value: string | number;
-};
+function pathToString(path: PathPart[]): string {
+	const result: string[] = [];
 
-const pathToString = (path: PathPart[]): string => {
-  const result: string[] = [];
+	path.forEach((part, index) => {
+		if (part.type === "key") {
+			if (index > 0) {
+				result.push(".");
+			}
+			result.push(part.value.toString());
+		}
+		else if (part.type === "index") {
+			result.push(`[${part.value}]`);
+		}
+	});
 
-  path.forEach((part, index) => {
-    if (part.type === 'key') {
-      if (index > 0) {
-        result.push('.');
-      }
-      result.push(part.value.toString());
-    } else if (part.type === 'index') {
-      result.push(`[${part.value}]`);
-    }
-  });
+	return result.join("");
+}
 
-  return result.join('');
-};
+interface EqualError {
+	type: "invalid-value" | "not-found" | "invalid-type" | "length-not-equal";
+	path: string;
+}
 
-type EqualError = {
-  type: 'invalid-value' | 'not-found' | 'invalid-type' | 'length-not-equal';
-  path: string;
-};
+function deepEqualObjectsWithoutValue(left: UnknownRecord, right: UnknownRecord, previousPath: PathPart[] = []): [boolean, EqualError | null] {
+	const compare = (keys: string[]): [boolean, EqualError | null] => {
+		for (let i = 0; i < keys.length; i++) {
+			const key = keys[i];
+			const leftValue = left[key];
+			const rightValue = right[key];
+			const path: PathPart[] = [...previousPath, { type: "key", value: key }];
+			if (typeof leftValue === "undefined" && typeof rightValue === "undefined") { continue; }
+			if (
+				(leftValue === undefined && rightValue !== undefined)
+				|| (leftValue !== undefined && rightValue === undefined)
+			) {
+				return [
+					false,
+					{
+						type: "not-found",
+						path: pathToString(path),
+					},
+				];
+			}
+			if (typeof leftValue === "number" && typeof rightValue === "number") { continue; }
+			if (typeof leftValue === "string" && typeof rightValue === "string") { continue; }
+			if (typeof leftValue === "boolean" && typeof rightValue === "boolean") { continue; }
+			if (typeof leftValue !== "object" && typeof rightValue !== "object") {
+				return [
+					false,
+					{
+						type: "invalid-value",
+						path: pathToString(path),
+					},
+				];
+			}
+			const [isSame, message] = deepEqualWithoutValue(
+				leftValue as UnknownRecord,
+				rightValue as UnknownRecord,
+				path,
+			);
+			if (!isSame) { return [isSame, message]; }
+		}
 
-const deepEqualObjectsWithoutValue = (
-  left: UnknownRecord,
-  right: UnknownRecord,
-  previousPath: PathPart[] = [],
-): [boolean, EqualError | null] => {
-  const compare = (keys: string[]): [boolean, EqualError | null] => {
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
-      const leftValue = left[key];
-      const rightValue = right[key];
-      const path: PathPart[] = [...previousPath, { type: 'key', value: key }];
-      if (typeof leftValue === 'undefined' && typeof rightValue === 'undefined')
-        {continue;}
-      if (
-        (leftValue === undefined && rightValue !== undefined) ||
-        (leftValue !== undefined && rightValue === undefined)
-      ) {
-        return [
-          false,
-          {
-            type: 'not-found',
-            path: pathToString(path),
-          },
-        ];
-      }
-      if (typeof leftValue === 'number' && typeof rightValue === 'number')
-        {continue;}
-      if (typeof leftValue === 'string' && typeof rightValue === 'string')
-        {continue;}
-      if (typeof leftValue === 'boolean' && typeof rightValue === 'boolean')
-        {continue;}
-      if (typeof leftValue !== 'object' && typeof rightValue !== 'object') {
-        return [
-          false,
-          {
-            type: 'invalid-value',
-            path: pathToString(path),
-          },
-        ];
-      }
-      const [isSame, message] = deepEqualWithoutValue(
-        leftValue as UnknownRecord,
-        rightValue as UnknownRecord,
-        path,
-      );
-      if (!isSame) {return [isSame, message];}
-    }
+		return [true, null];
+	};
 
-    return [true, null];
-  };
+	const leftResult = compare(Object.keys(left));
+	if (!leftResult[0]) { return leftResult; }
+	const rightResult = compare(Object.keys(right));
+	if (!rightResult[0]) { return rightResult; }
 
-  const leftResult = compare(Object.keys(left));
-  if (!leftResult[0]) {return leftResult;}
-  const rightResult = compare(Object.keys(right));
-  if (!rightResult[0]) {return rightResult;}
+	return [true, null];
+}
 
-  return [true, null];
-};
+function deepEqualArraysWithoutValue(left: UnknownArray, right: UnknownArray, previousPath: PathPart[] = []): [boolean, EqualError | null] {
+	if (left.length !== right.length) {
+		return [
+			false,
+			{
+				type: "length-not-equal",
+				path: pathToString(previousPath),
+			},
+		];
+	}
 
-const deepEqualArraysWithoutValue = (
-  left: UnknownArray,
-  right: UnknownArray,
-  previousPath: PathPart[] = [],
-): [boolean, EqualError | null] => {
-  if (left.length !== right.length)
-    {return [
-      false,
-      {
-        type: 'length-not-equal',
-        path: pathToString(previousPath),
-      },
-    ];}
+	for (let i = 0; i < left.length; i++) {
+		const leftValue = left[i];
+		const rightValue = right[i];
+		const path: PathPart[] = [...previousPath, { type: "index", value: i }];
+		if (typeof leftValue === "undefined" && typeof rightValue === "undefined") { continue; }
+		if (
+			(leftValue === undefined && rightValue !== undefined)
+			|| (leftValue !== undefined && rightValue === undefined)
+		) {
+			return [
+				false,
+				{
+					type: "not-found",
+					path: pathToString(path),
+				},
+			];
+		}
+		if (typeof leftValue === "number" && typeof rightValue === "number") { continue; }
+		if (typeof leftValue === "string" && typeof rightValue === "string") { continue; }
+		if (typeof leftValue === "boolean" && typeof rightValue === "boolean") { continue; }
+		if (typeof leftValue !== "object" && typeof rightValue !== "object") {
+			return [
+				false,
+				{
+					type: "invalid-value",
+					path: pathToString(path),
+				},
+			];
+		}
+		const [isSame, message] = deepEqualWithoutValue(
+			leftValue,
+			rightValue,
+			path,
+		);
+		if (!isSame) { return [isSame, message]; }
+	}
 
-  for (let i = 0; i < left.length; i++) {
-    const leftValue = left[i];
-    const rightValue = right[i];
-    const path: PathPart[] = [...previousPath, { type: 'index', value: i }];
-    if (typeof leftValue === 'undefined' && typeof rightValue === 'undefined')
-      {continue;}
-    if (
-      (leftValue === undefined && rightValue !== undefined) ||
-      (leftValue !== undefined && rightValue === undefined)
-    ) {
-      return [
-        false,
-        {
-          type: 'not-found',
-          path: pathToString(path),
-        },
-      ];
-    }
-    if (typeof leftValue === 'number' && typeof rightValue === 'number')
-      {continue;}
-    if (typeof leftValue === 'string' && typeof rightValue === 'string')
-      {continue;}
-    if (typeof leftValue === 'boolean' && typeof rightValue === 'boolean')
-      {continue;}
-    if (typeof leftValue !== 'object' && typeof rightValue !== 'object') {
-      return [
-        false,
-        {
-          type: 'invalid-value',
-          path: pathToString(path),
-        },
-      ];
-    }
-    const [isSame, message] = deepEqualWithoutValue(
-      leftValue,
-      rightValue,
-      path,
-    );
-    if (!isSame) {return [isSame, message];}
-  }
+	return [true, null];
+}
 
-  return [true, null];
-};
-
-export const deepEqualWithoutValue = (
-  left: unknown,
-  right: unknown,
-  previousPath: PathPart[] = [],
-): [boolean, EqualError | null] => {
-  if (typeof left !== 'object' && typeof right !== 'object') {
-    return [true, null];
-  }
-  if (
-    (Array.isArray(left) && !Array.isArray(right)) ||
-    (!Array.isArray(left) && Array.isArray(right))
-  ) {
-    return [
-      false,
-      {
-        type: 'invalid-type',
-        path: pathToString(previousPath),
-      },
-    ];
-  }
-  if (Array.isArray(left) && Array.isArray(right)) {
-    return deepEqualArraysWithoutValue(
-      left as UnknownArray,
-      right as UnknownArray,
-      previousPath,
-    );
-  }
-  return deepEqualObjectsWithoutValue(
-    left as UnknownRecord,
-    right as UnknownRecord,
-    previousPath,
-  );
-};
+export function deepEqualWithoutValue(left: unknown, right: unknown, previousPath: PathPart[] = []): [boolean, EqualError | null] {
+	if (typeof left !== "object" && typeof right !== "object") {
+		return [true, null];
+	}
+	if (
+		(Array.isArray(left) && !Array.isArray(right))
+		|| (!Array.isArray(left) && Array.isArray(right))
+	) {
+		return [
+			false,
+			{
+				type: "invalid-type",
+				path: pathToString(previousPath),
+			},
+		];
+	}
+	if (Array.isArray(left) && Array.isArray(right)) {
+		return deepEqualArraysWithoutValue(
+			left as UnknownArray,
+			right as UnknownArray,
+			previousPath,
+		);
+	}
+	return deepEqualObjectsWithoutValue(
+		left as UnknownRecord,
+		right as UnknownRecord,
+		previousPath,
+	);
+}

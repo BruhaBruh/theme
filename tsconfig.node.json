@@ -1,9 +1,11 @@
 {
-  "extends": "@bruhabruh/tsconfig/tsconfig.json",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  }
+	"extends": "@bruhabruh/tsconfig/tsconfig.json",
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@/*": [
+				"./src/*"
+			]
+		}
+	}
 }

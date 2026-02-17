@@ -1,14 +1,26 @@
 {
-  "extends": "@bruhabruh/tsconfig/tsconfig.json",
-  "compilerOptions": {
-    "types": ["vitest/globals"],
-    "composite": false,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-    "outDir": "dist"
-  },
-  "include": ["src", "*.mjs", "*.ts", ".prettierrc.mjs"],
-  "exclude": ["node_modules", "dist", "coverage"]
+	"extends": "@bruhabruh/tsconfig/tsconfig.json",
+	"compilerOptions": {
+		"composite": false,
+		"baseUrl": ".",
+		"paths": {
+			"@/*": [
+				"./src/*"
+			]
+		},
+		"types": [
+			"vitest/globals"
+		],
+		"outDir": "dist"
+	},
+	"include": [
+		"src",
+		"*.ts",
+		"**/*.test.ts"
+	],
+	"exclude": [
+		"node_modules",
+		"dist",
+		"coverage"
+	]
 }

@@ -1,15 +1,14 @@
-import type { Result, ZodFlattenError } from '@bruhabruh/type-safe';
-import { Err, Ok, zodFlattenError } from '@bruhabruh/type-safe';
-import type { Config } from './schema/config';
-import { configSchema } from './schema/config';
+import type { Result } from "@bruhabruh/type-safe";
+import type { Config } from "./schema/config";
+import { Err, Ok } from "@bruhabruh/type-safe";
+import z from "zod";
+import { configSchema } from "./schema/config";
 
-export const validateConfig = (
-  data: unknown,
-): Result<Config, ZodFlattenError<Config>> => {
-  const result = configSchema.safeParse(data);
-  if (result.success) {
-    return Ok(result.data);
-  }
+export function validateConfig(data: unknown): Result<Config, any> {
+	const result = configSchema.safeParse(data);
+	if (result.success) {
+		return Ok(result.data);
+	}
 
-  return Err(zodFlattenError(result.error));
-};
+	return Err(z.flattenError(result.error));
+}

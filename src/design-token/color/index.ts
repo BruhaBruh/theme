@@ -1,1 +1,1 @@
-export * from './color-design-token';
+export * from "./color-design-token";

@@ -1,27 +1,43 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Main Config for @bruhabruh/theme",
-  "type": "object",
-  "properties": {
-    "prefix": {
-      "default": "",
-      "description": "Prefix in css variables.\nDefault: \"\"",
-      "type": "string"
-    },
-    "content": {
-      "default": "./themes/*.theme.yaml",
-      "description": "Path to theme configs.\nDefault: \"./themes/*.theme.yaml\"",
-      "type": "string"
-    },
-    "absolute": {
-      "default": false,
-      "description": "Output w/ absolute values.\nDefault: false",
-      "type": "boolean"
-    },
-    "output": {
-      "description": "Output path destination of scheme.\nRequired",
-      "type": "string"
-    }
-  },
-  "required": ["output"]
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"type": "object",
+	"properties": {
+		"prefix": {
+			"$ref": "#/definitions/__schema0"
+		},
+		"content": {
+			"$ref": "#/definitions/__schema1"
+		},
+		"absolute": {
+			"$ref": "#/definitions/__schema2"
+		},
+		"output": {
+			"$ref": "#/definitions/__schema3"
+		}
+	},
+	"required": [
+		"output"
+	],
+	"description": "Main Config for @bruhabruh/theme",
+	"definitions": {
+		"__schema0": {
+			"default": "",
+			"type": "string",
+			"description": "Prefix in css variables.\nDefault: \"\""
+		},
+		"__schema1": {
+			"default": "./themes/*.theme.yaml",
+			"type": "string",
+			"description": "Path to theme configs.\nDefault: \"./themes/*.theme.yaml\""
+		},
+		"__schema2": {
+			"default": false,
+			"type": "boolean",
+			"description": "Output w/ absolute values.\nDefault: false"
+		},
+		"__schema3": {
+			"type": "string",
+			"description": "Output path destination of scheme.\nRequired"
+		}
+	}
 }

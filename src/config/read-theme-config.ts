@@ -1,21 +1,20 @@
-import type { Result, ZodFlattenError } from '@bruhabruh/type-safe';
-import { Err, Ok, zodFlattenError } from '@bruhabruh/type-safe';
-import fs from 'node:fs';
-import YAML from 'yaml';
-import type { ThemeConfig } from './schema/theme-config';
-import { themeConfigSchema } from './schema/theme-config';
+import type { Result } from "@bruhabruh/type-safe";
+import type { ThemeConfig } from "./schema/theme-config";
+import fs from "node:fs";
+import { Err, Ok } from "@bruhabruh/type-safe";
+import YAML from "yaml";
+import z from "zod";
+import { themeConfigSchema } from "./schema/theme-config";
 
-export const readThemeConfig = (
-  path: string,
-): Result<ThemeConfig, ZodFlattenError<ThemeConfig>> => {
-  const rawData = fs.readFileSync(path, { encoding: 'utf-8' });
+export function readThemeConfig(path: string): Result<ThemeConfig, any> {
+	const rawData = fs.readFileSync(path, { encoding: "utf-8" });
 
-  const data = YAML.parse(rawData);
+	const data = YAML.parse(rawData);
 
-  const result = themeConfigSchema.safeParse(data);
-  if (result.success) {
-    return Ok(result.data);
-  }
+	const result = themeConfigSchema.safeParse(data);
+	if (result.success) {
+		return Ok(result.data);
+	}
 
-  return Err(zodFlattenError(result.error));
-};
+	return Err(z.flattenError(result.error));
+}

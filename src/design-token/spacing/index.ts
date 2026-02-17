@@ -1,1 +1,1 @@
-export * from './spacing-design-token';
+export * from "./spacing-design-token";
